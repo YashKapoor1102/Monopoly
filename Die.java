@@ -31,15 +31,5 @@ public class Die {
         return rnd.nextInt(numberOfSides) + 1;
     }
 
-    /**
-     * Get the number of sides the die has
-     *
-     * @return      an int, number of sides the die has
-     */
-    public int getNumberOfSides() {
-        return this.numberOfSides;
-    }
-
-
 
 }
