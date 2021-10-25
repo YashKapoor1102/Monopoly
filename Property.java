@@ -1,52 +1,68 @@
 /**
- * The type Property.
+ * @author Himanshu Singh
+ * @version Milestone 1
  */
-public class Property {
 
-    private String propertyName;
-    private int cost;
+/**
+ * An abstract Property Class that implements the
+ * Square Interface.
+ *
+ * This has information about a typical property in
+ * Monopoly.
+ */
+public abstract class Property implements Square {
+
+    private final String PROPERTY_NAME;
+    private final int COST;
     private Player owner;
-
 
     /**
      * Instantiates a new Property.
      *
-     * @param pName the p name
-     * @param c     the c
+     * @param pName     a String, the property's name
+     * @param c         an int, the cost of the property
      */
     public Property(String pName, int c) {
-        this.propertyName = pName;
-        this.cost = c;
+        this.PROPERTY_NAME = pName;
+        this.COST = c;
         this.owner = null;
 
     }
 
     /**
-     * Returns the name of the property.
+     * Gets the name of the property.
      *
-     * @return the name
+     * @return      a String, the name of the property
      */
     public String getName() {
-        return propertyName;
+        return PROPERTY_NAME;
     }
 
     /**
-     * Returns owner (Player) of property.
+     * Sets owner (Player) of property.
      *
-     * @return the owner
+     * @param player    a Player Object, the player who is going to own the property
+     */
+    public void setOwner(Player player) {
+        this.owner = player;
+    }
+
+    /**
+     * Gets owner (Player) of property.
+     *
+     * @return      a Player Object, the player who owns the property
      */
     public Player getOwner() {
         return owner;
     }
 
     /**
-     * Returns the cost of the property.
+     * Returns the COST of the property.
      *
-     * @return the cost
+     * @return the COST
      */
     public int getCost() {
-        return cost;
+        return COST;
     }
-
 
 }

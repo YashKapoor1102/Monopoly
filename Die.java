@@ -1,5 +1,17 @@
+/**
+ * @author Yash Kapoor (Student ID: 101163338)
+ * @version Milestone 1
+ */
+
 import java.util.Random;
 
+/**
+ * Die Class that creates a die with
+ * a specific number of sides.
+ *
+ * Default is the die has 6 sides, meaning the highest number
+ * the die can roll is 6 and the lowest it can roll is 1.
+ */
 public class Die {
 
     private final int numberOfSides;
