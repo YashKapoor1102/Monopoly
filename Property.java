@@ -65,4 +65,6 @@ public abstract class Property implements Square {
         return COST;
     }
 
+    abstract int calculateRent(Gameboard gameboard);
+
 }

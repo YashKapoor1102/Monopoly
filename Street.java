@@ -49,8 +49,10 @@ public class Street extends Property
      * and goes up to 20% if the owner of the street owns all of the streets with this colour.
      * @return The rent of the street rounded down as an int.
     */
-    public int calculateRent(ArrayList<Player> player, Gameboard gameboard)
+    @Override
+    public int calculateRent(Gameboard gameboard)
     {
+        Player owner = this.getOwner();
 
         double rent = this.getCost() * 0.1;
 
@@ -58,12 +60,10 @@ public class Street extends Property
         // Iterates over all owned properties and counts how many are streets of the same colour as this one.
         int ownedSquaresMatchingColour = 0;
 
-        for(int i = 0; i < player.size(); i++) {
-            for (Property property : player.get(i).getProperties()) {
-                if (property instanceof Street) {
-                    if (((Street) property).getColour().equals(this.colour)) {
-                        ownedSquaresMatchingColour++;
-                    }
+        for (Property property : owner.getProperties()) {
+            if (property instanceof Street) {
+                if (((Street) property).getColour().equals(this.colour)) {
+                    ownedSquaresMatchingColour++;
                 }
             }
         }
@@ -80,18 +80,17 @@ public class Street extends Property
                     totalSquaresMatchingColour++;
                 }
             } catch (NullPointerException e){
-                    System.out.println();
             }
         }
 
         // If the owner of this square does not own all of the streets of this colour, the rent is 10% of the cost.
         if (ownedSquaresMatchingColour != totalSquaresMatchingColour)
         {
-            System.out.println("\nAll the streets of " + this.colour + " are not owned, so you pay 10% of the cost of this property.");
+            //System.out.println("\nAll the streets of " + this.colour + " are not owned, so you pay 10% of the cost of this property.");
             return (int) rent;
         }
 
-        System.out.println("\nAll the streets of " + this.colour + " are owned, so you pay 20% of the cost of this property.");
+        //System.out.println("\nAll the streets of " + this.colour + " are owned, so you pay 20% of the cost of this property.");
         // If the owner of the square owns all streets of this colour, the rent is 20% of the cost. Future milestones
         // will add houses and hotels to be accounted for after this.
         return (int) (rent * 2);

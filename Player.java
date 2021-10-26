@@ -17,7 +17,7 @@ public class Player {
     private int money;
     private final String name;
     private final List<Property> PROPERTIES;
-    private final List<Integer> POSITION;
+    private int position;
 
     /**
      * Instantiates a new Player.
@@ -30,7 +30,6 @@ public class Player {
         this.PROPERTIES = new ArrayList<>();
         this.name = name;
         this.money = money;
-        this.POSITION = new ArrayList<>();
     }
 
     /**
@@ -95,24 +94,21 @@ public class Player {
     }
 
     /**
-     * The list of positions in order that the player moves to on the gameboard
-     * reported as an integer. For example, if there are 23 squares and the player
-     * moves 5 spaces, the player is on position 4 (starting at index 0) or square #5.
-     *
-     * @param position      an int, the current position of the player on the gameboard
-     */
-    public void addPosition(int position) {
-        this.POSITION.add(position);
-
-    }
-
-    /**
      * Getting the list of positions
      *
      * @return          a List, the list of positions that the player has moved to on the gameboard
      */
-    public List<Integer> getPosition() {
-        return this.POSITION;
+    public int getPosition() {
+        return this.position;
+    }
+
+    /**
+     * @author Robert Simionescu
+     * @param position The player's new position as an int.
+     */
+    public void setPosition(int position)
+    {
+        this.position = position;
     }
 
 }
