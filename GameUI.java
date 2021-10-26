@@ -1,5 +1,5 @@
 /**
- * @author Yash Kapoor (Student ID: 101163338)
+ * @author Yash Kapoor and Robert Simionescu
  * @version Milestone 1
  */
 
@@ -11,15 +11,12 @@ import java.util.*;
  */
 public class GameUI {
 
-
-
     /**
      * @author Yash Kapoor
      * default constructor for a GameUI
      */
     public GameUI() {
     }
-
 
     /**
      * @author Robert Simionescu

@@ -1,5 +1,5 @@
 /**
- * @author Oliver Lu
+ * @author Oliver Lu, Yash Kapoor, and Robert Simionescu
  * @version Milestone 1
  */
 
@@ -15,7 +15,6 @@ public class GameLogic {
     private ArrayList<Player> players;
     private GameUI ui;
     private Gameboard gameboard;
-
 
     /**
      * @author Yash Kapoor and Robert Simionescu
@@ -91,17 +90,17 @@ public class GameLogic {
      * @author Yash Kapoor and Robert Simionescu
      * Handles bankuptcy of a player. Bankrupt player forfeits all their properties to the player they are indepted to
      * and is removed from the game.
-     * @param deptor Player who is in dept and has gone bankrupt.
+     * @param debtor Player who is in dept and has gone bankrupt.
      * @param creditor Player who is owed money by the bankrupt Player.
      */
-    private void bankruptcy(Player deptor, Player creditor)
+    private void bankruptcy(Player debtor, Player creditor)
     {
-        for (Property property : deptor.getProperties())
+        for (Property property : debtor.getProperties())
         {
             property.setOwner(creditor);
             creditor.addProperty(property);
         }
-        players.remove(deptor);
+        players.remove(debtor);
 
         if (players.size() == 1)
         {
@@ -236,7 +235,7 @@ public class GameLogic {
 
 
     /**
-     * @author Oliver Lu, Robert Simionescu
+     * @author Oliver Lu, Robert Simionescu, Yash Kapoor
      * The core loop of the game, this repeats until the game is done.
      */
     private void mainLoop()
@@ -263,8 +262,8 @@ public class GameLogic {
 
                 ui.displayMessage("\nPlayer " + (currentPlayer + 1) + "'s (" + players.get(currentPlayer).getName() + ") turn: ");
 
-                int rollDie = 0;
-                int rollDie2 = 0;
+                int rollDie;
+                int rollDie2;
 
                 ui.displayRollCommand();
 
@@ -315,6 +314,7 @@ public class GameLogic {
     }
 
     /**
+     * @author Robert Simionescu
      * Main method that deals with all the logic
      * of the game. It goes through each player and
      * allows them to roll their dice.

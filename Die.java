@@ -15,36 +15,36 @@ import java.util.Random;
  */
 public class Die {
 
-    private final int numberOfSides;
+    private final int NUM_SIDES;
 
     /**
      * @author Yash Kapoor
      * Default constructor for Die
      */
     public Die() {
-        this.numberOfSides = 6;
+        this.NUM_SIDES = 6;
     }
 
     /**
      * @author Yash Kapoor
      * Constructor for Die
      *
-     * @param numberOfSides     an int, numberOfSides the die has
+     * @param numberOfSides     an int, NUM_SIDES the die has
      */
     public Die(int numberOfSides) {
-        this.numberOfSides = numberOfSides;
+        this.NUM_SIDES = numberOfSides;
     }
 
     /**
      * @author Yash Kapoor
-     * Returns a random integer value in the range [1, numberOfSides]
+     * Returns a random integer value in the range [1, NUM_SIDES]
      *
      * @return      an int, randomly generated value between 1 and the number of sides the die has inclusive
      */
     public int roll() {
         Random rnd = new Random();
 
-        return rnd.nextInt(numberOfSides) + 1;
+        return rnd.nextInt(NUM_SIDES) + 1;
     }
 
 
