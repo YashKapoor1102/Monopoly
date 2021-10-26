@@ -17,6 +17,7 @@ public abstract class Property implements Square {
     private Player owner;
 
     /**
+     * @author Himanshu Singh
      * Instantiates a new Property.
      *
      * @param pName     a String, the property's name
@@ -30,6 +31,7 @@ public abstract class Property implements Square {
     }
 
     /**
+     * @author Himanshu Singh
      * Gets the name of the property.
      *
      * @return      a String, the name of the property
@@ -39,6 +41,7 @@ public abstract class Property implements Square {
     }
 
     /**
+     * @author Himanshu Singh
      * Sets owner (Player) of property.
      *
      * @param player    a Player Object, the player who is going to own the property
@@ -48,6 +51,7 @@ public abstract class Property implements Square {
     }
 
     /**
+     * @author Himanshu Singh
      * Gets owner (Player) of property.
      *
      * @return      a Player Object, the player who owns the property
@@ -57,6 +61,7 @@ public abstract class Property implements Square {
     }
 
     /**
+     * @author Himanshu Singh
      * Returns the COST of the property.
      *
      * @return the COST
@@ -65,6 +70,14 @@ public abstract class Property implements Square {
         return COST;
     }
 
+    /**
+     * @author Robert Simionescu
+     * This method will be used to calculate the rent of a particular property. Implementation depends on the type of
+     * property.
+     * @param gameboard The gameboard on which the square is found. Rent in properties depends on which other properties
+     *                  are owned by the same player, so this is necessary.
+     * @return int containing the rent.
+     */
     abstract int calculateRent(Gameboard gameboard);
 
 }

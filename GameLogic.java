@@ -42,20 +42,6 @@ public class GameLogic {
             }
 
             /**
-             * Setting the property that exists on the square (if any)
-             * Null if there is no property on that specific square.
-             * <p>
-             * This will be modified slightly in later milestones when we have to account for more than
-             * one Streets on the gameboard.
-             *
-             * @return a Street Object, the street that is present on the square
-             */
-            @Override
-            public Street setProperty() {
-                return null;
-            }
-
-            /**
              * Shows the user a text representation of what square they are currently on.
              *
              * @return a String, the name of the square

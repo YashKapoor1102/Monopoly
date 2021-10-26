@@ -37,6 +37,7 @@ public class Gameboard
     }
 
     /**
+     * @author Robert Simionescu
      * Returns the square found at a certain distance from the starting point.
      * @param position The number of squares past the starting point that the desired square is found.
      * @return          a Square Object, the position of that specific square on the gameboard

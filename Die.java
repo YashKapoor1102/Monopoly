@@ -6,6 +6,7 @@
 import java.util.Random;
 
 /**
+ * @author Yash Kapoor
  * Die Class that creates a die with
  * a specific number of sides.
  *
@@ -17,6 +18,7 @@ public class Die {
     private final int numberOfSides;
 
     /**
+     * @author Yash Kapoor
      * Default constructor for Die
      */
     public Die() {
@@ -24,6 +26,7 @@ public class Die {
     }
 
     /**
+     * @author Yash Kapoor
      * Constructor for Die
      *
      * @param numberOfSides     an int, numberOfSides the die has
@@ -33,6 +36,7 @@ public class Die {
     }
 
     /**
+     * @author Yash Kapoor
      * Returns a random integer value in the range [1, numberOfSides]
      *
      * @return      an int, randomly generated value between 1 and the number of sides the die has inclusive

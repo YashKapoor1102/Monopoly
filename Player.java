@@ -20,6 +20,7 @@ public class Player {
     private int position;
 
     /**
+     * @author Himanshu Singh
      * Instantiates a new Player.
      *
      * @param name  the name
@@ -33,6 +34,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Removes money from player's total amount.
      *
      * @param money     an int, the amount of money to be removed
@@ -42,6 +44,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Adds money to player's total amount.
      *
      * @param money     an int, the amount of money to be added
@@ -51,6 +54,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Gets PROPERTIES that the player owns
      *
      * @return      a List, the PROPERTIES
@@ -60,6 +64,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Returns the amount of money a player has.
      *
      * @return      an int, the amount of money
@@ -69,6 +74,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Returns the player's name.
      *
      * @return the string
@@ -78,6 +84,7 @@ public class Player {
     }
 
     /**
+     * @author Himanshu Singh
      * Adds a property to a player's list of PROPERTIES.
      *
      * @param property      a Property Object, the property that needs to be added
@@ -94,9 +101,10 @@ public class Player {
     }
 
     /**
-     * Getting the list of positions
+     * @author Himanshu Singh
+     * Getting the player's position
      *
-     * @return          a List, the list of positions that the player has moved to on the gameboard
+     * @return          int representing the player's position on the board
      */
     public int getPosition() {
         return this.position;

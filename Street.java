@@ -18,8 +18,6 @@ public class Street extends Property
      * The colour of the street as a String.
      */
     private String colour;
-
-    List<Property> ownerProperties;
     /**
      * @author Robert Simionescu
      * Instantiates a Street. Takes a street name, colour, and the initial cost.
@@ -31,7 +29,6 @@ public class Street extends Property
     {
         super(name, cost);
         this.colour = colour;
-        this.ownerProperties = new ArrayList<>();
     }
 
     /**
@@ -50,8 +47,7 @@ public class Street extends Property
      * @return The rent of the street rounded down as an int.
     */
     @Override
-    public int calculateRent(Gameboard gameboard)
-    {
+    public int calculateRent(Gameboard gameboard) {
         Player owner = this.getOwner();
 
         double rent = this.getCost() * 0.1;
@@ -73,19 +69,16 @@ public class Street extends Property
 
         int totalSquaresMatchingColour = 0;
 
-        for (Square square : gameboardSquares)
-        {
-            try {
-                if (square.setProperty().getColour().equals(this.colour)) {
+        for (Square square : gameboardSquares) {
+            if (square instanceof Street) {
+                if (((Street) square).getColour().equals(this.colour)) {
                     totalSquaresMatchingColour++;
                 }
-            } catch (NullPointerException e){
             }
         }
 
         // If the owner of this square does not own all of the streets of this colour, the rent is 10% of the cost.
-        if (ownedSquaresMatchingColour != totalSquaresMatchingColour)
-        {
+        if (ownedSquaresMatchingColour != totalSquaresMatchingColour) {
             //System.out.println("\nAll the streets of " + this.colour + " are not owned, so you pay 10% of the cost of this property.");
             return (int) rent;
         }
@@ -97,18 +90,6 @@ public class Street extends Property
     }
 
 
-    /**
-     * @author Yash Kapoor
-     *
-     * Setting the street that exists on the square (if any)
-     * Null if there is no property on that specific square.
-     *
-     * @return      a Street Object, the street that is present on the square
-     */
-    @Override
-    public Street setProperty() {
-        return null;
-    }
 
     /**
      * @author Yash Kapoor

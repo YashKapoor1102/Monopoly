@@ -11,25 +11,20 @@ import java.util.*;
  */
 public class GameUI {
 
-    private Gameboard gameboard;
-    private final List<Property> PROPERTY;
 
 
     /**
      * @author Yash Kapoor
-     * Constructor for GameUI that initializes
-     * a gameboard and a PROPERTY ArrayList
+     * default constructor for a GameUI
      */
     public GameUI() {
-        this.gameboard = null;
-        this.PROPERTY = new ArrayList<>();
     }
 
 
     /**
      * @author Robert Simionescu
      * Displays a message to the user. In the current milestone, this is just a print statement. In future milestones,
-     * it may be a textbox or something similar.
+     * it may be a textbox or something eslse.
      * @param message The message to be displayed.
      */
     public void displayMessage(String message)
