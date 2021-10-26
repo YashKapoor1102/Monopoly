@@ -244,14 +244,13 @@ public class GameUI {
     /**
      * @author Yash Kapoor and Robert Simionescu
      * Displays the first and second dice roll of the player
-     * and adds them together to get the total spaces the player moves
-     * on the gameboard.
+     * and adds them together to display how many squares the
+     * player will move.
      *
      * @param firstRoll     an int, first dice roll
      * @param secondRoll    an int, second dice roll
-     * @return              an int, sum of the first and second dice roll
      */
-    public int displayDiceRoll(int firstRoll, int secondRoll) {
+    public void displayDiceRoll(int firstRoll, int secondRoll) {
 
         System.out.println("You rolled a " + firstRoll + " and a " + secondRoll);
 
@@ -265,54 +264,5 @@ public class GameUI {
             System.out.println("Hence, you will move " + sum + " spaces on the gameboard and will get to roll again.");
         }
 
-        return sum;
-
     }
-
-    /**
-     * Displays the amount that the player needs to pay the property owner.
-     *
-     * @param player            an ArrayList of players, list of the players that are currently playing the game
-     * @param propertyBlock     a Square Object, the current position of the player on the gameboard
-     * @param payer             an int, index of the player in the ArrayList of players
-     */
-    public void displayPayment(ArrayList<Player> player, Square propertyBlock, int payer)  {
-        for (int payee = 0; payee < player.size(); payee++) {
-
-            if (!player.get(payer).equals(player.get(payee))) {
-                // if current player does not equal other players in the game
-                // scan all properties of other players to see if they own that PROPERTY
-                if (player.get(payee).getProperties().toString().contains(propertyBlock.getName())) {
-                    // another player has been found that owns the property that the current player landed on
-                    // so they must pay the other player rent.
-
-                    System.out.println("\n" + player.get(payer).getName() + " must pay $" + propertyBlock.setProperty().calculateRent(gameboard) + " to " + player.get(payee).getName());
-
-                    player.get(payer).removeMoney(propertyBlock.setProperty().calculateRent(gameboard));
-                    // removing the rent that the current player had to pay
-
-                    player.get(payee).addMoney(propertyBlock.setProperty().calculateRent(gameboard));
-                    // adding the rent received from the current player
-
-                    if (player.get(payee).getMoney() <= 0) {
-                        // if player has no money left after paying the other player, then they have gone bankrupt
-                        System.out.println(player.get(payee).getName() + " cannot pay rent. Hence, they have gone bankrupt.");
-                        player.remove(player.get(payee));
-
-                        if (player.size() == 1) {
-                            // Check if only one player is left
-                            // Only one player left, game over
-                            System.out.println("\n" + player.get(0).getName() + " has won! Congratulations!");
-                            System.exit(0);
-                        }
-
-
-                    }
-
-                }
-            }
-        }
-    }
-
-
 }

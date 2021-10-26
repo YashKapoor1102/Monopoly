@@ -288,7 +288,8 @@ public class GameLogic {
                 rollDie = d.roll();
                 rollDie2 = d2.roll();
 
-                sum = 6;//ui.displayDiceRoll(rollDie, rollDie2);
+                sum = rollDie + rollDie2;
+                ui.displayDiceRoll(rollDie, rollDie2);
                 int newPosition = (players.get(currentPlayer).getPosition() + sum) % gameboard.getSquares().size();
 
                 players.get(currentPlayer).setPosition(newPosition);
