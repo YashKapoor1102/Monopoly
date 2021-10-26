@@ -269,10 +269,9 @@ public class GameLogic {
                 ui.displayRollCommand();
 
                 Die d = new Die();
-                Die d2 = new Die();
 
                 rollDie = d.roll();
-                rollDie2 = d2.roll();
+                rollDie2 = d.roll();
 
                 sum = rollDie + rollDie2;
                 ui.displayDiceRoll(rollDie, rollDie2);
