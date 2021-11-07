@@ -12,9 +12,7 @@ import java.util.*;
  */
 public class GameLogic {
 
-    private ArrayList<Player> players;
-    private GameUI ui;
-    private Gameboard gameboard;
+    private GameFrame gui;
 
     /**
      * @author Yash Kapoor and Robert Simionescu
@@ -23,7 +21,7 @@ public class GameLogic {
      * Jail, GO, and Utilities will be added in later milestones.
      * @return The gameboard that will be used for the game.
      */
-    private Gameboard createGameboard()
+    public Gameboard createGameboard()
     {
         ArrayList<Square> squares = new ArrayList<>();
 
@@ -49,7 +47,6 @@ public class GameLogic {
             public String toString() {
                 return String.format("%s", getName());
             }
-
 
         }, new Street("Mediterranean Avenue", "Brown", 40) {
         }, new Street("Baltic Avenue", "Brown", 60) {
@@ -85,6 +82,23 @@ public class GameLogic {
 
     }
 
+    public ArrayList<Integer> calculateRoll() {
+        int rollDie;
+        int rollDie2;
+
+        Die d = new Die();
+
+        rollDie = d.roll();
+        rollDie2 = d.roll();
+
+        ArrayList<Integer> rolls = new ArrayList<>();
+
+        rolls.add(0, rollDie);
+        rolls.add(1, rollDie2);
+
+        return rolls;
+
+    }
 
     /**
      * @author Yash Kapoor and Robert Simionescu
@@ -92,8 +106,9 @@ public class GameLogic {
      * and is removed from the game.
      * @param debtor Player who is in dept and has gone bankrupt.
      * @param creditor Player who is owed money by the bankrupt Player.
+     * @return      a boolean, notifying methods when there is only one player remaining and all other players have gone bankrupt.
      */
-    private void bankruptcy(Player debtor, Player creditor)
+    private boolean bankruptcy(Player debtor, Player creditor, ArrayList<Player> players)
     {
         for (Property property : debtor.getProperties())
         {
@@ -104,9 +119,10 @@ public class GameLogic {
 
         if (players.size() == 1)
         {
-            ui.displayMessage(players.get(0).getName() + " has won!");
-            quitGame();
+            gui.displayMessage(players.get(0).getName() + " has won!");
+            return true;
         }
+        return false;
     }
 
 
@@ -116,37 +132,36 @@ public class GameLogic {
      * state displays where they are on the gameboard, how much money they have,
      * and the list of properties that they currently own.
      */
-    private void inspectPlayer()
+    public void inspectPlayer(String name, ArrayList<Player> players, Gameboard gameboard)
     {
 
-        boolean playerName = false;
+        gui = new GameFrame();
+        StringBuilder sb = new StringBuilder();
 
-        while (!playerName)
-        {
-            String cp = ui.selectPlayer();
+        for(Player p: players) {
 
-            for (Player player : players) {
-                if (cp.equalsIgnoreCase(player.getName())) {
-                    // entered player matches the one found by the loop
-                    // display their state
+            if(p.getName().equals(name)) {
+                gui = new GameFrame();
 
-                    System.out.println(player.getName() + " has $" + player.getMoney());
+                // entered player matches the one found by the loop
+                // display their state
 
-                    try {
-                        System.out.println(player.getName() + " is currently on " + gameboard.getSquare(player.getPosition()));
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(player.getName() + " is currently on " + gameboard.getSquare(0));
-                    }
-                    System.out.println(player.getName() + " currently owns " + player.getProperties().toString());
-                    // [] (Empty List) indicates player owns no properties
+                sb.append(p.getName() + " has $" + p.getMoney() + "\n");
 
-                    playerName = true;
+                try {
+                    sb.append(name + " is currently on " + gameboard.getSquare(p.getPosition()) + "\n");
+                } catch (IndexOutOfBoundsException e) {
+                    sb.append(p.getName() + " is currently on " + gameboard.getSquare(0) + "\n");
                 }
+                sb.append(p.getName() + " currently owns " + p.getProperties().toString() + "\n");
+                // [] (Empty List) indicates player owns no properties
+
             }
-            if (!playerName) {
-                ui.displayMessage("Sorry! This name does not exist in the list of players.");
-            }
+
         }
+
+        gui.displayMessage(sb.toString());
+
     }
 
 
@@ -156,8 +171,10 @@ public class GameLogic {
      * already owned, or the player does not have enough money to make the purchase.
      * @param buyer The player attempting to buy the property.
      */
-    private void buyProperty(Player buyer)
+    public void buyProperty(Player buyer, Gameboard gameboard)
     {
+        gui = new GameFrame();
+
         Square property = gameboard.getSquare(buyer.getPosition());
         // Checks that the player is on a property square.
         if (property instanceof Property)
@@ -170,35 +187,23 @@ public class GameLogic {
                     buyer.addProperty((Property) property);
                     buyer.removeMoney(((Property) property).getCost());
                     ((Property) property).setOwner(buyer);
-                    System.out.println("You have purchased " + property.getName());
+                    gui.displayMessage("You have purchased " + property.getName());
                 }
                 else
                 {
-                    ui.displayMessage("You do not have enough money to purchase this property!");
+                    gui.displayMessage("You do not have enough money to purchase this property!");
                 }
             }
             else
             {
-                ui.displayMessage("This property is already owned by " + ((Property) property).getOwner().getName() + "!");
+                gui.displayMessage("This property is already owned by " + ((Property) property).getOwner().getName() + "!");
             }
         }
         else
         {
-            ui.displayMessage("You are not on a property!");
+            gui.displayMessage("You are not on a property!");
         }
     }
-
-
-    /**
-     * @author Yash Kapoor
-     * Quits the game
-     */
-    private void quitGame()
-    {
-        ui.displayMessage("\nThank you for playing!");
-        System.exit(0);
-    }
-
 
     /**
      * Oliver Lu and Robert Simionescu
@@ -206,8 +211,10 @@ public class GameLogic {
      * future milestones, there will be other types of squares.
      * @param player The player who has just rolled.
      * @param square The square on which they have landed.
+     *
+     * @return      a boolean, false if there is only one player remaining, true otherwise
      */
-    private void playerLandOnSquare(Player player, Square square)
+    public boolean playerLandOnSquare(Player player, Square square, Gameboard gameboard, ArrayList<Player> listPlayers)
     {
         // If the player lands on a property
         if (square instanceof Property)
@@ -220,115 +227,22 @@ public class GameLogic {
                 {
                     player.removeMoney(((Property) square).calculateRent(gameboard));
                     ((Property) square).getOwner().addMoney(((Property) square).calculateRent(gameboard));
-                    ui.displayMessage(player.getName()
+                    gui.displayMessage(player.getName()
                             + " pays $" + ((Property) square).calculateRent(gameboard)
                             + " to " + ((Property) square).getOwner().getName());
                 }
                 else
                 {
-                    ui.displayMessage(player + " could not pay their rent and has gone bankrupt. All their property has been transfered to " + ((Property) square).getOwner() + ".");
-                    bankruptcy(player, ((Property) square).getOwner());
-                }
-            }
-        }
-    }
-
-
-    /**
-     * @author Oliver Lu, Robert Simionescu, Yash Kapoor
-     * The core loop of the game, this repeats until the game is done.
-     */
-    private void mainLoop()
-    {
-        // Game is NOT called Monopoly due to copyright reasons
-        System.out.println("\nWelcome to the game of Funopoly!\n");
-
-        ui = new GameUI();
-        gameboard = createGameboard();
-        players = new ArrayList<>();
-        String command;
-
-        // ask the user how many players are going to be playing the game and their names
-        players = ui.displayPlayerSelection();
-
-
-        int sum = 0;
-
-        while (true) {
-            for (int currentPlayer = 0; currentPlayer < players.size(); currentPlayer++) {
-                // go through each player
-
-                ui.printBoard(gameboard, players);
-
-                ui.displayMessage("\nPlayer " + (currentPlayer + 1) + "'s (" + players.get(currentPlayer).getName() + ") turn: ");
-
-                int rollDie;
-                int rollDie2;
-
-                ui.displayRollCommand();
-
-                Die d = new Die();
-
-                rollDie = d.roll();
-                rollDie2 = d.roll();
-
-                sum = rollDie + rollDie2;
-                ui.displayDiceRoll(rollDie, rollDie2);
-                int newPosition = (players.get(currentPlayer).getPosition() + sum) % gameboard.getSquares().size();
-
-                players.get(currentPlayer).setPosition(newPosition);
-
-                // getting the square that the user is currently on
-                Square currentPosition = gameboard.getSquare(players.get(currentPlayer).getPosition());
-
-                ui.displayMessage("You landed on " + currentPosition.getName());
-
-                playerLandOnSquare(players.get(currentPlayer), currentPosition);
-
-                do
-                {
-                    command = ui.displayCommands();
-
-                    switch (command)
-                    {
-                        case "BP":
-                            buyProperty(players.get(currentPlayer));
-                            break;
-                        case "SP":
-                            inspectPlayer();
-                            break;
-                        case "PT":
-                            break;
-                        case "Q":
-                            quitGame();
+                    gui.displayMessage(player.getName() + " could not pay their rent and has gone bankrupt. All their property has been transfered to " + ((Property) square).getOwner().getName() + ".");
+                    if(bankruptcy(player, ((Property) square).getOwner(), listPlayers)) {
+                        return false;
                     }
-                } while (!command.equals("PT"));
-
-                if (rollDie == rollDie2) {
-                    // doubles are rolled, same player goes again
-                    currentPlayer--;
                 }
-
             }
         }
+        return true;
     }
 
-    /**
-     * @author Robert Simionescu
-     * Main method that deals with all the logic
-     * of the game. It goes through each player and
-     * allows them to roll their dice.
-     *
-     * If a player rolls doubles,
-     * they get to go again.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        GameLogic game = new GameLogic();
-        game.mainLoop();
-
-    }
 }
 
 

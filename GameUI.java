@@ -5,6 +5,11 @@
 
 import java.util.*;
 
+/*
+This Class is not needed anymore.
+
+Replaced by GameFrame.
+ */
 /**
  * GameUI class creates the User Interface for this game.
  * Displays all the necessary messages and commands for the user to play the game.
@@ -21,7 +26,7 @@ public class GameUI {
     /**
      * @author Robert Simionescu
      * Displays a message to the user. In the current milestone, this is just a print statement. In future milestones,
-     * it may be a textbox or something eslse.
+     * it may be a textbox or something else.
      * @param message The message to be displayed.
      */
     public void displayMessage(String message)
@@ -170,21 +175,6 @@ public class GameUI {
             }
             System.out.println();
         }
-    }
-
-
-    /**
-     * @author Yash Kapoor and Robert Simionescu
-     * Allows the user to input the name of a player to check the state of.
-     * @return String containing the name of the player selected.
-     */
-    public String selectPlayer()
-    {
-        Scanner choosePlayer = new Scanner(System.in);
-        System.out.println("Which player would you like to view the state of? Please type their name: ");
-        String cp = choosePlayer.next();
-
-        return cp;
     }
 
 
