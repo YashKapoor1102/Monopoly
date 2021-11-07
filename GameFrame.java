@@ -20,11 +20,7 @@ Game continues until there is one player remaining and all other players have go
 
  */
 
-public class GameFrame extends JFrame {
-
-    private GameLogic gl;
-
-    private ArrayList<Player> players;
+public class GameFrame extends JFrame implements GameView {
 
     private final JButton addPlayers;
     private final JButton start;
@@ -36,7 +32,7 @@ public class GameFrame extends JFrame {
     private final JPanel bodyPanel;
 
     private int clicks;
-    private int currentPlayer;
+
 
     private final JButton[] buttons;
 
@@ -45,11 +41,12 @@ public class GameFrame extends JFrame {
     public GameFrame() {
         super("Funopoly");
 
+        GameModel model = new GameModel();
+        model.addGameView(this);
+
         buttons = new JButton[8];
 
-        gl = new GameLogic();
         jLabelList = new ArrayList<>();
-        players = new ArrayList<Player>();
 
         addPlayers = new JButton("Add Players");
         start = new JButton("Start");
@@ -57,38 +54,85 @@ public class GameFrame extends JFrame {
         bp = new JButton("Buy Property");
         pt = new JButton("Pass turn");
 
+        GameController gameController = new GameController(model);
+
+        addPlayers.addActionListener(gameController);
+        start.addActionListener(gameController);
+        roll.addActionListener(gameController);
+        bp.addActionListener(gameController);
+        pt.addActionListener(gameController);
+
+        addPlayers.setEnabled(true);
+        start.setEnabled(false);
+        roll.setEnabled(false);
+        bp.setEnabled(false);
+        pt.setEnabled(false);
+
         bodyPanel = new JPanel(new BorderLayout());
 
         clicks = 0;
-        currentPlayer = 0;
 
         // Close the JFrame when "x" is pressed
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        // Game is NOT called Monopoly due to copyright reasons
+
+        getInitialSouthLabels();
+        getInitialWestLabels();
+        getInitialNorthLabels();
+        getInitialEastLabels();
+
+        bodyPanel.add(getNorth(), BorderLayout.NORTH);
+        bodyPanel.add(getSouth(), BorderLayout.SOUTH);
+        bodyPanel.add(getCenter(), BorderLayout.CENTER);
+        bodyPanel.add(getEast(), BorderLayout.EAST);
+        bodyPanel.add(getWest(), BorderLayout.WEST);
+
+        setupPlayerButtons();
+
+//        startGame();
+//        rollDice();
+//        buyPropertySetup();
+//
+//        passTurn();
+
+
+        bodyPanel.setPreferredSize(new Dimension(1000, 1000));
+
+        JPanel mainPanel = new JPanel();
+
+
+        mainPanel.add(bodyPanel);
+
+        this.add(mainPanel);
+        this.pack();
+
+        this.setVisible(true);
+
     }
 
     private void getInitialSouthLabels() {
-        ImageIcon mediterraneanAvenue = new ImageIcon("MediterraneanAvenue.PNG");
+        ImageIcon mediterraneanAvenue = new ImageIcon("Images/MediterraneanAvenue.PNG");
         Image ma = mediterraneanAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon mt = new ImageIcon(ma);
 
-        ImageIcon balticAvenue = new ImageIcon("BalticAvenue.PNG");
+        ImageIcon balticAvenue = new ImageIcon("Images/BalticAvenue.PNG");
         Image ba = balticAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon b = new ImageIcon(ba);
 
-        ImageIcon orientalAvenue = new ImageIcon("OrientalAvenue.PNG");
+        ImageIcon orientalAvenue = new ImageIcon("Images/OrientalAvenue.PNG");
         Image oa = orientalAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon o = new ImageIcon(oa);
 
-        ImageIcon vermontAvenue = new ImageIcon("VermontAvenue.PNG");
+        ImageIcon vermontAvenue = new ImageIcon("Images/VermontAvenue.PNG");
         Image vma = vermontAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon vm = new ImageIcon(vma);
 
-        ImageIcon connecticutAvenue = new ImageIcon("ConnecticutAvenue.PNG");
+        ImageIcon connecticutAvenue = new ImageIcon("Images/ConnecticutAvenue.PNG");
         Image ca = connecticutAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon c = new ImageIcon(ca);
 
-        ImageIcon startingPoint = new ImageIcon("StartingPoint.PNG");
+        ImageIcon startingPoint = new ImageIcon("Images/StartingPoint.PNG");
         Image sp = startingPoint.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon s = new ImageIcon(sp);
 
@@ -126,27 +170,27 @@ public class GameFrame extends JFrame {
     }
 
     private void getInitialWestLabels() {
-        ImageIcon newYorkAvenue = new ImageIcon("NewYorkAvenue.PNG");
+        ImageIcon newYorkAvenue = new ImageIcon("Images/NewYorkAvenue.PNG");
         Image nya = newYorkAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon ny = new ImageIcon(nya);
 
-        ImageIcon tennesseeAvenue = new ImageIcon("TennesseeAvenue.PNG");
+        ImageIcon tennesseeAvenue = new ImageIcon("Images/TennesseeAvenue.PNG");
         Image ta = tennesseeAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon t = new ImageIcon(ta);
 
-        ImageIcon stJamesPlace = new ImageIcon("StJamesPlace.PNG");
+        ImageIcon stJamesPlace = new ImageIcon("Images/StJamesPlace.PNG");
         Image sjp = stJamesPlace.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon sj = new ImageIcon(sjp);
 
-        ImageIcon virginiaAvenue = new ImageIcon("VirginiaAvenue.PNG");
+        ImageIcon virginiaAvenue = new ImageIcon("Images/VirginiaAvenue.PNG");
         Image vga = virginiaAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon vg = new ImageIcon(vga);
 
-        ImageIcon statesAvenue = new ImageIcon("StatesAvenue.PNG");
+        ImageIcon statesAvenue = new ImageIcon("Images/StatesAvenue.PNG");
         Image sta = statesAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon st = new ImageIcon(sta);
 
-        ImageIcon stCharlesPlace = new ImageIcon("StCharlesPlace.PNG");
+        ImageIcon stCharlesPlace = new ImageIcon("Images/StCharlesPlace.PNG");
         Image scp = stCharlesPlace.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon sc = new ImageIcon(scp);
 
@@ -187,27 +231,27 @@ public class GameFrame extends JFrame {
 
     private void getInitialNorthLabels() {
 
-        ImageIcon kentuckyAvenue = new ImageIcon("KentuckyAvenue.PNG");
+        ImageIcon kentuckyAvenue = new ImageIcon("Images/KentuckyAvenue.PNG");
         Image ka = kentuckyAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon k = new ImageIcon(ka);
 
-        ImageIcon indianaAvenue = new ImageIcon("IndianaAvenue.PNG");
+        ImageIcon indianaAvenue = new ImageIcon("Images/IndianaAvenue.PNG");
         Image ina = indianaAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon in = new ImageIcon(ina);
 
-        ImageIcon illinoisAvenue = new ImageIcon("IllinoisAvenue.PNG");
+        ImageIcon illinoisAvenue = new ImageIcon("Images/IllinoisAvenue.PNG");
         Image ia = illinoisAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon i = new ImageIcon(ia);
 
-        ImageIcon atlanticAvenue = new ImageIcon("AtlanticAvenue.PNG");
+        ImageIcon atlanticAvenue = new ImageIcon("Images/AtlanticAvenue.PNG");
         Image aa = atlanticAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon a = new ImageIcon(aa);
 
-        ImageIcon ventnorAvenue = new ImageIcon("VentnorAvenue.PNG");
+        ImageIcon ventnorAvenue = new ImageIcon("Images/VentnorAvenue.PNG");
         Image va = ventnorAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon v = new ImageIcon(va);
 
-        ImageIcon marvinGardens = new ImageIcon("MarvinGardens.PNG");
+        ImageIcon marvinGardens = new ImageIcon("Images/MarvinGardens.PNG");
         Image mg = marvinGardens.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon m = new ImageIcon(mg);
 
@@ -246,23 +290,23 @@ public class GameFrame extends JFrame {
 
     private void getInitialEastLabels() {
 
-        ImageIcon pacificAvenue = new ImageIcon("PacificAvenue.PNG");
+        ImageIcon pacificAvenue = new ImageIcon("Images/PacificAvenue.PNG");
         Image pa = pacificAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
         ImageIcon p = new ImageIcon(pa);
 
-        ImageIcon northCarolinaAvenue = new ImageIcon("NorthCarolinaAvenue.PNG");
+        ImageIcon northCarolinaAvenue = new ImageIcon("Images/NorthCarolinaAvenue.PNG");
         Image nca = northCarolinaAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
         ImageIcon nc = new ImageIcon(nca);
 
-        ImageIcon pennsylvaniaAvenue = new ImageIcon("PennsylvaniaAvenue.PNG");
+        ImageIcon pennsylvaniaAvenue = new ImageIcon("Images/PennsylvaniaAvenue.PNG");
         Image pna = pennsylvaniaAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
         ImageIcon pn = new ImageIcon(pna);
 
-        ImageIcon parkPlace = new ImageIcon("ParkPlace.PNG");
+        ImageIcon parkPlace = new ImageIcon("Images/ParkPlace.PNG");
         Image park = parkPlace.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
         ImageIcon pp = new ImageIcon(park);
 
-        ImageIcon boardWalk = new ImageIcon("BoardWalk.PNG");
+        ImageIcon boardWalk = new ImageIcon("Images/BoardWalk.PNG");
         Image bdw = boardWalk.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(bdw);
 
@@ -403,7 +447,7 @@ public class GameFrame extends JFrame {
         JPanel center = new JPanel();
 
         JLabel funopoly = new JLabel();
-        ImageIcon fun = new ImageIcon("Funopoly.png");
+        ImageIcon fun = new ImageIcon("Images/Funopoly.png");
         Image f = fun.getImage().getScaledInstance(600, 800, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(f);
 
@@ -422,179 +466,153 @@ public class GameFrame extends JFrame {
 
     }
 
-    private void addNewPlayers() {
 
-        addPlayers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                clicks++;
-
-                players.add(new Player("Player " + clicks, 500));
-
-                JOptionPane.showMessageDialog(null, "Number of Players: " + clicks);
-
-                if (clicks == 2) {
-                    // Must have at least two players for the game to start
-                    start.setEnabled(true);
-                }
-
-                if (clicks == 8) {
-                    addPlayers.setEnabled(false);
-                    JOptionPane.showMessageDialog(null, "You have reached your limit.\n\nNo more than 8 players are allowed!");
-
-
-                }
-
-            }
-        });
-    }
-
-    private void startGame() {
-
-        start.setEnabled(false);
-
-        start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                roll.setEnabled(true);
-                start.setEnabled(false);
-                addPlayers.setEnabled(false);
-
-
-                ActionListener listener = new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if(e.getSource() instanceof JButton) {
-
-                            for(int k = 0; k < buttons.length; k++) {
-
-                                if(buttons[k] == e.getSource()) {
-                                    gl.inspectPlayer(players.get(k).getName(), players, gameboard);
-                                }
-
-                            }
-
-                        }
-                    }
-                };
-
-                for(int j = 0; j < players.size(); j++) {
-
-                    buttons[j].addActionListener(listener);
-
-                }
-
-                for(int i = 0; i < players.size(); i++) {
-
-
-                    buttons[i].setVisible(true);
-
-
-                    jLabelList.get(0).setLayout(new FlowLayout());
-                    jLabelList.get(0).add(buttons[i], new GridLayout(4, 4));
-
-                    bodyPanel.removeAll();
-
-                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
-                    bodyPanel.add(getEast(), BorderLayout.EAST);
-                    bodyPanel.add(getWest(), BorderLayout.WEST);
-                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
-
-                    bodyPanel.revalidate();
-                    bodyPanel.repaint();
-
-                }
-
-                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
-
-
-                roll.setVisible(true);
-
-            }
-        });
-    }
-
-    private void rollDice() {
-
-        roll.setEnabled(false);
-
-        roll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                StringBuilder sb = new StringBuilder();
-
-                roll.setEnabled(false);
-                bp.setEnabled(true);
-                pt.setEnabled(true);
-
-
-                int rollDie = gl.calculateRoll().get(0);
-                int rollDie2 = gl.calculateRoll().get(1);
-
-
-                sb.append("You rolled a " + rollDie + " and a " + rollDie2);
-
-                int sum = rollDie + rollDie2;
-                if (rollDie != rollDie2)
-                {
-                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard.");
-                }
-                else
-                {
-                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard\nand will get to roll again.");
-                }
-
-                displayMessage(sb.toString());
-
-                int newPosition = (players.get(currentPlayer).getPosition() + sum) % gameboard.getSquares().size();
-
-                players.get(currentPlayer).setPosition(newPosition);
-
-                // getting the square that the user is currently on
-                Square currentPosition = gameboard.getSquare(players.get(currentPlayer).getPosition());
-
-
-                if(currentPosition.getName().equals(jLabelList.get(newPosition).getName())) {
-
-                    jLabelList.get(players.get(currentPlayer).getPosition()).setLayout(new FlowLayout());
-                    jLabelList.get(players.get(currentPlayer).getPosition()).add(buttons[currentPlayer], new GridLayout(4, 4));
-
-
-                    bodyPanel.removeAll();
-
-                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
-                    bodyPanel.add(getEast(), BorderLayout.EAST);
-                    bodyPanel.add(getWest(), BorderLayout.WEST);
-                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
-
-                    bodyPanel.revalidate();
-                    bodyPanel.repaint();
-
-                }
-
-                displayMessage("You landed on " + currentPosition.getName());
-
-                if (!gl.playerLandOnSquare(players.get(currentPlayer), currentPosition, gameboard, players)) {
-                    GameFrame.super.dispose();
-                }
-
-                if (rollDie == rollDie2) {
-                    roll.setEnabled(true);
-                    pt.setEnabled(false);
-                    // doubles are rolled, same player goes again
-
-                }
-
-
-            }
-        });
-
-    }
+//    private void startGame() {
+//
+//        start.setEnabled(false);
+//
+//        start.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//                roll.setEnabled(true);
+//                start.setEnabled(false);
+//                addPlayers.setEnabled(false);
+//
+//
+//                ActionListener listener = new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        if(e.getSource() instanceof JButton) {
+//
+//                            for(int k = 0; k < buttons.length; k++) {
+//
+//                                if(buttons[k] == e.getSource()) {
+//                                    gl.inspectPlayer(players.get(k).getName(), players);
+//                                }
+//
+//                            }
+//
+//                        }
+//                    }
+//                };
+//
+//                for(int j = 0; j < players.size(); j++) {
+//
+//                    buttons[j].addActionListener(listener);
+//
+//                }
+//
+//                for(int i = 0; i < players.size(); i++) {
+//
+//
+//                    buttons[i].setVisible(true);
+//
+//
+//                    jLabelList.get(0).setLayout(new FlowLayout());
+//                    jLabelList.get(0).add(buttons[i], new GridLayout(4, 4));
+//
+//                    bodyPanel.removeAll();
+//
+//                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
+//                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
+//                    bodyPanel.add(getEast(), BorderLayout.EAST);
+//                    bodyPanel.add(getWest(), BorderLayout.WEST);
+//                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
+//
+//                    bodyPanel.revalidate();
+//                    bodyPanel.repaint();
+//
+//                }
+//
+//                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
+//
+//
+//                roll.setVisible(true);
+//
+//            }
+//        });
+//    }
+//
+//    private void rollDice() {
+//
+//        roll.setEnabled(false);
+//
+//        roll.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//                StringBuilder sb = new StringBuilder();
+//
+//                roll.setEnabled(false);
+//                bp.setEnabled(true);
+//                pt.setEnabled(true);
+//
+//
+//                int rollDie = gl.calculateRoll().get(0);
+//                int rollDie2 = gl.calculateRoll().get(1);
+//
+//
+//                sb.append("You rolled a " + rollDie + " and a " + rollDie2);
+//
+//                int sum = rollDie + rollDie2;
+//                if (rollDie != rollDie2)
+//                {
+//                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard.");
+//                }
+//                else
+//                {
+//                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard\nand will get to roll again.");
+//                }
+//
+//                displayMessage(sb.toString());
+//
+//                int newPosition = (players.get(currentPlayer).getPosition() + sum) % gameboard.getSquares().size();
+//
+//                players.get(currentPlayer).setPosition(newPosition);
+//
+//                // getting the square that the user is currently on
+//                Square currentPosition = gameboard.getSquare(players.get(currentPlayer).getPosition());
+//
+//
+//                if(currentPosition.getName().equals(jLabelList.get(newPosition).getName())) {
+//
+//                    jLabelList.get(players.get(currentPlayer).getPosition()).setLayout(new FlowLayout());
+//                    jLabelList.get(players.get(currentPlayer).getPosition()).add(buttons[currentPlayer], new GridLayout(4, 4));
+//
+//
+//                    bodyPanel.removeAll();
+//
+//                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
+//                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
+//                    bodyPanel.add(getEast(), BorderLayout.EAST);
+//                    bodyPanel.add(getWest(), BorderLayout.WEST);
+//                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
+//
+//                    bodyPanel.revalidate();
+//                    bodyPanel.repaint();
+//
+//                }
+//
+//                displayMessage("You landed on " + currentPosition.getName());
+//
+//                if (!gl.playerLandOnSquare(players.get(currentPlayer), currentPosition, gameboard, players)) {
+//                    GameFrame.super.dispose();
+//                }
+//
+//                if (rollDie == rollDie2) {
+//                    roll.setEnabled(true);
+//                    pt.setEnabled(false);
+//                    // doubles are rolled, same player goes again
+//
+//                }
+//
+//
+//            }
+//        });
+//
+//    }
 
     private void setupPlayerButtons() {
 
@@ -612,89 +630,92 @@ public class GameFrame extends JFrame {
         }
     }
 
-    private void buyPropertySetup() {
+//    private void buyPropertySetup() {
+//
+//        bp.setEnabled(false);
+//
+//        bp.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                gl.buyProperty(players.get(currentPlayer), gameboard);
+//
+//                bp.setEnabled(false);
+//            }
+//        });
+//
+//    }
+//
+//    private void passTurn() {
+//
+//        pt.setEnabled(false);
+//
+//        pt.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                currentPlayer = (currentPlayer + 1) % players.size();
+//
+//                roll.setEnabled(true);
+//                pt.setEnabled(false);
+//                bp.setEnabled(false);
+//
+//                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
+//
+//            }
+//        });
+//
+//    }
 
-        bp.setEnabled(false);
 
-        bp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gl.buyProperty(players.get(currentPlayer), gameboard);
+    /**
+     * Updates the GUI to reflect any changes made by the previous action. Also, hides certain buttons depending on the
+     * state of the game.
+     * @param gameModel
+     */
+    @Override
+    public void handleGameStatusUpdate(GameModel gameModel) {
+        //todo: update gameboard
 
-                bp.setEnabled(false);
-            }
-        });
+        for (Player player: gameModel.getPlayers())
+        {
+            jLabelList.get(player.getPosition()).add(new JLabel(player.getName()));
+        }
 
+        if (gameModel.getGameState() == GameModel.GameState.ADDING_PLAYERS)
+        {
+            // hide all buttons except for add player and start
+            addPlayers.setEnabled(true);
+            start.setEnabled(true);
+            roll.setEnabled(false);
+            bp.setEnabled(false);
+            pt.setEnabled(false);
+        }
+        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLING)
+        {
+            // hide all buttons except for roll
+            addPlayers.setEnabled(false);
+            start.setEnabled(false);
+            roll.setEnabled(true);
+            bp.setEnabled(false);
+            pt.setEnabled(false);
+        }
+        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
+                || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES)
+        {
+            // hide all buttons except for buy property and pass
+            addPlayers.setEnabled(false);
+            start.setEnabled(false);
+            roll.setEnabled(false);
+            bp.setEnabled(true);
+            pt.setEnabled(true);
+
+        }
+        else if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
+        {
+            //todo: handle a player winning
+        }
     }
-
-    private void passTurn() {
-
-        pt.setEnabled(false);
-
-        pt.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                currentPlayer = (currentPlayer + 1) % players.size();
-
-                roll.setEnabled(true);
-                pt.setEnabled(false);
-                bp.setEnabled(false);
-
-                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
-
-            }
-        });
-
-    }
-
-    public void displayGUI()
-    {
-        // Game is NOT called Monopoly due to copyright reasons
-
-        gameboard = gl.createGameboard();
-
-        getInitialSouthLabels();
-        getInitialWestLabels();
-        getInitialNorthLabels();
-        getInitialEastLabels();
-
-
-        bodyPanel.add(getNorth(), BorderLayout.NORTH);
-        bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-        bodyPanel.add(getCenter(), BorderLayout.CENTER);
-        bodyPanel.add(getEast(), BorderLayout.EAST);
-        bodyPanel.add(getWest(), BorderLayout.WEST);
-
-
-        addNewPlayers();
-
-        setupPlayerButtons();
-
-        startGame();
-        rollDice();
-        buyPropertySetup();
-
-        passTurn();
-
-
-        bodyPanel.setPreferredSize(new Dimension(1000, 1000));
-
-        JPanel mainPanel = new JPanel();
-
-
-        mainPanel.add(bodyPanel);
-
-        this.add(mainPanel);
-        this.pack();
-
-        this.setVisible(true);
-
-    }
-
 
     public static void main(String[] args) {
         GameFrame game = new GameFrame();
-
-        game.displayGUI();
     }
 }

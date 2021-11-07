@@ -18,6 +18,7 @@ public class Player {
     private final String name;
     private final List<Property> PROPERTIES;
     private int position;
+    private boolean bankrupt;
 
     /**
      * @author Himanshu Singh
@@ -31,6 +32,7 @@ public class Player {
         this.PROPERTIES = new ArrayList<>();
         this.name = name;
         this.money = money;
+        this.bankrupt = false;
     }
 
     /**
@@ -41,6 +43,23 @@ public class Player {
      */
     public void removeMoney(int money){
         this.money = this.money - money;
+    }
+
+    /**
+     * @author Robert Simionescu
+     * @return True if the player is bankrupt, false otherwise.
+     */
+    public boolean isBankrupt() {
+        return bankrupt;
+    }
+
+    /**
+     * Setter for the bankruptcy state of a player.
+     * @param bankruptcyState True if the player is bankrupt, false if they are not.
+     */
+    public void setBankruptcy(boolean bankruptcyState)
+    {
+        this.bankrupt = bankruptcyState;
     }
 
     /**
