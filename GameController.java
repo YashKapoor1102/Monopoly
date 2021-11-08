@@ -50,7 +50,7 @@ public class GameController implements ActionListener
      * @author Robert Simionescu and Yash Kapoor
      * Attempts to start the game. Outputs an error message if there are not enough players to begin.
      */
-    public void start()
+    private void start()
     {
         try
         {
@@ -70,7 +70,7 @@ public class GameController implements ActionListener
      * Attempts to purchase the property the requesting player is on. Outputs an error message if they attempt to purchase
      * something they cannot detailing the reason the purchase cannot be completed.
      */
-    public void buyProperty()
+    private void buyProperty()
     {
         try
         {
@@ -100,7 +100,7 @@ public class GameController implements ActionListener
      * @author Robert Simionescu and Yash Kapoor
      * Passes the turn to the next player and outputs a message indicating which player's turn it is.
      */
-    public void pass()
+    private void pass()
     {
 
         model.passTurn(false);
@@ -115,7 +115,7 @@ public class GameController implements ActionListener
      * the player landed on another player's property, displays the payment that must be made and a message if the player
      * cannot pay and has gone bankrupt.
      */
-    public void roll()
+    private void roll()
     {
         int[] roll = model.roll();
         if (roll[0] == roll[1])
