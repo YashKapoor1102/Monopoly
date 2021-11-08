@@ -21,7 +21,7 @@ public class GameModel {
 
 
 
-    public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, GAME_OVER;}
+    public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, GAME_OVER}
     private List<GameView> views;
 
     private GameState gameState;
@@ -326,24 +326,6 @@ public class GameModel {
         return false;
     }
 
-//    /**
-//     * Returns a Player in the game with the requested name. Throws a PlayerNotFoundException if there is no player
-//     * with that name.
-//     * @param name The name of the Player to get.
-//     * @return The Player with the requested name.
-//     */
-//    public Player getPlayer(String name)
-//    {
-//        for (Player player : players)
-//        {
-//            if (player.getName().equals(name))
-//            {
-//                return player;
-//            }
-//        }
-//        throw new PlayerNotFoundException("No player named " + name + " exists.");
-//    }
-
     /**
      * @author Robert Simionescu
      * Returns the list of players.
@@ -415,9 +397,7 @@ public class GameModel {
                 }
                 else
                 {
-                    if(bankruptcy(player, ((Property) square).getOwner())) {
-                        return false;
-                    }
+                    return !bankruptcy(player, ((Property) square).getOwner());
                 }
             }
         }

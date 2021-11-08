@@ -2,22 +2,28 @@ import gameexceptions.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.random;
 
 public class GameController implements ActionListener
 {
     GameModel model;
     List<GameView> views;
 
+    /**
+     * Constructor for a GameController. Takes a model and generates its list of views from the model.
+     * @param model The model this is a controller for.
+     */
     public GameController(GameModel model)
     {
         this.model = model;
         this.views = model.getGameViews();
     }
 
+    /**
+     * @author Robert Simionescu
+     * Displays a message to all views.
+     * @param message The message to be displayed.
+     */
     private void displayMessage(String message)
     {
         for (GameView view : views)
@@ -29,6 +35,10 @@ public class GameController implements ActionListener
         }
     }
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Attempts to start the game. Outputs an error message if there are not enough players to begin.
+     */
     public void start()
     {
         try
@@ -41,6 +51,11 @@ public class GameController implements ActionListener
         }
     }
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Attempts to purchase the property the requesting player is on. Outputs an error message if they attempt to purchase
+     * something they cannot detailing the reason the purchase cannot be completed.
+     */
     public void buyProperty()
     {
         try
@@ -67,12 +82,22 @@ public class GameController implements ActionListener
         }
     }
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Passes the turn to the next player and outputs a message indicating which player's turn it is.
+     */
     public void pass()
     {
         model.passTurn();
         displayMessage(model.getCurrentPlayer().getName() + "'s turn.");
     }
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Rolls the dice for a player and moves them the appropriate amount of squares. Outputs the results of the roll. If
+     * the player landed on another player's property, displays the payment that must be made and a message if the player
+     * cannot pay and has gone bankrupt.
+     */
     public void roll()
     {
         int[] roll = model.roll();
@@ -103,9 +128,14 @@ public class GameController implements ActionListener
         }
     }
 
-    private void addPlayers()
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Attempts to add a new player to the game with the name of their position (e.g. first player added will be named "1").
+     * Outputs an error message if adding the player failed.
+     */
+    private void addPlayer()
     {
-        Player newPlayer = new Player(String.valueOf(model.getPlayers().size() + 1), GameModel.STARTING_MONEY);    //todo: add a text input for the name
+        Player newPlayer = new Player(String.valueOf(model.getPlayers().size() + 1), GameModel.STARTING_MONEY);
 
         try
         {
@@ -123,34 +153,20 @@ public class GameController implements ActionListener
     }
 
     /**
-     * @Author Robert Simionescu and Yash Kapoor
+     * @author Robert Simionescu and Yash Kapoor
      * Handles all button presses in the game. Calls the corresponding methods in GameModel and outputs whatever messages
      * should be output to GameFrame.
-     * @param e
+     * @param e The actionevent that has occured.
      */
     @Override
     public void actionPerformed(ActionEvent e)
     {
         switch (e.getActionCommand()) {
-            case "Add Players":
-                addPlayers();
-                break;
-
-            case "Start":
-                start();
-                break;
-
-            case "Roll":
-                roll();
-                break;
-
-            case "Buy Property":
-                buyProperty();
-                break;
-
-            case "Pass turn":
-                pass();
-                break;
+            case "Add Players" -> addPlayer();
+            case "Start" -> start();
+            case "Roll" -> roll();
+            case "Buy Property" -> buyProperty();
+            case "Pass turn" -> pass();
         }
         for (GameView view : views)
         {

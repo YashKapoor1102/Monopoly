@@ -19,6 +19,10 @@ Game continues until there is one player remaining and all other players have go
 
  */
 
+/**
+ * @author Robert Simionescu and Yash Kapoor
+ * Class handling displaying the UI for Monopoly to the user.
+ */
 public class GameFrame extends JFrame implements GameView {
 
     private final JButton addPlayers;
@@ -38,6 +42,10 @@ public class GameFrame extends JFrame implements GameView {
     private final JPanel[] fullPlayerPanels;
     private final JPanel[] simplePlayerPanels;
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Constructor for a GameFrame. Initializes all the necessary Swing components to begin the game.
+     */
     public GameFrame() {
         // Game is NOT called Monopoly due to copyright reasons
         super("Funopoly");
@@ -45,10 +53,14 @@ public class GameFrame extends JFrame implements GameView {
         GameModel model = new GameModel();
         model.addGameView(this);
 
+        // Used to display all the players and their total money on the side of the screen at all times
         fullPlayerPanels = new JPanel[GameModel.MAX_PLAYERS];
+
+        // Used to indicate where the players are on the board
         simplePlayerPanels = new JPanel[GameModel.MAX_PLAYERS];
         playerNames = new JLabel[GameModel.MAX_PLAYERS];
 
+        // Initializes the panels that represent players with empty values.
         for (int i = 0; i < GameModel.MAX_PLAYERS; i++)
         {
             simplePlayerPanels[i] = new JPanel();
@@ -63,6 +75,7 @@ public class GameFrame extends JFrame implements GameView {
 
         }
 
+        // Text field that contains the past 3 messages to the user
         messageBox = new JPanel(new GridLayout(3, 1));
         messages = new JLabel[3];
         for (JLabel message : messages)
@@ -75,9 +88,10 @@ public class GameFrame extends JFrame implements GameView {
 
         displayMessage("Welcome to Funopoly! Add at least 2 players to begin.");
 
-
+        // List of labels used to represent each square
         jLabelList = new ArrayList<>();
 
+        // Buttons used to interface with the game
         addPlayers = new JButton("Add Players");
         start = new JButton("Start");
         roll = new JButton("Roll");
@@ -98,42 +112,46 @@ public class GameFrame extends JFrame implements GameView {
         bp.setEnabled(false);
         pt.setEnabled(false);
 
+        // The section of the UI that displays the gameboard, controls, message box, and the players on the board
         gameboardPanel = new JPanel(new BorderLayout());
+
+        // The section of the UI that displays the list of players and how much money they have
         playerPanel = new JPanel(new GridLayout(GameModel.MAX_PLAYERS, 1));
         playerPanel.setPreferredSize(new Dimension(220, 1000));
+
+        // The main panel that contains everything
         bodyPanel = new JPanel(new BorderLayout());
         bodyPanel.add(gameboardPanel, BorderLayout.CENTER);
         bodyPanel.add(playerPanel, BorderLayout.LINE_END);
 
-        // Close the JFrame when "x" is pressed
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        getInitialSouthLabels();
-        getInitialWestLabels();
-        getInitialNorthLabels();
-        getInitialEastLabels();
+        // Add all squares to the gameboardPanel
+        initializeSouthLabels();
+        initializeWestLabels();
+        initializeNorthLabels();
+        initializeEastLabels();
 
         gameboardPanel.add(getNorth(), BorderLayout.NORTH);
         gameboardPanel.add(getSouth(), BorderLayout.SOUTH);
         gameboardPanel.add(getCenter(), BorderLayout.CENTER);
         gameboardPanel.add(getEast(), BorderLayout.EAST);
         gameboardPanel.add(getWest(), BorderLayout.WEST);
-
         gameboardPanel.setPreferredSize(new Dimension(1000, 1000));
 
-        JPanel mainPanel = new JPanel();
+        // Close the JFrame when "x" is pressed
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
-        mainPanel.add(bodyPanel);
-
-        this.add(mainPanel);
+        this.add(bodyPanel);
         this.pack();
 
         this.setVisible(true);
 
     }
 
-    private void getInitialSouthLabels() {
+    /**
+     * @author Yash Kapoor
+     * Initializes all the labels on the south side of the board with their names and images.
+     */
+    private void initializeSouthLabels() {
         ImageIcon mediterraneanAvenue = new ImageIcon("Images/MediterraneanAvenue.PNG");
         Image ma = mediterraneanAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
         ImageIcon mt = new ImageIcon(ma);
@@ -191,7 +209,11 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
-    private void getInitialWestLabels() {
+    /**
+     * @author Yash Kapoor
+     * Initializes all the labels on the west side of the board with their names and images.
+     */
+    private void initializeWestLabels() {
         ImageIcon newYorkAvenue = new ImageIcon("Images/NewYorkAvenue.PNG");
         Image nya = newYorkAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
         ImageIcon ny = new ImageIcon(nya);
@@ -251,7 +273,11 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
-    private void getInitialNorthLabels() {
+    /**
+     * @author Yash Kapoor
+     * Initializes all the labels on the north side of the board with their names and images.
+     */
+    private void initializeNorthLabels() {
 
         ImageIcon kentuckyAvenue = new ImageIcon("Images/KentuckyAvenue.PNG");
         Image ka = kentuckyAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
@@ -310,7 +336,11 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
-    private void getInitialEastLabels() {
+    /**
+     * @author Yash Kapoor
+     * Initializes all the labels on the east side of the board with their names and images.
+     */
+    private void initializeEastLabels() {
 
         ImageIcon pacificAvenue = new ImageIcon("Images/PacificAvenue.PNG");
         Image pa = pacificAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
@@ -360,6 +390,11 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
+    /**
+     * @author Robert Simionescu
+     * Displays a message on the bottom of the message field. Shifts the existing messages up and removes the oldest one.
+     * @param message The message that will be displayed to the message board.
+     */
     public void displayMessage(String message)
     {
         ((JLabel)messageBox.getComponent(0)).setText(((JLabel)messageBox.getComponent(1)).getText());
@@ -367,6 +402,11 @@ public class GameFrame extends JFrame implements GameView {
         ((JLabel)messageBox.getComponent(2)).setText(message);
     }
 
+    /**
+     * @author Yash Kapoor
+     * Getter for the squares on the south side of the board.
+     * @return A JPanel with all the labels for the south side of the board.
+     */
     private JPanel getSouth() {
 
         JPanel south = new JPanel();
@@ -391,6 +431,11 @@ public class GameFrame extends JFrame implements GameView {
         return south;
     }
 
+    /**
+     * @author Yash Kapoor
+     * Getter for the squares on the west side of the board.
+     * @return A JPanel with all the labels for the west side of the board.
+     */
     private JPanel getWest() {
 
         JPanel west = new JPanel();
@@ -415,6 +460,11 @@ public class GameFrame extends JFrame implements GameView {
         return west;
     }
 
+    /**
+     * @author Yash Kapoor
+     * Getter for the squares on the north side of the board.
+     * @return A JPanel with all the labels for the north side of the board.
+     */
     private JPanel getNorth() {
 
         JPanel north = new JPanel();
@@ -442,6 +492,11 @@ public class GameFrame extends JFrame implements GameView {
         return north;
     }
 
+    /**
+     * @author Yash Kapoor
+     * Getter for the squares on the east side of the board.
+     * @return A JPanel with all the labels for the east side of the board.
+     */
     private JPanel getEast() {
 
         JPanel east = new JPanel();
@@ -467,6 +522,12 @@ public class GameFrame extends JFrame implements GameView {
         return east;
     }
 
+    /**
+     * @author Robert Simionescu and Yash Kapoor
+     * Getter for center of the board, containing the funopoly logo, the buttons used to interface with the game, and
+     * the message board.
+     * @return A JPanel with all the labels for the south side of the board.
+     */
     private JPanel getCenter() {
         JPanel center = new JPanel(new BorderLayout());
 
@@ -503,12 +564,12 @@ public class GameFrame extends JFrame implements GameView {
      * @author Robert Simionescu and Yash Kapoor
      * Updates the GUI to reflect any changes made by the previous action. Also, hides certain buttons depending on the
      * state of the game.
-     * @param gameModel
+     * @param gameModel The model to update the GUI to match.
      */
     @Override
     public void handleGameStatusUpdate(GameModel gameModel) {
-        //todo: update gameboard
 
+        // Clear everything in the UI to prevent duplicate entries from appearing
         for(JLabel label: jLabelList)
         {
             label.removeAll();
@@ -517,7 +578,7 @@ public class GameFrame extends JFrame implements GameView {
 
         for (int i = 0; i < gameModel.getPlayers().size(); i++)
         {
-            // Update player positions on the gameboard.
+            // Update player positions on the gameboard. Only display players that are not bankrupt.
             if (!gameModel.getPlayers().get(i).isBankrupt())
             {
                 simplePlayerPanels[i].setEnabled(true);
@@ -526,10 +587,11 @@ public class GameFrame extends JFrame implements GameView {
                 jLabelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
 
                 fullPlayerPanels[i].removeAll();
-                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: " + String.valueOf(gameModel.getPlayers().get(i).getMoney()) + "</html>"));
+                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: " + gameModel.getPlayers().get(i).getMoney() + "</html>"));
                 //fullPlayerPanels[i].add(new JLabel(String.valueOf(gameModel.getPlayers().get(i).getMoney())));
                 playerPanel.add(fullPlayerPanels[i]);
 
+                // Update all the property indicators on the board
                 for (Property property : gameModel.getPlayers().get(i).getProperties())
                 {
                     JPanel propertyPanel = new JPanel();
@@ -542,7 +604,9 @@ public class GameFrame extends JFrame implements GameView {
             }
             else
             {
+                // Remove bankrupt players from the gameboard.
                 simplePlayerPanels[i].setEnabled(false);
+                fullPlayerPanels[i].setEnabled(false);
             }
 
             gameboardPanel.removeAll();
@@ -595,7 +659,12 @@ public class GameFrame extends JFrame implements GameView {
         }
         else if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
         {
-            //todo: handle a player winning
+            displayMessage(gameModel.getCurrentPlayer().getName() + " wins!");
+            addPlayers.setEnabled(false);
+            start.setEnabled(false);
+            roll.setEnabled(false);
+            bp.setEnabled(false);
+            pt.setEnabled(false);
         }
     }
 
