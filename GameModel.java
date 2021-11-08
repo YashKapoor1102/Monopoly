@@ -326,23 +326,23 @@ public class GameModel {
         return false;
     }
 
-    /**
-     * Returns a Player in the game with the requested name. Throws a PlayerNotFoundException if there is no player
-     * with that name.
-     * @param name The name of the Player to get.
-     * @return The Player with the requested name.
-     */
-    public Player getPlayer(String name)
-    {
-        for (Player player : players)
-        {
-            if (player.getName().equals(name))
-            {
-                return player;
-            }
-        }
-        throw new PlayerNotFoundException("No player named " + name + " exists.");
-    }
+//    /**
+//     * Returns a Player in the game with the requested name. Throws a PlayerNotFoundException if there is no player
+//     * with that name.
+//     * @param name The name of the Player to get.
+//     * @return The Player with the requested name.
+//     */
+//    public Player getPlayer(String name)
+//    {
+//        for (Player player : players)
+//        {
+//            if (player.getName().equals(name))
+//            {
+//                return player;
+//            }
+//        }
+//        throw new PlayerNotFoundException("No player named " + name + " exists.");
+//    }
 
     /**
      * @author Robert Simionescu
