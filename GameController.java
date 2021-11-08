@@ -1,9 +1,20 @@
+/**
+ * @author Robert Simionescu and Yash Kapoor
+ * @version Milestone 2
+ */
+
 import gameexceptions.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * @author Yash Kapoor and Robert Simionescu
+ *
+ * Controller Class for GameModel
+ * Responsible for controlling the functions of the buttons
+ */
 public class GameController implements ActionListener
 {
     GameModel model;
@@ -43,6 +54,9 @@ public class GameController implements ActionListener
     {
         try
         {
+            // first player always starts
+            displayMessage("1's turn.");
+
             model.startGame();
         }
         catch (NotEnoughPlayersException exception)
@@ -88,8 +102,11 @@ public class GameController implements ActionListener
      */
     public void pass()
     {
-        model.passTurn();
+
+        model.passTurn(false);
+
         displayMessage(model.getCurrentPlayer().getName() + "'s turn.");
+
     }
 
     /**
@@ -110,21 +127,20 @@ public class GameController implements ActionListener
             displayMessage("You rolled a " + roll[0] + " and a " + roll[1] + ", so you will move " + (roll[0] + roll[1]) + " spaces.");
         }
 
-
         Square square = model.getGameboard().getSquare(model.getCurrentPlayer().getPosition());
-
 
         if (square instanceof Property)
         {
-            if (((Property)square).getOwner() != null)
+            if (((Property)square).getOwner() != null && ((Property)square).getOwner() != model.getCurrentPlayer())
             {
                 displayMessage("You have landed on " + ((Property)square).getOwner().getName() + "'s property and must pay them $" + ((Property)square).calculateRent(model.getGameboard()));
             }
         }
         if (model.getCurrentPlayer().isBankrupt())
         {
+            model.passTurn(true);
             displayMessage("You could not pay your dept and have gone bankrupt.");
-            pass();
+
         }
     }
 

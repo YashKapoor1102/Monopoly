@@ -1,6 +1,6 @@
 /**
  * @author Oliver Lu, Yash Kapoor, and Robert Simionescu
- * @version Milestone 1
+ * @version Milestone 2
  */
 
 import gameexceptions.*;
@@ -9,6 +9,8 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 /**
+ * @author Yash Kapoor and Robert Simionescu
+ *
  * GameModel Class that deals with the logic of the game
  * and uses GameFrame to print out important commands for each
  * player that is playing the game.
@@ -19,14 +21,12 @@ public class GameModel {
     public static final int MIN_PLAYERS = 2;
     public static final int STARTING_MONEY = 1500;
 
-
-
     public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, GAME_OVER}
     private List<GameView> views;
 
     private GameState gameState;
     private ArrayList<Player> players;
-    private GameFrame gui;
+
     private Gameboard gameboard;
     private int currentPlayer;
 
@@ -228,8 +228,7 @@ public class GameModel {
      */
     public int[] roll()
     {
-        if (gameState == GameState.PLAYER_ROLLING)
-        {
+        if (gameState == GameState.PLAYER_ROLLING) {
             int die1;
             int die2;
 
@@ -244,8 +243,11 @@ public class GameModel {
             rolls[1] = die2;
 
             int newPosition = (players.get(currentPlayer).getPosition() + rolls[0] + rolls[1]) % gameboard.getSquares().size();
+
+
             players.get(currentPlayer).setPosition(newPosition);
             playerLandOnSquare(players.get(currentPlayer), gameboard.getSquare(newPosition));
+
 
             if (gameState == GameState.GAME_OVER)
             {
@@ -268,29 +270,33 @@ public class GameModel {
         }
     }
 
-
     /**
-     * @author Robert Simionescu
+     * @author Robert Simionescu and Yash Kapoor
      * Changes the current player to the next one in the order, skipping bankrupt players. If the current player rolled
      * doubles on their previous roll, they go again.
+     *
+     * @param  playerBankrupt       a boolean, true if player is bankrupt, false otherwise
      */
-    public void passTurn()
+    public void passTurn(boolean playerBankrupt)
     {
         if (gameState == GameState.PLAYER_ROLLED_DOUBLES)
         {
             gameState = GameState.PLAYER_ROLLING;
         }
+
         else if (gameState == GameState.PLAYER_ROLLED_NORMAL)
         {
-            currentPlayer = (currentPlayer + 1) % players.size();
-            if (players.get(currentPlayer).isBankrupt())
-            {
-                passTurn();
-            }
-            else
-            {
+            if (!playerBankrupt) {
+                currentPlayer = (currentPlayer + 1) % players.size();
                 gameState = GameState.PLAYER_ROLLING;
             }
+            else {
+                // decrement currentPlayer counter by 1 to get the correct
+                // turn of the next available player if current player is
+                // bankrupt
+                currentPlayer = (currentPlayer - 1) % players.size();
+            }
+
         }
         else
         {
@@ -299,14 +305,14 @@ public class GameModel {
     }
 
 
-
     /**
      * @author Yash Kapoor and Robert Simionescu
      * Handles bankuptcy of a player. Bankrupt player forfeits all their properties to the player they are indepted to
      * and is removed from the game.
      * @param debtor Player who is in dept and has gone bankrupt.
      * @param creditor Player who is owed money by the bankrupt Player.
-     * @return      a boolean, notifying methods when there is only one player remaining and all other players have gone bankrupt.
+     *
+     * @return     a boolean, returns true indicating that the player has gone bankrupt
      */
     private boolean bankruptcy(Player debtor, Player creditor)
     {
@@ -317,13 +323,28 @@ public class GameModel {
         }
         debtor.setBankruptcy(true);
 
+        return true;
+    }
 
+    /**
+     * @author Yash Kapoor
+     * Checks to see if there is one player remaining
+     */
+    public void onePlayerRemaining() {
         if (players.size() == 1)
         {
-            gui.displayMessage(players.get(0).getName() + " has won!"); //TODO
-            return true;
+            gameState = GameState.GAME_OVER;
         }
-        return false;
+    }
+
+    /**
+     * @author Yash Kapoor
+     * Remove a player from the ArrayList
+     *
+     * @param player        a Player Object, the player to be removed
+     */
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 
     /**
@@ -379,7 +400,7 @@ public class GameModel {
      * @param player The player who has just rolled.
      * @param square The square on which they have landed.
      *
-     * @return      a boolean, false if there is only one player remaining, true otherwise
+     * @return      a boolean, true if player landing on the square has no money left (becomes bankrupt), false otherwise
      */
     public boolean playerLandOnSquare(Player player, Square square)
     {
@@ -397,11 +418,11 @@ public class GameModel {
                 }
                 else
                 {
-                    return !bankruptcy(player, ((Property) square).getOwner());
+                    return bankruptcy(player, ((Property) square).getOwner());
                 }
             }
         }
-        return true;
+        return false;
     }
 }
 

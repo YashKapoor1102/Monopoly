@@ -1,6 +1,6 @@
 /**
  * @author Robert Simionescu
- * @version Milestone 1
+ * @version Milestone 2
  */
 
 import java.util.*;

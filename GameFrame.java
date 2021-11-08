@@ -1,27 +1,17 @@
+/**
+ * @author Robert Simionescu and Yash Kapoor
+ * @version Milestone 2
+ */
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-
-/*
-
-INSTRUCTIONS:
-
-5 buttons: add players, start, roll, buy property, pass turn
-
-When you add players, they will appear on the board after you click "start"
-Maximum players = 8
-
-Each player appears on the board as a button (1, 2, 3, ..., n)
-You can click the individual buttons of the players to view their current state on the board.
-
-After you are done your turn, click "pass turn" to let the next player roll the dice.
-Game continues until there is one player remaining and all other players have gone bankrupt.
-
- */
 
 /**
  * @author Robert Simionescu and Yash Kapoor
- * Class handling displaying the UI for Monopoly to the user.
+ * Class handling the UI for Monopoly to the user.
  */
 public class GameFrame extends JFrame implements GameView {
 
@@ -60,20 +50,7 @@ public class GameFrame extends JFrame implements GameView {
         simplePlayerPanels = new JPanel[GameModel.MAX_PLAYERS];
         playerNames = new JLabel[GameModel.MAX_PLAYERS];
 
-        // Initializes the panels that represent players with empty values.
-        for (int i = 0; i < GameModel.MAX_PLAYERS; i++)
-        {
-            simplePlayerPanels[i] = new JPanel();
-            playerNames[i] = new JLabel();
-            simplePlayerPanels[i].setPreferredSize(new Dimension(52, 25));
-            simplePlayerPanels[i].setEnabled(false);
-            simplePlayerPanels[i].add(playerNames[i]);
-
-            fullPlayerPanels[i] = new JPanel(new GridLayout(1, 2));
-            fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
-            fullPlayerPanels[i].setEnabled(false);
-
-        }
+        this.setResizable(false);
 
         // Text field that contains the past 3 messages to the user
         messageBox = new JPanel(new GridLayout(3, 1));
@@ -137,8 +114,20 @@ public class GameFrame extends JFrame implements GameView {
         gameboardPanel.add(getWest(), BorderLayout.WEST);
         gameboardPanel.setPreferredSize(new Dimension(1000, 1000));
 
-        // Close the JFrame when "x" is pressed
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // ADD the window listener
+        // we no longer want the frame to close immediately when we press "x"
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?")
+                        == JOptionPane.OK_OPTION) {
+                    // close it down!
+                    setVisible(false);
+                    dispose();
+                }
+            }
+        });
 
         this.add(bodyPanel);
         this.pack();
@@ -581,14 +570,29 @@ public class GameFrame extends JFrame implements GameView {
             // Update player positions on the gameboard. Only display players that are not bankrupt.
             if (!gameModel.getPlayers().get(i).isBankrupt())
             {
+                // initializing panels
+                simplePlayerPanels[i] = new JPanel();
+                playerNames[i] = new JLabel();
+                simplePlayerPanels[i].setPreferredSize(new Dimension(52, 25));
+                simplePlayerPanels[i].setEnabled(false);
+                simplePlayerPanels[i].add(playerNames[i]);
+
+                fullPlayerPanels[i] = new JPanel(new GridLayout(1, 2));
+                fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
+                fullPlayerPanels[i].setEnabled(false);
+
+
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());
                 jLabelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
                 jLabelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
 
                 fullPlayerPanels[i].removeAll();
-                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: " + gameModel.getPlayers().get(i).getMoney() + "</html>"));
-                //fullPlayerPanels[i].add(new JLabel(String.valueOf(gameModel.getPlayers().get(i).getMoney())));
+
+                fullPlayerPanels[i].setBackground(new Color(255, 204, 204));
+
+                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: $" + gameModel.getPlayers().get(i).getMoney() + "</html>"));
+
                 playerPanel.add(fullPlayerPanels[i]);
 
                 // Update all the property indicators on the board
@@ -596,17 +600,41 @@ public class GameFrame extends JFrame implements GameView {
                 {
                     JPanel propertyPanel = new JPanel();
                     JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
+
+                    propertyLabel.setFont(new Font("Serif", Font.BOLD, 11));
                     propertyPanel.add(propertyLabel);
-                    propertyPanel.setPreferredSize(new Dimension(104, 25));
+
+                    propertyPanel.setPreferredSize(new Dimension(104, 17));
                     jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
                     jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel, new GridLayout(4, 4));
                 }
             }
-            else
+            else        // Otherwise, player is bankrupt
             {
+                fullPlayerPanels[i].removeAll();
+
+                // positioning these panels correctly if the current player needs to be removed
+                // since he/she is bankrupt
+                fullPlayerPanels[i].setBackground(new Color(255, 204, 204));
+
+                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: $" + gameModel.getPlayers().get(i).getMoney() + "</html>"));
+
+                playerPanel.add(fullPlayerPanels[(i + 1) % gameModel.getPlayers().size()]);
+
+                jLabelList.get(gameModel.getPlayers().get((i + 1) % gameModel.getPlayers().size()).getPosition()).add(simplePlayerPanels[(i + 1) % gameModel.getPlayers().size()], new GridLayout(4, 4));
+
+                revalidate();
+                repaint();
+
                 // Remove bankrupt players from the gameboard.
-                simplePlayerPanels[i].setEnabled(false);
-                fullPlayerPanels[i].setEnabled(false);
+                gameModel.removePlayer(gameModel.getPlayers().get(i));
+                gameModel.onePlayerRemaining();
+
+                if(gameModel.getGameState() != GameModel.GameState.GAME_OVER) {
+                    // if game isn't over, go to the next iteration of the for-loop
+                    continue;
+                }
+
             }
 
             gameboardPanel.removeAll();
@@ -621,7 +649,16 @@ public class GameFrame extends JFrame implements GameView {
             gameboardPanel.repaint();
         }
 
-        if (gameModel.getGameState() == GameModel.GameState.ADDING_PLAYERS)
+        if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
+        {
+            JOptionPane.showMessageDialog(null, gameModel.getPlayers().get(0).getName() + " wins!");
+            addPlayers.setEnabled(false);
+            start.setEnabled(false);
+            roll.setEnabled(false);
+            bp.setEnabled(false);
+            pt.setEnabled(false);
+        }
+        else if (gameModel.getGameState() == GameModel.GameState.ADDING_PLAYERS)
         {
             // disable all buttons except for add player and start. Enable start only if the minimum number of players has been reached.
             start.setEnabled(gameModel.getPlayers().size() >= GameModel.MIN_PLAYERS);
@@ -630,8 +667,31 @@ public class GameFrame extends JFrame implements GameView {
             bp.setEnabled(false);
             pt.setEnabled(false);
         }
-        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLING)
+        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
+                || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES)
         {
+            bp.setEnabled(false);
+            // disable all buttons except for buy property and pass. Enable buy property only if the property is not owned.
+
+            try {
+                if (gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition()) instanceof Property) {
+                    if (((Property) gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition())).getOwner() == null) {
+                        bp.setEnabled(true);
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+                bp.setEnabled(false);
+            }
+
+            addPlayers.setEnabled(false);
+            start.setEnabled(false);
+            roll.setEnabled(false);
+            pt.setEnabled(true);
+
+        }
+        else
+        {
+            // Otherwise, the GameState == PLAYER_ROLLING
             // disable all buttons except for roll
             addPlayers.setEnabled(false);
             start.setEnabled(false);
@@ -639,36 +699,10 @@ public class GameFrame extends JFrame implements GameView {
             bp.setEnabled(false);
             pt.setEnabled(false);
         }
-        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
-                || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES)
-        {
-            bp.setEnabled(false);
-            // disable all buttons except for buy property and pass. Enable buy property only if the property is not owned.
-            if (gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition()) instanceof Property)
-            {
-                if (((Property)gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition())).getOwner() == null)
-                {
-                    bp.setEnabled(true);
-                }
-            }
-            addPlayers.setEnabled(false);
-            start.setEnabled(false);
-            roll.setEnabled(false);
-            pt.setEnabled(true);
 
-        }
-        else if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
-        {
-            displayMessage(gameModel.getCurrentPlayer().getName() + " wins!");
-            addPlayers.setEnabled(false);
-            start.setEnabled(false);
-            roll.setEnabled(false);
-            bp.setEnabled(false);
-            pt.setEnabled(false);
-        }
     }
 
     public static void main(String[] args) {
-        GameFrame game = new GameFrame();
+        new GameFrame();
     }
 }
