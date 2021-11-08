@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class GameController implements ActionListener
 {
-    GameModel model;
-    List<GameView> views;
+    private GameModel model;
+    private List<GameView> views;
 
     /**
      * Constructor for a GameController. Takes a model and generates its list of views from the model.
