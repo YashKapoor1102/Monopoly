@@ -93,7 +93,7 @@ public class GameController implements ActionListener
         {
             if (((Property)square).getOwner() != null)
             {
-                displayMessage("You must pay $" + ((Property)square).calculateRent(model.getGameboard()) + " to " + ((Property)square).getOwner().getName());
+                displayMessage("You have landed on " + ((Property)square).getOwner().getName() + "'s property and must pay them $" + ((Property)square).calculateRent(model.getGameboard()));
             }
         }
         if (model.getCurrentPlayer().isBankrupt())
@@ -105,7 +105,7 @@ public class GameController implements ActionListener
 
     private void addPlayers()
     {
-        Player newPlayer = new Player(String.valueOf(random()), GameModel.STARTING_MONEY);    //todo: add a text input for the name
+        Player newPlayer = new Player(String.valueOf(model.getPlayers().size() + 1), GameModel.STARTING_MONEY);    //todo: add a text input for the name
 
         try
         {

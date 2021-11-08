@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 
 /*
@@ -29,22 +28,53 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton pt;
 
     private final ArrayList<JLabel> jLabelList;
+    private final JPanel gameboardPanel;
+    private final JPanel playerPanel;
     private final JPanel bodyPanel;
 
-    private int clicks;
-
-
-    private final JButton[] buttons;
-
-    private Gameboard gameboard;
+    private final JPanel messageBox;
+    private final JLabel[] messages;
+    private final JLabel[] playerNames;
+    private final JPanel[] fullPlayerPanels;
+    private final JPanel[] simplePlayerPanels;
 
     public GameFrame() {
+        // Game is NOT called Monopoly due to copyright reasons
         super("Funopoly");
 
         GameModel model = new GameModel();
         model.addGameView(this);
 
-        buttons = new JButton[8];
+        fullPlayerPanels = new JPanel[GameModel.MAX_PLAYERS];
+        simplePlayerPanels = new JPanel[GameModel.MAX_PLAYERS];
+        playerNames = new JLabel[GameModel.MAX_PLAYERS];
+
+        for (int i = 0; i < GameModel.MAX_PLAYERS; i++)
+        {
+            simplePlayerPanels[i] = new JPanel();
+            playerNames[i] = new JLabel();
+            simplePlayerPanels[i].setPreferredSize(new Dimension(52, 25));
+            simplePlayerPanels[i].setEnabled(false);
+            simplePlayerPanels[i].add(playerNames[i]);
+
+            fullPlayerPanels[i] = new JPanel(new GridLayout(1, 2));
+            fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
+            fullPlayerPanels[i].setEnabled(false);
+
+        }
+
+        messageBox = new JPanel(new GridLayout(3, 1));
+        messages = new JLabel[3];
+        for (JLabel message : messages)
+        {
+            message = new JLabel();
+            message.setHorizontalAlignment(SwingConstants.CENTER);
+            message.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+            messageBox.add(message);
+        }
+
+        displayMessage("Welcome to Funopoly! Add at least 2 players to begin.");
+
 
         jLabelList = new ArrayList<>();
 
@@ -68,36 +98,28 @@ public class GameFrame extends JFrame implements GameView {
         bp.setEnabled(false);
         pt.setEnabled(false);
 
+        gameboardPanel = new JPanel(new BorderLayout());
+        playerPanel = new JPanel(new GridLayout(GameModel.MAX_PLAYERS, 1));
+        playerPanel.setPreferredSize(new Dimension(220, 1000));
         bodyPanel = new JPanel(new BorderLayout());
-
-        clicks = 0;
+        bodyPanel.add(gameboardPanel, BorderLayout.CENTER);
+        bodyPanel.add(playerPanel, BorderLayout.LINE_END);
 
         // Close the JFrame when "x" is pressed
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        // Game is NOT called Monopoly due to copyright reasons
 
         getInitialSouthLabels();
         getInitialWestLabels();
         getInitialNorthLabels();
         getInitialEastLabels();
 
-        bodyPanel.add(getNorth(), BorderLayout.NORTH);
-        bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-        bodyPanel.add(getCenter(), BorderLayout.CENTER);
-        bodyPanel.add(getEast(), BorderLayout.EAST);
-        bodyPanel.add(getWest(), BorderLayout.WEST);
+        gameboardPanel.add(getNorth(), BorderLayout.NORTH);
+        gameboardPanel.add(getSouth(), BorderLayout.SOUTH);
+        gameboardPanel.add(getCenter(), BorderLayout.CENTER);
+        gameboardPanel.add(getEast(), BorderLayout.EAST);
+        gameboardPanel.add(getWest(), BorderLayout.WEST);
 
-        setupPlayerButtons();
-
-//        startGame();
-//        rollDice();
-//        buyPropertySetup();
-//
-//        passTurn();
-
-
-        bodyPanel.setPreferredSize(new Dimension(1000, 1000));
+        gameboardPanel.setPreferredSize(new Dimension(1000, 1000));
 
         JPanel mainPanel = new JPanel();
 
@@ -340,7 +362,9 @@ public class GameFrame extends JFrame implements GameView {
 
     public void displayMessage(String message)
     {
-        JOptionPane.showMessageDialog(null, message);
+        ((JLabel)messageBox.getComponent(0)).setText(((JLabel)messageBox.getComponent(1)).getText());
+        ((JLabel)messageBox.getComponent(1)).setText(((JLabel)messageBox.getComponent(2)).getText());
+        ((JLabel)messageBox.getComponent(2)).setText(message);
     }
 
     private JPanel getSouth() {
@@ -444,7 +468,8 @@ public class GameFrame extends JFrame implements GameView {
     }
 
     private JPanel getCenter() {
-        JPanel center = new JPanel();
+        JPanel center = new JPanel(new BorderLayout());
+
 
         JLabel funopoly = new JLabel();
         ImageIcon fun = new ImageIcon("Images/Funopoly.png");
@@ -452,221 +477,30 @@ public class GameFrame extends JFrame implements GameView {
         ImageIcon bd = new ImageIcon(f);
 
         funopoly.setIcon(bd);
+        center.add(funopoly, BorderLayout.CENTER);
 
-        funopoly.setLayout(new FlowLayout());
-        funopoly.add(addPlayers);
-        funopoly.add(start);
-        funopoly.add(roll);
-        funopoly.add(bp);
-        funopoly.add(pt);
 
-        center.add(funopoly);
+        JPanel buttons = new JPanel(new FlowLayout());
+        buttons.add(addPlayers);
+        buttons.add(start);
+        buttons.add(roll);
+        buttons.add(bp);
+        buttons.add(pt);
+
+        buttons.setBackground(new Color (187, 255, 202));
+
+        center.add(buttons, BorderLayout.PAGE_START);
+
+        center.add(messageBox, BorderLayout.PAGE_END);
+
 
         return center;
 
     }
 
 
-
-//    private void startGame() {
-//
-//        start.setEnabled(false);
-//
-//        start.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//                roll.setEnabled(true);
-//                start.setEnabled(false);
-//                addPlayers.setEnabled(false);
-//
-//
-//                ActionListener listener = new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        if(e.getSource() instanceof JButton) {
-//
-//                            for(int k = 0; k < buttons.length; k++) {
-//
-//                                if(buttons[k] == e.getSource()) {
-//                                    gl.inspectPlayer(players.get(k).getName(), players);
-//                                }
-//
-//                            }
-//
-//                        }
-//                    }
-//                };
-//
-//                for(int j = 0; j < players.size(); j++) {
-//
-//                    buttons[j].addActionListener(listener);
-//
-//                }
-//
-//                for(int i = 0; i < players.size(); i++) {
-//
-//
-//                    buttons[i].setVisible(true);
-//
-//
-//                    jLabelList.get(0).setLayout(new FlowLayout());
-//                    jLabelList.get(0).add(buttons[i], new GridLayout(4, 4));
-//
-//                    bodyPanel.removeAll();
-//
-//                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-//                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
-//                    bodyPanel.add(getEast(), BorderLayout.EAST);
-//                    bodyPanel.add(getWest(), BorderLayout.WEST);
-//                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
-//
-//                    bodyPanel.revalidate();
-//                    bodyPanel.repaint();
-//
-//                }
-//
-//                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
-//
-//
-//                roll.setVisible(true);
-//
-//            }
-//        });
-//    }
-//
-//    private void rollDice() {
-//
-//        roll.setEnabled(false);
-//
-//        roll.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//                StringBuilder sb = new StringBuilder();
-//
-//                roll.setEnabled(false);
-//                bp.setEnabled(true);
-//                pt.setEnabled(true);
-//
-//
-//                int rollDie = gl.calculateRoll().get(0);
-//                int rollDie2 = gl.calculateRoll().get(1);
-//
-//
-//                sb.append("You rolled a " + rollDie + " and a " + rollDie2);
-//
-//                int sum = rollDie + rollDie2;
-//                if (rollDie != rollDie2)
-//                {
-//                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard.");
-//                }
-//                else
-//                {
-//                    sb.append("\nHence, you will move " + sum + " spaces on the gameboard\nand will get to roll again.");
-//                }
-//
-//                displayMessage(sb.toString());
-//
-//                int newPosition = (players.get(currentPlayer).getPosition() + sum) % gameboard.getSquares().size();
-//
-//                players.get(currentPlayer).setPosition(newPosition);
-//
-//                // getting the square that the user is currently on
-//                Square currentPosition = gameboard.getSquare(players.get(currentPlayer).getPosition());
-//
-//
-//                if(currentPosition.getName().equals(jLabelList.get(newPosition).getName())) {
-//
-//                    jLabelList.get(players.get(currentPlayer).getPosition()).setLayout(new FlowLayout());
-//                    jLabelList.get(players.get(currentPlayer).getPosition()).add(buttons[currentPlayer], new GridLayout(4, 4));
-//
-//
-//                    bodyPanel.removeAll();
-//
-//                    bodyPanel.add(getSouth(), BorderLayout.SOUTH);
-//                    bodyPanel.add(getNorth(), BorderLayout.NORTH);
-//                    bodyPanel.add(getEast(), BorderLayout.EAST);
-//                    bodyPanel.add(getWest(), BorderLayout.WEST);
-//                    bodyPanel.add(getCenter(), BorderLayout.CENTER);
-//
-//                    bodyPanel.revalidate();
-//                    bodyPanel.repaint();
-//
-//                }
-//
-//                displayMessage("You landed on " + currentPosition.getName());
-//
-//                if (!gl.playerLandOnSquare(players.get(currentPlayer), currentPosition, gameboard, players)) {
-//                    GameFrame.super.dispose();
-//                }
-//
-//                if (rollDie == rollDie2) {
-//                    roll.setEnabled(true);
-//                    pt.setEnabled(false);
-//                    // doubles are rolled, same player goes again
-//
-//                }
-//
-//
-//            }
-//        });
-//
-//    }
-
-    private void setupPlayerButtons() {
-
-        for(int i = 0; i < buttons.length; i++) {
-
-            JButton button = new JButton();
-
-            int playerNumber = i + 1;
-
-            button.setVisible(false);
-            button.setName("" + playerNumber);
-            button.setText("" + playerNumber);
-            buttons[i] = button;
-
-        }
-    }
-
-//    private void buyPropertySetup() {
-//
-//        bp.setEnabled(false);
-//
-//        bp.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                gl.buyProperty(players.get(currentPlayer), gameboard);
-//
-//                bp.setEnabled(false);
-//            }
-//        });
-//
-//    }
-//
-//    private void passTurn() {
-//
-//        pt.setEnabled(false);
-//
-//        pt.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                currentPlayer = (currentPlayer + 1) % players.size();
-//
-//                roll.setEnabled(true);
-//                pt.setEnabled(false);
-//                bp.setEnabled(false);
-//
-//                displayMessage("Player " + (currentPlayer + 1) + "'s turn");
-//
-//            }
-//        });
-//
-//    }
-
-
     /**
+     * @author Robert Simionescu and Yash Kapoor
      * Updates the GUI to reflect any changes made by the previous action. Also, hides certain buttons depending on the
      * state of the game.
      * @param gameModel
@@ -675,23 +509,66 @@ public class GameFrame extends JFrame implements GameView {
     public void handleGameStatusUpdate(GameModel gameModel) {
         //todo: update gameboard
 
-        for (Player player: gameModel.getPlayers())
+        for(JLabel label: jLabelList)
         {
-            jLabelList.get(player.getPosition()).add(new JLabel(player.getName()));
+            label.removeAll();
+        }
+        playerPanel.removeAll();
+
+        for (int i = 0; i < gameModel.getPlayers().size(); i++)
+        {
+            // Update player positions on the gameboard.
+            if (!gameModel.getPlayers().get(i).isBankrupt())
+            {
+                simplePlayerPanels[i].setEnabled(true);
+                playerNames[i].setText(gameModel.getPlayers().get(i).getName());
+                jLabelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
+                jLabelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
+
+                fullPlayerPanels[i].removeAll();
+                fullPlayerPanels[i].add(new JLabel("<html>Name: " + gameModel.getPlayers().get(i).getName() + "<br/>Money: " + String.valueOf(gameModel.getPlayers().get(i).getMoney()) + "</html>"));
+                //fullPlayerPanels[i].add(new JLabel(String.valueOf(gameModel.getPlayers().get(i).getMoney())));
+                playerPanel.add(fullPlayerPanels[i]);
+
+                for (Property property : gameModel.getPlayers().get(i).getProperties())
+                {
+                    JPanel propertyPanel = new JPanel();
+                    JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
+                    propertyPanel.add(propertyLabel);
+                    propertyPanel.setPreferredSize(new Dimension(104, 25));
+                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
+                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel, new GridLayout(4, 4));
+                }
+            }
+            else
+            {
+                simplePlayerPanels[i].setEnabled(false);
+            }
+
+            gameboardPanel.removeAll();
+
+            gameboardPanel.add(getSouth(), BorderLayout.SOUTH);
+            gameboardPanel.add(getNorth(), BorderLayout.NORTH);
+            gameboardPanel.add(getEast(), BorderLayout.EAST);
+            gameboardPanel.add(getWest(), BorderLayout.WEST);
+            gameboardPanel.add(getCenter(), BorderLayout.CENTER);
+
+            gameboardPanel.revalidate();
+            gameboardPanel.repaint();
         }
 
         if (gameModel.getGameState() == GameModel.GameState.ADDING_PLAYERS)
         {
-            // hide all buttons except for add player and start
+            // disable all buttons except for add player and start. Enable start only if the minimum number of players has been reached.
+            start.setEnabled(gameModel.getPlayers().size() >= GameModel.MIN_PLAYERS);
             addPlayers.setEnabled(true);
-            start.setEnabled(true);
             roll.setEnabled(false);
             bp.setEnabled(false);
             pt.setEnabled(false);
         }
         else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLING)
         {
-            // hide all buttons except for roll
+            // disable all buttons except for roll
             addPlayers.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(true);
@@ -701,11 +578,18 @@ public class GameFrame extends JFrame implements GameView {
         else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
                 || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES)
         {
-            // hide all buttons except for buy property and pass
+            bp.setEnabled(false);
+            // disable all buttons except for buy property and pass. Enable buy property only if the property is not owned.
+            if (gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition()) instanceof Property)
+            {
+                if (((Property)gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition())).getOwner() == null)
+                {
+                    bp.setEnabled(true);
+                }
+            }
             addPlayers.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(false);
-            bp.setEnabled(true);
             pt.setEnabled(true);
 
         }

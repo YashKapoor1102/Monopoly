@@ -326,45 +326,6 @@ public class GameModel {
         return false;
     }
 
-
-    /**
-     * @author Yash Kapoor and Robert Simionescu
-     * player can view the state of any player by typing their name
-     * state displays where they are on the gameboard, how much money they have,
-     * and the list of properties that they currently own.
-     */
-    public void inspectPlayer(String name, ArrayList<Player> players)
-    {
-
-        gui = new GameFrame();
-        StringBuilder sb = new StringBuilder();
-
-        for(Player p: players) {
-
-            if(p.getName().equals(name)) {
-                gui = new GameFrame();
-
-                // entered player matches the one found by the loop
-                // display their state
-
-                sb.append(p.getName() + " has $" + p.getMoney() + "\n");
-
-                try {
-                    sb.append(name + " is currently on " + gameboard.getSquare(p.getPosition()) + "\n");
-                } catch (IndexOutOfBoundsException e) {
-                    sb.append(p.getName() + " is currently on " + gameboard.getSquare(0) + "\n");
-                }
-                sb.append(p.getName() + " currently owns " + p.getProperties().toString() + "\n");
-                // [] (Empty List) indicates player owns no properties
-
-            }
-
-        }
-
-        gui.displayMessage(sb.toString());
-
-    }
-
     /**
      * Returns a Player in the game with the requested name. Throws a PlayerNotFoundException if there is no player
      * with that name.
@@ -451,13 +412,9 @@ public class GameModel {
                 {
                     player.removeMoney(((Property) square).calculateRent(gameboard));
                     ((Property) square).getOwner().addMoney(((Property) square).calculateRent(gameboard));
-                    gui.displayMessage(player.getName()
-                            + " pays $" + ((Property) square).calculateRent(gameboard)
-                            + " to " + ((Property) square).getOwner().getName());
                 }
                 else
                 {
-                    gui.displayMessage(player.getName() + " could not pay their rent and has gone bankrupt. All their property has been transfered to " + ((Property) square).getOwner().getName() + ".");
                     if(bankruptcy(player, ((Property) square).getOwner())) {
                         return false;
                     }
