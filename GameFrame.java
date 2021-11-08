@@ -581,6 +581,19 @@ public class GameFrame extends JFrame implements GameView {
                 fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
                 fullPlayerPanels[i].setEnabled(false);
 
+                // Update all the property indicators on the board
+                for (Property property : gameModel.getPlayers().get(i).getProperties())
+                {
+                    JPanel propertyPanel = new JPanel();
+                    JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
+
+                    propertyLabel.setFont(new Font("Sans Serif", Font.BOLD, 11));
+                    propertyPanel.add(propertyLabel);
+
+                    propertyPanel.setPreferredSize(new Dimension(104, 25));
+                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
+                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel, new GridLayout(4, 4));
+                }
 
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());
@@ -595,19 +608,6 @@ public class GameFrame extends JFrame implements GameView {
 
                 playerPanel.add(fullPlayerPanels[i]);
 
-                // Update all the property indicators on the board
-                for (Property property : gameModel.getPlayers().get(i).getProperties())
-                {
-                    JPanel propertyPanel = new JPanel();
-                    JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
-
-                    propertyLabel.setFont(new Font("Serif", Font.BOLD, 11));
-                    propertyPanel.add(propertyLabel);
-
-                    propertyPanel.setPreferredSize(new Dimension(104, 17));
-                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
-                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel, new GridLayout(4, 4));
-                }
             }
             else        // Otherwise, player is bankrupt
             {
