@@ -93,6 +93,15 @@ public class GameModel {
     }
 
     /**
+     * @author Robert Simionescu
+     * Meant for testing purposes
+     * @return The current GameState.
+     */
+    public void setGameState(GameState gm){
+        this.gameState = gm;
+    }
+
+    /**
      * @author Yash Kapoor and Robert Simionescu
      * Creating the gameboard by adding squares to it.
      * Those squares can represent properties (e.g., streets) and the initial starting point.
@@ -295,6 +304,7 @@ public class GameModel {
                 // bankrupt
                 currentPlayer = (currentPlayer - 1) % players.size();
             }
+
 
         }
         else

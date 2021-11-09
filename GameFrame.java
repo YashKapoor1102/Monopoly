@@ -548,7 +548,6 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
-
     /**
      * @author Robert Simionescu and Yash Kapoor
      * Updates the GUI to reflect any changes made by the previous action. Also, hides certain buttons depending on the
