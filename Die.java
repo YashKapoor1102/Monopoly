@@ -1,12 +1,11 @@
 /**
- * @author Yash Kapoor (Student ID: 101163338)
- * @version Milestone 2
+ * @author Yash Kapoor
+ * @version Milestone 3
  */
 
 import java.util.Random;
 
 /**
- * @author Yash Kapoor
  * Die Class that creates a die with
  * a specific number of sides.
  *

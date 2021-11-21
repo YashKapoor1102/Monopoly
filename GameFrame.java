@@ -1,12 +1,11 @@
 /**
  * @author Robert Simionescu and Yash Kapoor
- * @version Milestone 2
+ * @version Milestone 3
  */
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -20,8 +19,16 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton roll;
     private final JButton bp;
     private final JButton pt;
+    private final JButton jail;
+    private final JButton build;
 
-    private final ArrayList<JLabel> jLabelList;
+    private GameController gameController;
+
+    // Buttons to be implemented in Milestone 4
+    private final JButton save;
+    private final JButton load;
+
+    private ArrayList<JLabel> jLabelList;
     private final JPanel gameboardPanel;
     private final JPanel playerPanel;
     private final JPanel bodyPanel;
@@ -53,10 +60,9 @@ public class GameFrame extends JFrame implements GameView {
         this.setResizable(false);
 
         // Text field that contains the past 3 messages to the user
-        messageBox = new JPanel(new GridLayout(3, 1));
-        messages = new JLabel[3];
-        for (JLabel message : messages)
-        {
+        messageBox = new JPanel(new GridLayout(4, 1));
+        messages = new JLabel[4];
+        for (JLabel message : messages) {
             message = new JLabel();
             message.setHorizontalAlignment(SwingConstants.CENTER);
             message.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
@@ -74,19 +80,29 @@ public class GameFrame extends JFrame implements GameView {
         roll = new JButton("Roll");
         bp = new JButton("Buy Property");
         pt = new JButton("Pass turn");
+        jail = new JButton("Get Out of Jail");
+        build = new JButton("Build");
+        save = new JButton("Save");
+        load = new JButton("Load");
 
-        GameController gameController = new GameController(model);
+        gameController = new GameController(model);
 
         addPlayers.addActionListener(gameController);
         start.addActionListener(gameController);
         roll.addActionListener(gameController);
         bp.addActionListener(gameController);
+        build.addActionListener(gameController);
+        jail.addActionListener(gameController);
         pt.addActionListener(gameController);
+        save.addActionListener(gameController);
+        load.addActionListener(gameController);
 
         addPlayers.setEnabled(true);
         start.setEnabled(false);
         roll.setEnabled(false);
         bp.setEnabled(false);
+        jail.setEnabled(false);
+        build.setEnabled(false);
         pt.setEnabled(false);
 
         // The section of the UI that displays the gameboard, controls, message box, and the players on the board
@@ -142,28 +158,36 @@ public class GameFrame extends JFrame implements GameView {
      */
     private void initializeSouthLabels() {
         ImageIcon mediterraneanAvenue = new ImageIcon("Images/MediterraneanAvenue.PNG");
-        Image ma = mediterraneanAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ma = mediterraneanAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon mt = new ImageIcon(ma);
 
         ImageIcon balticAvenue = new ImageIcon("Images/BalticAvenue.PNG");
-        Image ba = balticAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ba = balticAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon b = new ImageIcon(ba);
 
+        ImageIcon readingRailroad = new ImageIcon("Images/ReadingRailroad.PNG");
+        Image rr = readingRailroad.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
+        ImageIcon r = new ImageIcon(rr);
+
         ImageIcon orientalAvenue = new ImageIcon("Images/OrientalAvenue.PNG");
-        Image oa = orientalAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image oa = orientalAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon o = new ImageIcon(oa);
 
         ImageIcon vermontAvenue = new ImageIcon("Images/VermontAvenue.PNG");
-        Image vma = vermontAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image vma = vermontAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon vm = new ImageIcon(vma);
 
         ImageIcon connecticutAvenue = new ImageIcon("Images/ConnecticutAvenue.PNG");
-        Image ca = connecticutAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ca = connecticutAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon c = new ImageIcon(ca);
 
         ImageIcon startingPoint = new ImageIcon("Images/StartingPoint.PNG");
-        Image sp = startingPoint.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image sp = startingPoint.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon s = new ImageIcon(sp);
+
+        ImageIcon jail = new ImageIcon("Images/Jail.PNG");
+        Image jl = jail.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
+        ImageIcon j = new ImageIcon(jl);
 
 
         JLabel spl = new JLabel();
@@ -181,20 +205,30 @@ public class GameFrame extends JFrame implements GameView {
         btal.setName("Baltic Avenue");
         jLabelList.add(2, btal);
 
+        JLabel rrl = new JLabel();
+        rrl.setIcon(r);
+        rrl.setName("Reading Railroad");
+        jLabelList.add(3, rrl);
+
         JLabel oal = new JLabel();
         oal.setIcon(o);
         oal.setName("Oriental Avenue");
-        jLabelList.add(3, oal);
+        jLabelList.add(4, oal);
 
         JLabel vtal = new JLabel();
         vtal.setIcon(vm);
         vtal.setName("Vermont Avenue");
-        jLabelList.add(4, vtal);
+        jLabelList.add(5, vtal);
 
         JLabel cal = new JLabel();
         cal.setIcon(c);
         cal.setName("Connecticut Avenue");
-        jLabelList.add(5, cal);
+        jLabelList.add(6, cal);
+
+        JLabel jll = new JLabel();
+        jll.setIcon(j);
+        jll.setName("Jail");
+        jLabelList.add(7, jll);
 
     }
 
@@ -204,61 +238,78 @@ public class GameFrame extends JFrame implements GameView {
      */
     private void initializeWestLabels() {
         ImageIcon newYorkAvenue = new ImageIcon("Images/NewYorkAvenue.PNG");
-        Image nya = newYorkAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image nya = newYorkAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon ny = new ImageIcon(nya);
 
         ImageIcon tennesseeAvenue = new ImageIcon("Images/TennesseeAvenue.PNG");
-        Image ta = tennesseeAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image ta = tennesseeAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon t = new ImageIcon(ta);
 
         ImageIcon stJamesPlace = new ImageIcon("Images/StJamesPlace.PNG");
-        Image sjp = stJamesPlace.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image sjp = stJamesPlace.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon sj = new ImageIcon(sjp);
 
+        ImageIcon pennsylvaniaRailroad = new ImageIcon("Images/PennsylvaniaRailroad.PNG");
+        Image pr = pennsylvaniaRailroad.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
+        ImageIcon p = new ImageIcon(pr);
+
         ImageIcon virginiaAvenue = new ImageIcon("Images/VirginiaAvenue.PNG");
-        Image vga = virginiaAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image vga = virginiaAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon vg = new ImageIcon(vga);
 
         ImageIcon statesAvenue = new ImageIcon("Images/StatesAvenue.PNG");
-        Image sta = statesAvenue.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image sta = statesAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon st = new ImageIcon(sta);
 
+        ImageIcon electricCompany = new ImageIcon("Images/ElectricCompany.PNG");
+        Image ec = electricCompany.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
+        ImageIcon e = new ImageIcon(ec);
+
         ImageIcon stCharlesPlace = new ImageIcon("Images/StCharlesPlace.PNG");
-        Image scp = stCharlesPlace.getImage().getScaledInstance(140, 117, Image.SCALE_DEFAULT);
+        Image scp = stCharlesPlace.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon sc = new ImageIcon(scp);
 
 
         JLabel scpl = new JLabel();
         scpl.setIcon(sc);
         scpl.setName("St. Charles Place");
-        jLabelList.add(6, scpl);
+        jLabelList.add(8, scpl);
+
+        JLabel ecl = new JLabel();
+        ecl.setIcon(e);
+        ecl.setName("Electric Company");
+        jLabelList.add(9, ecl);
 
         JLabel sal = new JLabel();
         sal.setIcon(st);
         sal.setName("States Avenue");
-        jLabelList.add(7, sal);
+        jLabelList.add(10, sal);
 
         JLabel vgal = new JLabel();
         vgal.setIcon(vg);
         vgal.setName("Virginia Avenue");
-        jLabelList.add(8, vgal);
+        jLabelList.add(11, vgal);
 
+        JLabel prl = new JLabel();
+        prl.setIcon(p);
+        prl.setName("Pennsylvania Railroad");
+        jLabelList.add(12, prl);
 
         JLabel sjpl = new JLabel();
         sjpl.setIcon(sj);
         sjpl.setName("St. James Place");
-        jLabelList.add(9, sjpl);
+        jLabelList.add(13, sjpl);
 
 
         JLabel tal = new JLabel();
         tal.setIcon(t);
         tal.setName("Tennessee Avenue");
-        jLabelList.add(10, tal);
+        jLabelList.add(14, tal);
 
         JLabel nyl = new JLabel();
         nyl.setIcon(ny);
         nyl.setName("New York Avenue");
-        jLabelList.add(11, nyl);
+        jLabelList.add(15, nyl);
 
     }
 
@@ -269,59 +320,86 @@ public class GameFrame extends JFrame implements GameView {
     private void initializeNorthLabels() {
 
         ImageIcon kentuckyAvenue = new ImageIcon("Images/KentuckyAvenue.PNG");
-        Image ka = kentuckyAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ka = kentuckyAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon k = new ImageIcon(ka);
 
         ImageIcon indianaAvenue = new ImageIcon("Images/IndianaAvenue.PNG");
-        Image ina = indianaAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ina = indianaAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon in = new ImageIcon(ina);
 
         ImageIcon illinoisAvenue = new ImageIcon("Images/IllinoisAvenue.PNG");
-        Image ia = illinoisAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image ia = illinoisAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon i = new ImageIcon(ia);
 
+        ImageIcon boRailroad = new ImageIcon("Images/B. & O. Railroad.PNG");
+        Image bor = boRailroad.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
+        ImageIcon bo = new ImageIcon(bor);
+
         ImageIcon atlanticAvenue = new ImageIcon("Images/AtlanticAvenue.PNG");
-        Image aa = atlanticAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image aa = atlanticAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon a = new ImageIcon(aa);
 
         ImageIcon ventnorAvenue = new ImageIcon("Images/VentnorAvenue.PNG");
-        Image va = ventnorAvenue.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image va = ventnorAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon v = new ImageIcon(va);
 
+        ImageIcon waterWorks = new ImageIcon("Images/WaterWorks.PNG");
+        Image ww = waterWorks.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
+        ImageIcon w = new ImageIcon(ww);
+
         ImageIcon marvinGardens = new ImageIcon("Images/MarvinGardens.PNG");
-        Image mg = marvinGardens.getImage().getScaledInstance(157, 140, Image.SCALE_DEFAULT);
+        Image mg = marvinGardens.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon m = new ImageIcon(mg);
+
+        ImageIcon goToJail = new ImageIcon("Images/GoToJail.PNG");
+        Image gtj = goToJail.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
+        ImageIcon gt = new ImageIcon(gtj);
 
 
         JLabel kal = new JLabel();
         kal.setIcon(k);
         kal.setName("Kentucky Avenue");
-        jLabelList.add(12, kal);
+        jLabelList.add(16, kal);
 
         JLabel inal = new JLabel();
         inal.setIcon(in);
         inal.setName("Indiana Avenue");
-        jLabelList.add(13, inal);
+        jLabelList.add(17, inal);
 
         JLabel ial = new JLabel();
         ial.setIcon(i);
         ial.setName("Illinois Avenue");
-        jLabelList.add(14, ial);
+        jLabelList.add(18, ial);
+
+        JLabel borl = new JLabel();
+        borl.setIcon(bo);
+        borl.setName("B. & O. Railroad");
+        jLabelList.add(19, borl);
 
         JLabel aal = new JLabel();
         aal.setIcon(a);
         aal.setName("Atlantic Avenue");
-        jLabelList.add(15, aal);
+        jLabelList.add(20, aal);
 
         JLabel val = new JLabel();
         val.setIcon(v);
         val.setName("Ventnor Avenue");
-        jLabelList.add(16, val);
+        jLabelList.add(21, val);
+
+        JLabel wwl = new JLabel();
+        wwl.setIcon(w);
+        wwl.setName("Water Works");
+        jLabelList.add(22, wwl);
 
         JLabel mgl = new JLabel();
         mgl.setIcon(m);
         mgl.setName("Marvin Gardens");
-        jLabelList.add(17, mgl);
+        jLabelList.add(23, mgl);
+
+        JLabel gtjl = new JLabel();
+        gtjl.setIcon(gt);
+        gtjl.setName("Go to Jail");
+        jLabelList.add(24, gtjl);
 
     }
 
@@ -332,69 +410,78 @@ public class GameFrame extends JFrame implements GameView {
     private void initializeEastLabels() {
 
         ImageIcon pacificAvenue = new ImageIcon("Images/PacificAvenue.PNG");
-        Image pa = pacificAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
+        Image pa = pacificAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon p = new ImageIcon(pa);
 
         ImageIcon northCarolinaAvenue = new ImageIcon("Images/NorthCarolinaAvenue.PNG");
-        Image nca = northCarolinaAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
+        Image nca = northCarolinaAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon nc = new ImageIcon(nca);
 
         ImageIcon pennsylvaniaAvenue = new ImageIcon("Images/PennsylvaniaAvenue.PNG");
-        Image pna = pennsylvaniaAvenue.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
+        Image pna = pennsylvaniaAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon pn = new ImageIcon(pna);
 
+        ImageIcon shortLineRailroad = new ImageIcon("Images/ShortLineRailroad.PNG");
+        Image slr = shortLineRailroad.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
+        ImageIcon sl = new ImageIcon(slr);
+
         ImageIcon parkPlace = new ImageIcon("Images/ParkPlace.PNG");
-        Image park = parkPlace.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
+        Image park = parkPlace.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon pp = new ImageIcon(park);
 
         ImageIcon boardWalk = new ImageIcon("Images/BoardWalk.PNG");
-        Image bdw = boardWalk.getImage().getScaledInstance(140, 141, Image.SCALE_DEFAULT);
+        Image bdw = boardWalk.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(bdw);
 
 
         JLabel pal = new JLabel();
         pal.setIcon(p);
         pal.setName("Pacific Avenue");
-        jLabelList.add(18, pal);
+        jLabelList.add(25, pal);
 
         JLabel ncal = new JLabel();
         ncal.setIcon(nc);
         ncal.setName("North Carolina Avenue");
-        jLabelList.add(19, ncal);
+        jLabelList.add(26, ncal);
 
         JLabel plal = new JLabel();
         plal.setIcon(pn);
         plal.setName("Pennsylvania Avenue");
-        jLabelList.add(20, plal);
+        jLabelList.add(27, plal);
+
+        JLabel slrl = new JLabel();
+        slrl.setIcon(sl);
+        slrl.setName("Short Line Railroad");
+        jLabelList.add(28, slrl);
 
         JLabel ppl = new JLabel();
         ppl.setIcon(pp);
         ppl.setName("Park Place");
-        jLabelList.add(21, ppl);
+        jLabelList.add(29, ppl);
 
         JLabel bwl = new JLabel();
         bwl.setIcon(bd);
         bwl.setName("Board Walk");
-        jLabelList.add(22, bwl);
+        jLabelList.add(30, bwl);
 
     }
 
     /**
+     * @param message The message that will be displayed to the message board.
      * @author Robert Simionescu
      * Displays a message on the bottom of the message field. Shifts the existing messages up and removes the oldest one.
-     * @param message The message that will be displayed to the message board.
      */
-    public void displayMessage(String message)
-    {
-        ((JLabel)messageBox.getComponent(0)).setText(((JLabel)messageBox.getComponent(1)).getText());
-        ((JLabel)messageBox.getComponent(1)).setText(((JLabel)messageBox.getComponent(2)).getText());
-        ((JLabel)messageBox.getComponent(2)).setText(message);
+    public void displayMessage(String message) {
+        ((JLabel) messageBox.getComponent(0)).setText(((JLabel) messageBox.getComponent(1)).getText());
+        ((JLabel) messageBox.getComponent(1)).setText(((JLabel) messageBox.getComponent(2)).getText());
+        ((JLabel) messageBox.getComponent(2)).setText(((JLabel) messageBox.getComponent(3)).getText());
+        ((JLabel) messageBox.getComponent(3)).setText(message);
     }
 
     /**
+     * @return A JPanel with all the labels for the south side of the board.
      * @author Yash Kapoor
      * Getter for the squares on the south side of the board.
-     * @return A JPanel with all the labels for the south side of the board.
      */
     private JPanel getSouth() {
 
@@ -404,6 +491,8 @@ public class GameFrame extends JFrame implements GameView {
         BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.X_AXIS);
         labelPanel.setLayout(boxlayout);
 
+        labelPanel.add(jLabelList.get(7));
+        labelPanel.add(jLabelList.get(6));
         labelPanel.add(jLabelList.get(5));
         labelPanel.add(jLabelList.get(4));
         labelPanel.add(jLabelList.get(3));
@@ -414,16 +503,16 @@ public class GameFrame extends JFrame implements GameView {
         south.setLayout(new GridBagLayout());
         south.add(labelPanel);
 
-        south.setBackground(new Color (187, 255, 202));
+        south.setBackground(new Color(187, 255, 202));
         south.setPreferredSize(new Dimension(500, 145));
 
         return south;
     }
 
     /**
+     * @return A JPanel with all the labels for the west side of the board.
      * @author Yash Kapoor
      * Getter for the squares on the west side of the board.
-     * @return A JPanel with all the labels for the west side of the board.
      */
     private JPanel getWest() {
 
@@ -433,16 +522,18 @@ public class GameFrame extends JFrame implements GameView {
         BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.Y_AXIS);
         labelPanel.setLayout(boxlayout);
 
+        labelPanel.add(jLabelList.get(15));
+        labelPanel.add(jLabelList.get(14));
+        labelPanel.add(jLabelList.get(13));
+        labelPanel.add(jLabelList.get(12));
         labelPanel.add(jLabelList.get(11));
         labelPanel.add(jLabelList.get(10));
         labelPanel.add(jLabelList.get(9));
         labelPanel.add(jLabelList.get(8));
-        labelPanel.add(jLabelList.get(7));
-        labelPanel.add(jLabelList.get(6));
 
         west.setLayout(new GridBagLayout());
         west.add(labelPanel);
-        west.setBackground(new Color (187, 255, 202));
+        west.setBackground(new Color(187, 255, 202));
 
         west.setPreferredSize(new Dimension(200, 200));
 
@@ -450,9 +541,9 @@ public class GameFrame extends JFrame implements GameView {
     }
 
     /**
+     * @return A JPanel with all the labels for the north side of the board.
      * @author Yash Kapoor
      * Getter for the squares on the north side of the board.
-     * @return A JPanel with all the labels for the north side of the board.
      */
     private JPanel getNorth() {
 
@@ -462,29 +553,32 @@ public class GameFrame extends JFrame implements GameView {
         BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.X_AXIS);
         labelPanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(12));
-
-        labelPanel.add(jLabelList.get(13));
-
-        labelPanel.add(jLabelList.get(14));
-        labelPanel.add(jLabelList.get(15));
-
         labelPanel.add(jLabelList.get(16));
+
         labelPanel.add(jLabelList.get(17));
+
+        labelPanel.add(jLabelList.get(18));
+        labelPanel.add(jLabelList.get(19));
+
+        labelPanel.add(jLabelList.get(20));
+        labelPanel.add(jLabelList.get(21));
+        labelPanel.add(jLabelList.get(22));
+        labelPanel.add(jLabelList.get(23));
+        labelPanel.add(jLabelList.get(24));
 
         north.setLayout(new GridBagLayout());
         north.add(labelPanel);
 
-        north.setBackground(new Color (187, 255, 202));
+        north.setBackground(new Color(187, 255, 202));
         north.setPreferredSize(new Dimension(500, 145));
 
         return north;
     }
 
     /**
+     * @return A JPanel with all the labels for the east side of the board.
      * @author Yash Kapoor
      * Getter for the squares on the east side of the board.
-     * @return A JPanel with all the labels for the east side of the board.
      */
     private JPanel getEast() {
 
@@ -494,28 +588,29 @@ public class GameFrame extends JFrame implements GameView {
         BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.Y_AXIS);
         labelPanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(18));
-        labelPanel.add(jLabelList.get(19));
+        labelPanel.add(jLabelList.get(25));
+        labelPanel.add(jLabelList.get(26));
 
-        labelPanel.add(jLabelList.get(20));
-        labelPanel.add(jLabelList.get(21));
+        labelPanel.add(jLabelList.get(27));
+        labelPanel.add(jLabelList.get(28));
 
-        labelPanel.add(jLabelList.get(22));
+        labelPanel.add(jLabelList.get(29));
+        labelPanel.add(jLabelList.get(30));
 
         east.setLayout(new GridBagLayout());
         east.add(labelPanel);
 
-        east.setBackground(new Color (187, 255, 202));
+        east.setBackground(new Color(187, 255, 202));
         east.setPreferredSize(new Dimension(200, 200));
 
         return east;
     }
 
     /**
+     * @return A JPanel with all the labels for the south side of the board.
      * @author Robert Simionescu and Yash Kapoor
      * Getter for center of the board, containing the funopoly logo, the buttons used to interface with the game, and
      * the message board.
-     * @return A JPanel with all the labels for the south side of the board.
      */
     private JPanel getCenter() {
         JPanel center = new JPanel(new BorderLayout());
@@ -530,14 +625,25 @@ public class GameFrame extends JFrame implements GameView {
         center.add(funopoly, BorderLayout.CENTER);
 
 
-        JPanel buttons = new JPanel(new FlowLayout());
+        JPanel buttonPanel = new JPanel();
+        JPanel buttons = new JPanel(new GridLayout(2, 1));
+
         buttons.add(addPlayers);
         buttons.add(start);
         buttons.add(roll);
         buttons.add(bp);
+        buttons.add(build);
+        buttons.add(jail);
         buttons.add(pt);
 
-        buttons.setBackground(new Color (187, 255, 202));
+        save.setEnabled(false);
+        load.setEnabled(false);
+        buttons.add(save);
+        buttons.add(load);
+
+        buttonPanel.setBackground(new Color(187, 255, 202));
+
+        buttons.add(buttonPanel);
 
         center.add(buttons, BorderLayout.PAGE_START);
 
@@ -545,6 +651,120 @@ public class GameFrame extends JFrame implements GameView {
 
 
         return center;
+
+    }
+
+    @Override
+    public void handleBuildingStatusUpdate(GameModel gameModel) {
+
+        if (gameModel.getBuildingState() == GameModel.BuildingState.PLAYER_BUILDING) {
+
+            for(int i = 0; i < jLabelList.size(); i++) {
+
+                // avoiding more than one mouse listener at all times
+                jLabelList.get(i).removeMouseListener(gameController);
+                jLabelList.get(i).addMouseListener(gameController);
+            }
+
+        }
+
+        for (int i = 0; i < gameModel.getPlayers().size(); i++) {
+
+            // Update all the property indicators on the board
+            for (Property property : gameModel.getPlayers().get(i).getProperties()) {
+
+                if (property instanceof Street) {
+
+                    if (((Street) property).buildHouses(gameModel.getCurrentPlayer(), gameModel.getGameboard()) != null) {
+                        // player owns all the properties in the color set
+
+                        build.setEnabled(true);
+
+                    }
+
+                    if (((Street) property).getHouses() == 1) {
+
+                        JLabel houseLab = new JLabel("");
+                        houseLab.setOpaque(true);
+                        houseLab.setPreferredSize(new Dimension(20, 10));
+                        houseLab.setBackground(Color.GREEN);
+
+                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
+
+
+                    } else if (((Street) property).getHouses() == 2) {
+
+                        for (int k = 0; k < 2; k++) {
+
+                            JLabel houseLab = new JLabel("");
+                            houseLab.setOpaque(true);
+                            houseLab.setPreferredSize(new Dimension(20, 10));
+                            houseLab.setBackground(Color.GREEN);
+
+                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        }
+
+                    } else if (((Street) property).getHouses() == 3) {
+
+                        for (int k = 0; k < 3; k++) {
+
+                            JLabel houseLab = new JLabel("");
+                            houseLab.setOpaque(true);
+                            houseLab.setPreferredSize(new Dimension(20, 10));
+                            houseLab.setBackground(Color.GREEN);
+
+                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
+                        }
+
+                    } else if (((Street) property).getHouses() == 4) {
+
+                        for (int k = 0; k < 4; k++) {
+
+                            JLabel houseLab = new JLabel("");
+                            houseLab.setOpaque(true);
+                            houseLab.setPreferredSize(new Dimension(20, 10));
+                            houseLab.setBackground(Color.GREEN);
+
+                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
+                        }
+
+                    } else if (((Street) property).getHouses() == 5) {
+
+                        JLabel houseLab = new JLabel("");
+                        houseLab.setOpaque(true);
+                        houseLab.setPreferredSize(new Dimension(20, 10));
+                        houseLab.setBackground(Color.RED);
+
+                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
+                    }
+
+                }
+
+                JPanel propertyPanel = new JPanel();
+                JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
+
+                propertyLabel.setFont(new Font("Sans Serif", Font.BOLD, 11));
+                propertyPanel.add(propertyLabel);
+
+                propertyPanel.setPreferredSize(new Dimension(104, 25));
+                jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
+
+            }
+        }
+
+        if (gameModel.getBuildingState() == GameModel.BuildingState.ALL_HOUSES_BUILT) {
+            displayMessage("You have built all four houses. Click again on the streets to upgrade to a hotel!");
+        }
+
+        if (gameModel.getBuildingState() == GameModel.BuildingState.ALL_HOTELS_BUILT) {
+            displayMessage("You cannot build anymore hotels on these set of streets.");
+        }
+
+        gameModel.setBuildingState(GameModel.BuildingState.PLAYER_NOT_BUILDING);
 
     }
 
@@ -562,7 +782,9 @@ public class GameFrame extends JFrame implements GameView {
         {
             label.removeAll();
         }
+
         playerPanel.removeAll();
+
 
         for (int i = 0; i < gameModel.getPlayers().size(); i++)
         {
@@ -580,24 +802,13 @@ public class GameFrame extends JFrame implements GameView {
                 fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
                 fullPlayerPanels[i].setEnabled(false);
 
-                // Update all the property indicators on the board
-                for (Property property : gameModel.getPlayers().get(i).getProperties())
-                {
-                    JPanel propertyPanel = new JPanel();
-                    JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
 
-                    propertyLabel.setFont(new Font("Sans Serif", Font.BOLD, 11));
-                    propertyPanel.add(propertyLabel);
-
-                    propertyPanel.setPreferredSize(new Dimension(104, 25));
-                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
-                    jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel, new GridLayout(4, 4));
-                }
 
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());
                 jLabelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
                 jLabelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
+                // adding players to the GUI gameboard
 
                 fullPlayerPanels[i].removeAll();
 
@@ -610,6 +821,12 @@ public class GameFrame extends JFrame implements GameView {
             }
             else        // Otherwise, player is bankrupt
             {
+                // player bankrupt, returning all houses to the bank
+                gameModel.setTotalNumberHouses(gameModel.getTotalNumberHouses() + gameModel.getPlayers().get(i).getTotalHouses());
+
+                // player bankrupt, returning all hotels to the bank
+                gameModel.setTotalNumberHotels(gameModel.getTotalNumberHotels() + gameModel.getPlayers().get(i).getTotalHouses());
+
                 fullPlayerPanels[i].removeAll();
 
                 // positioning these panels correctly if the current player needs to be removed
@@ -655,6 +872,7 @@ public class GameFrame extends JFrame implements GameView {
             start.setEnabled(false);
             roll.setEnabled(false);
             bp.setEnabled(false);
+            jail.setEnabled(false);
             pt.setEnabled(false);
         }
         else if (gameModel.getGameState() == GameModel.GameState.ADDING_PLAYERS)
@@ -664,10 +882,14 @@ public class GameFrame extends JFrame implements GameView {
             addPlayers.setEnabled(true);
             roll.setEnabled(false);
             bp.setEnabled(false);
+            jail.setEnabled(false);
             pt.setEnabled(false);
         }
-        else if (gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
-                || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES)
+        else if ((gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_NORMAL
+                || gameModel.getGameState() == GameModel.GameState.PLAYER_ROLLED_DOUBLES
+                || gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_THRICE
+                || gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_IN_JAIL
+                ))
         {
             bp.setEnabled(false);
             // disable all buttons except for buy property and pass. Enable buy property only if the property is not owned.
@@ -682,9 +904,28 @@ public class GameFrame extends JFrame implements GameView {
                 bp.setEnabled(false);
             }
 
+
+            if (gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_IN_JAIL && bp.isEnabled()) {
+                displayMessage("You have rolled doubles, so you get out of jail and your turn ends.");
+            }
+
+            if (gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_THRICE) {
+                roll.setEnabled(false);
+                pt.setEnabled(true);
+                displayMessage("You have rolled double three times in a row, so you go to jail.");
+            }
+
+            if (gameModel.getCurrentPlayer().getInJail()) {
+                displayMessage("You are in jail, so your turn has ended.");
+                displayMessage("Pay $50 to get out of jail or roll doubles once in three turns.");
+                jail.setEnabled(true);
+                pt.setEnabled(true);
+            }
+
             addPlayers.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(false);
+            jail.setEnabled(false);
             pt.setEnabled(true);
 
         }
@@ -692,11 +933,21 @@ public class GameFrame extends JFrame implements GameView {
         {
             // Otherwise, the GameState == PLAYER_ROLLING
             // disable all buttons except for roll
+
+            if (gameModel.getCurrentPlayer().getInJail()) {
+                jail.setEnabled(true);
+            }
+            else {
+                jail.setEnabled(false);
+                gameModel.setGameState(GameModel.GameState.PLAYER_ROLLING);
+            }
+
             addPlayers.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(true);
             bp.setEnabled(false);
             pt.setEnabled(false);
+            build.setEnabled(false);
         }
 
     }

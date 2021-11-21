@@ -1,9 +1,7 @@
 /**
- * @author Himanshu Singh
- * @version Milestone 2
- */
-
-/**
+ * @author Himanshu Singh and Robert Simionescu
+ * @version Milestone 3
+ *
  * An abstract Property Class that implements the
  * Square Interface.
  *
@@ -74,10 +72,11 @@ public abstract class Property implements Square {
      * @author Robert Simionescu
      * This method will be used to calculate the rent of a particular property. Implementation depends on the type of
      * property.
+     * @param player    a Player object, the player who landed on the owner's property
      * @param gameboard The gameboard on which the square is found. Rent in properties depends on which other properties
      *                  are owned by the same player, so this is necessary.
      * @return int containing the rent.
      */
-    abstract int calculateRent(Gameboard gameboard);
+    abstract int calculateRent(Player player, Gameboard gameboard);
 
 }

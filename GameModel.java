@@ -1,6 +1,6 @@
 /**
  * @author Oliver Lu, Yash Kapoor, and Robert Simionescu
- * @version Milestone 2
+ * @version Milestone 3
  */
 
 import gameexceptions.*;
@@ -20,15 +20,22 @@ public class GameModel {
     public static final int MIN_PLAYERS = 2;
     public static final int STARTING_MONEY = 1500;
 
-    public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, GAME_OVER}
+    public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, PLAYER_PASSED_GO,
+        DOUBLES_ROLLED_THRICE, DOUBLES_ROLLED_IN_JAIL, GAME_OVER}
+
+    public enum BuildingState {PLAYER_NOT_BUILDING, PLAYER_BUILDING, ALL_HOUSES_BUILT, ALL_HOTELS_BUILT}
+
     private List<GameView> views;
 
+    private BuildingState buildingState;
     private GameState gameState;
     private ArrayList<Player> players;
 
     private Gameboard gameboard;
-    private int currentPlayer;
 
+    private int currentPlayer;
+    private int totalNumberHouses;
+    private int totalNumberHotels;
 
     /**
      * @author Robert Simionescu
@@ -41,6 +48,10 @@ public class GameModel {
         currentPlayer = 0;
         gameState = GameState.ADDING_PLAYERS;
         views = new ArrayList<GameView>();
+
+        this.totalNumberHouses = 32;
+        this.totalNumberHotels = 12;
+
     }
 
     /**
@@ -92,6 +103,17 @@ public class GameModel {
         return gameState;
     }
 
+    public BuildingState getBuildingState()
+    {
+        return buildingState;
+    }
+
+    public void setBuildingState(BuildingState bs){
+        this.buildingState = bs;
+    }
+
+
+
     /**
      * @author Robert Simionescu
      * Meant for testing purposes
@@ -135,35 +157,88 @@ public class GameModel {
                 return String.format("%s", getName());
             }
 
-        }, new Street("Mediterranean Avenue", "Brown", 40) {
-        }, new Street("Baltic Avenue", "Brown", 60) {
+        }, new Street("Mediterranean Avenue", "Brown", 60, 50, 50) {
+        }, new Street("Baltic Avenue", "Brown", 60, 50, 50) {
 
-        }, new Street("Oriental Avenue", "Blue", 100) {
-        }, new Street("Vermont Avenue", "Blue", 100) {
-        }, new Street("Connecticut Avenue", "Blue", 120) {
+        }, new Railroad("Reading Railroad", 200) {
 
-        }, new Street("St. Charles Place", "Pink", 140) {
-        }, new Street("States Avenue", "Pink", 140) {
-        }, new Street("Virginia Avenue", "Pink", 160) {
+        }, new Street("Oriental Avenue", "Blue", 100, 50, 50) {
+        }, new Street("Vermont Avenue", "Blue", 100, 50, 50) {
+        }, new Street("Connecticut Avenue", "Blue", 120, 50, 50) {
 
-        }, new Street("St. James Place", "Orange", 180) {
-        }, new Street("Tennessee Avenue", "Orange", 180) {
-        }, new Street("New York Avenue", "Orange", 200) {
+        }, new Square() {
 
-        }, new Street("Kentucky Avenue", "Red", 220) {
-        }, new Street("Indiana Avenue", "Red", 220) {
-        }, new Street("Illinois Avenue", "Red", 240) {
+            /**
+             * Getting the name of the square
+             *
+             * @return a String, the name of the square
+             */
+            @Override
+            public String getName() {
+                return "Jail";
+            }
 
-        }, new Street("Atlantic Avenue", "Yellow", 260) {
-        }, new Street("Ventnor Avenue", "Yellow", 260) {
-        }, new Street("Marvin Gardens", "Yellow", 280) {
+            /**
+             * Shows the user a text representation of what square they are currently on.
+             *
+             * @return a String, the name of the square
+             */
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+        }, new Street("St. Charles Place", "Pink", 140, 100, 100) {
+        }, new Utility("Electric Company", 150) {
+        }, new Street("States Avenue", "Pink", 140, 100, 100) {
+        }, new Street("Virginia Avenue", "Pink", 160, 100, 100) {
 
-        }, new Street("Pacific Avenue", "Green", 300) {
-        }, new Street("North Carolina Avenue", "Green", 300) {
-        }, new Street("Pennsylvania Avenue", "Green", 320) {
+        }, new Railroad("Pennsylvania Railroad", 200) {
 
-        }, new Street("Park Place", "Dark Blue", 350) {
-        }, new Street("Board Walk", "Dark Blue", 400));
+        }, new Street("St. James Place", "Orange", 180, 100, 100) {
+        }, new Street("Tennessee Avenue", "Orange", 180, 100, 100) {
+        }, new Street("New York Avenue", "Orange", 200, 100, 100) {
+
+        }, new Street("Kentucky Avenue", "Red", 220, 150, 150) {
+        }, new Street("Indiana Avenue", "Red", 220, 150, 150) {
+        }, new Street("Illinois Avenue", "Red", 240, 150, 150) {
+
+        }, new Railroad("B. & O. Railroad", 200) {
+
+        }, new Street("Atlantic Avenue", "Yellow", 260, 150, 150) {
+        }, new Street("Ventnor Avenue", "Yellow", 260, 150, 150) {
+        }, new Utility("Water Works", 150) {
+        }, new Street("Marvin Gardens", "Yellow", 280, 150, 150) {
+
+        }, new Square() {
+
+            /**
+             * Getting the name of the square
+             *
+             * @return a String, the name of the square
+             */
+            @Override
+            public String getName() {
+                return "Go to Jail";
+            }
+
+            /**
+             * Shows the user a text representation of what square they are currently on.
+             *
+             * @return a String, the name of the square
+             */
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+
+        }, new Street("Pacific Avenue", "Green", 300, 200, 200) {
+        }, new Street("North Carolina Avenue", "Green", 300, 200, 200) {
+        }, new Street("Pennsylvania Avenue", "Green", 320, 200, 200) {
+
+        }, new Railroad("Short Line Railroad", 200) {
+
+        }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
+        }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
 
         return new Gameboard(squares);
 
@@ -233,43 +308,142 @@ public class GameModel {
      * @author Robert Simionescu and Yash Kapoor
      * Rolls the dice and moves the current player by that many squares. If the player rolls doubles, sets the game
      * state to PLAYER_ROLLED_DOUBLES. If not, sets the state to PLAYER_ROLLED_NORMAL.
+     *
+     * Modified to account for Jail and GO.
+     * Player goes to "Jail" if they land on "Go to Jail" or roll doubles 3 times in succession, and turn ends immediately.
+     * Player collects $200 when they land or pass "GO".
+     *
+     * @return      an array of integers, the dice rolls
      */
-    public int[] roll()
-    {
-        if (gameState == GameState.PLAYER_ROLLING) {
-            int die1;
-            int die2;
+    public int[] roll() {
 
-            Die d = new Die();
+        int die1;
+        int die2;
 
-            die1 = d.roll();
-            die2 = d.roll();
+        Die d = new Die();
 
-            int[] rolls = {0, 0};
+        die1 = d.roll();
+        die2 = d.roll();
 
-            rolls[0] = die1;
-            rolls[1] = die2;
+        int[] rolls = {0, 0};
 
-            int newPosition = (players.get(currentPlayer).getPosition() + rolls[0] + rolls[1]) % gameboard.getSquares().size();
+        rolls[0] = 1;
+        rolls[1] = 0;
 
+        int dc = players.get(currentPlayer).getDoubleCount();
+        players.get(currentPlayer).setTotalRoll(rolls[0] + rolls[1]);
 
-            players.get(currentPlayer).setPosition(newPosition);
-            playerLandOnSquare(players.get(currentPlayer), gameboard.getSquare(newPosition));
+        if (players.get(currentPlayer).getInJail()) {
+            if (rolls[0] != rolls[1]) {
+                gameState = GameState.PLAYER_ROLLED_NORMAL;
+                // doubles are not rolled
+                dc++;
+                players.get(currentPlayer).setDoubleCount(dc);
 
+            }
+            if (rolls[0] == rolls[1] || players.get(currentPlayer).getDoubleCount() == 3) {
+
+                if (players.get(currentPlayer).getDoubleCount() == 3) {
+                    // third attempt, must pay if doubles are not rolled
+
+                    players.get(currentPlayer).removeMoney(50);
+                    players.get(currentPlayer).setDoubleCount(0);
+
+                    players.get(currentPlayer).setInJail(false);
+
+                }
+                // doubles are rolled, player gets to get out of jail
+                // turn ends after doubles are rolled
+                gameState = GameState.DOUBLES_ROLLED_IN_JAIL;
+
+                players.get(currentPlayer).setInJail(false);
+
+                int newPosition = (players.get(currentPlayer).getPosition() + rolls[0] + rolls[1]) % gameboard.getSquares().size();
+
+                int oldPosition = players.get(currentPlayer).getPosition();
+                while(oldPosition != newPosition) {
+
+                    oldPosition = (oldPosition + 1) % gameboard.getSquares().size();
+
+                    players.get(currentPlayer).setPosition(oldPosition);
+
+                }
+
+                playerLandOnSquare(players.get(currentPlayer), gameboard.getSquare(newPosition));
+
+            }
 
             if (gameState == GameState.GAME_OVER)
             {
                 return rolls;
             }
 
+            return rolls;
+        }
+        else if (gameState == GameState.PLAYER_ROLLING) {
+
             if (rolls[0] == rolls[1])
             {
-                gameState = GameState.PLAYER_ROLLED_DOUBLES;
+                dc++;
+                players.get(currentPlayer).setDoubleCount(dc);
+
+                if (players.get(currentPlayer).getDoubleCount() == 3) {
+                    // player rolls doubles 3 times in a row
+                    // goes to jail immediately on 3rd double roll
+
+                    players.get(currentPlayer).setPosition(7);
+                    players.get(currentPlayer).setInJail(true);
+
+                    gameState = GameState.DOUBLES_ROLLED_THRICE;
+                }
+                else {
+
+                    gameState = GameState.PLAYER_ROLLED_DOUBLES;
+                }
             }
             else
             {
+                // resetting counter if doubles not rolled
+                players.get(currentPlayer).setDoubleCount(0);
+
                 gameState = GameState.PLAYER_ROLLED_NORMAL;
             }
+
+            int newPosition = (players.get(currentPlayer).getPosition() + rolls[0] + rolls[1]) % gameboard.getSquares().size();
+
+            int oldPosition = players.get(currentPlayer).getPosition();
+
+            while(oldPosition != newPosition && !players.get(currentPlayer).getInJail()) {
+
+                oldPosition = (oldPosition + 1) % gameboard.getSquares().size();
+
+                if (newPosition == 24) {
+                    // user lands on "Go to Jail"
+                    // set position to "Jail"
+                    players.get(currentPlayer).setPosition(7);
+                    players.get(currentPlayer).setInJail(true);
+                }
+                else {
+                    players.get(currentPlayer).setPosition(oldPosition);
+                }
+
+                if (oldPosition == 0) {
+                    // User passes go, award them $200
+                    players.get(currentPlayer).addMoney(200);
+                    gameState = GameState.PLAYER_PASSED_GO;
+                }
+            }
+
+            if (!players.get(currentPlayer).getInJail()) {
+                // player isn't in jail, so rent must be paid to the other player
+                playerLandOnSquare(players.get(currentPlayer), gameboard.getSquare(newPosition));
+            }
+
+            if (gameState == GameState.GAME_OVER)
+            {
+                return rolls;
+            }
+
             return rolls;
         }
         else
@@ -287,12 +461,15 @@ public class GameModel {
      */
     public void passTurn(boolean playerBankrupt)
     {
-        if (gameState == GameState.PLAYER_ROLLED_DOUBLES)
+        if (getCurrentPlayer().getInJail()) {
+            currentPlayer = (currentPlayer + 1) % players.size();
+            gameState = GameState.PLAYER_ROLLING;
+        }
+        else if (gameState == GameState.PLAYER_ROLLED_DOUBLES)
         {
             gameState = GameState.PLAYER_ROLLING;
         }
-
-        else if (gameState == GameState.PLAYER_ROLLED_NORMAL)
+        else if (gameState == GameState.PLAYER_ROLLED_NORMAL || gameState == GameState.DOUBLES_ROLLED_IN_JAIL)
         {
             if (!playerBankrupt) {
                 currentPlayer = (currentPlayer + 1) % players.size();
@@ -304,8 +481,6 @@ public class GameModel {
                 // bankrupt
                 currentPlayer = (currentPlayer - 1) % players.size();
             }
-
-
         }
         else
         {
@@ -411,6 +586,7 @@ public class GameModel {
      *
      * @return      a boolean, true if player landing on the square has no money left (becomes bankrupt), false otherwise
      */
+
     public boolean playerLandOnSquare(Player player, Square square)
     {
         // If the player lands on a property
@@ -420,10 +596,10 @@ public class GameModel {
             if (((Property) square).getOwner() != null && ((Property) square).getOwner() != player)
             {
                 // If the player has enough money to pay rent for that property
-                if (((Property) square).calculateRent(gameboard) < player.getMoney())
+                if (((Property) square).calculateRent(player, gameboard) < player.getMoney())
                 {
-                    player.removeMoney(((Property) square).calculateRent(gameboard));
-                    ((Property) square).getOwner().addMoney(((Property) square).calculateRent(gameboard));
+                    player.removeMoney(((Property) square).calculateRent(player, gameboard));
+                    ((Property) square).getOwner().addMoney(((Property) square).calculateRent(player, gameboard));
                 }
                 else
                 {
@@ -432,6 +608,127 @@ public class GameModel {
             }
         }
         return false;
+    }
+
+
+
+    public int getTotalNumberHouses() {
+        return this.totalNumberHouses;
+    }
+
+    public void setTotalNumberHouses(int houses) {
+        this.totalNumberHouses = houses;
+    }
+
+    public int getTotalNumberHotels() {
+        return this.totalNumberHotels;
+    }
+
+    public void setTotalNumberHotels(int hotels) {
+        this.totalNumberHotels = hotels;
+    }
+
+    public void buildOnProperty(Player buyer, String name) {
+
+        // Iterates over all squares on the gameboard and counts how many are streets of the same colour as this one.
+        ArrayList<Square> gameboardSquares = gameboard.getSquares();
+
+        for (Square s : gameboardSquares) {
+            if (s instanceof Street) {
+                if ((s.getName().equals(name))) {
+                    if (((Street) s).buildHouses(getCurrentPlayer(), gameboard) == null) {
+                        // player does not own all the properties in the color set
+
+                        return;
+                    }
+                    else {
+                        // player owns all the properties in the same color set
+
+                        ArrayList<Street> ownedSquaresMatching = ((Street) s).buildHouses(getCurrentPlayer(), gameboard);
+
+                        int totalHouses = 0;
+                        for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+
+                            totalHouses += ownedSquaresMatching.get(sameStreet).getHouses();
+
+                        }
+
+
+                        float average = totalHouses / (float) ownedSquaresMatching.size();
+
+                        int numHouses = ((Street) s).getHouses();
+
+                        if (numHouses > average && !((Street) s).getMaxCapacityReached()) {
+
+                            throw new BuildHousesException("You must build houses evenly! Try again.");
+                            // cannot build house since player is not building evenly
+                        }
+
+                        if (((Street) s).getHouseCost() <= buyer.getMoney()) {
+
+                            if(!((Street) s).getMaxCapacityReached()) {
+
+                                totalNumberHouses--;
+
+                                if (totalNumberHouses >= 0) {
+                                    buyer.removeMoney(((Street) s).getHouseCost());
+                                    ((Street) s).setHouses(++numHouses);
+
+                                    if (totalHouses == (4 * ownedSquaresMatching.size()) - 1) {
+                                        buildingState = BuildingState.ALL_HOUSES_BUILT;
+                                    }
+
+                                    getCurrentPlayer().setTotalNumberHouses(getCurrentPlayer().getTotalHouses() + 1);
+
+                                    if (numHouses == 5) {
+                                        ((Street) s).setMaxCapacityReached(true);
+
+                                        totalNumberHouses += 5;
+                                        // houses returned to the bank, so plus 5
+
+                                        totalNumberHotels--;
+
+                                        if(totalNumberHotels >= 0) {
+                                            // 5 houses technically equal 1 hotel, so we set hotels = 1
+                                            ((Street) s).setHotels(1);
+
+                                            int totalHotels = 0;
+                                            for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+
+                                                totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
+
+                                                if (totalHotels == ownedSquaresMatching.size()) {
+                                                    buildingState = BuildingState.ALL_HOTELS_BUILT;
+                                                }
+
+                                            }
+
+                                            getCurrentPlayer().setTotalNumberHotels(getCurrentPlayer().getTotalNumberHotels() + 1);
+
+                                            return;
+                                            // hotel built
+                                        }
+                                        else {
+                                            throw new NotEnoughHotelsException("There are no more hotels left in the bank. Sorry!");
+
+                                        }
+
+                                    }
+
+                                }
+                                else {
+                                    throw new NotEnoughHousesException("There are no more houses left in the bank. Sorry!");
+                                }
+                            }
+                        } else {
+                            throw new InsufficientMoneyException("You do not have enough money to purchase this house.");
+
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -1,13 +1,11 @@
 /**
  * @author Himanshu Singh
- * @version Milestone 2
+ * @version Milestone 3
  */
 
-import org.junit.After;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -48,6 +46,7 @@ public class GameModelTest {
      * @Author Himanshu Singh
      * Test create and get gameboard.
      */
+    /*
     @Test
     public void testCreateAndGetGameboard() {
         System.out.println("Testing GetGameboard and CreatingGameboard Function...");
@@ -98,6 +97,8 @@ public class GameModelTest {
                 gm.createGameboard().getSquares().toString() + "\n");
         assertEquals(squares.toString(), gm.createGameboard().getSquares().toString());
     }
+
+     */
 
     /**
      * @Author Himanshu Singh

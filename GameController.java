@@ -1,12 +1,15 @@
 /**
  * @author Robert Simionescu and Yash Kapoor
- * @version Milestone 2
+ * @version Milestone 3
  */
 
 import gameexceptions.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
@@ -15,7 +18,7 @@ import java.util.List;
  * Controller Class for GameModel
  * Responsible for controlling the functions of the buttons
  */
-public class GameController implements ActionListener
+public class GameController extends MouseAdapter implements ActionListener
 {
     private GameModel model;
     private List<GameView> views;
@@ -80,6 +83,8 @@ public class GameController implements ActionListener
 
             displayMessage("You have purchased " + propertyPurchased.getName() + " for $" + propertyPurchased.getCost());
 
+
+
         }
         catch(InsufficientMoneyException exception)
         {
@@ -95,6 +100,15 @@ public class GameController implements ActionListener
             displayMessage(exception.getMessage());
         }
     }
+
+
+    private void buildOnProperty() {
+
+        model.setBuildingState(GameModel.BuildingState.PLAYER_BUILDING);
+
+    }
+
+
 
     /**
      * @author Robert Simionescu and Yash Kapoor
@@ -118,13 +132,20 @@ public class GameController implements ActionListener
     private void roll()
     {
         int[] roll = model.roll();
-        if (roll[0] == roll[1])
+
+        if (model.getGameState() == GameModel.GameState.PLAYER_PASSED_GO) {
+            displayMessage("You passed GO, so you get $200.");
+        }
+
+        if (roll[0] == roll[1] && !model.getCurrentPlayer().getInJail() && model.getGameState() != GameModel.GameState.DOUBLES_ROLLED_IN_JAIL)
         {
             displayMessage("You rolled a " + roll[0] + " and a " + roll[1] + ", so you will move " + (roll[0] + roll[1]) + " spaces and will get to go again.");
+            model.setGameState(GameModel.GameState.PLAYER_ROLLED_DOUBLES);
         }
         else
         {
             displayMessage("You rolled a " + roll[0] + " and a " + roll[1] + ", so you will move " + (roll[0] + roll[1]) + " spaces.");
+            model.setGameState(GameModel.GameState.PLAYER_ROLLED_NORMAL);
         }
 
         Square square = model.getGameboard().getSquare(model.getCurrentPlayer().getPosition());
@@ -133,7 +154,7 @@ public class GameController implements ActionListener
         {
             if (((Property)square).getOwner() != null && ((Property)square).getOwner() != model.getCurrentPlayer())
             {
-                displayMessage("You have landed on " + ((Property)square).getOwner().getName() + "'s property and must pay them $" + ((Property)square).calculateRent(model.getGameboard()));
+                displayMessage("You have landed on " + ((Property)square).getOwner().getName() + "'s property and must pay them $" + ((Property)square).calculateRent(model.getCurrentPlayer(), model.getGameboard()));
             }
         }
         if (model.getCurrentPlayer().isBankrupt())
@@ -168,6 +189,41 @@ public class GameController implements ActionListener
         }
     }
 
+    private void outOfJail() {
+
+        model.getCurrentPlayer().removeMoney(50);
+        model.getCurrentPlayer().setInJail(false);
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        JLabel currentLabel = (JLabel) e.getSource();
+
+        try {
+            model.buildOnProperty(model.getCurrentPlayer(), currentLabel.getName());
+
+            for (GameView view : views) {
+                view.handleGameStatusUpdate(model);
+                view.handleBuildingStatusUpdate(model);
+            }
+
+        }
+        catch(InsufficientMoneyException exception)
+        {
+            displayMessage(exception.getMessage());
+        }
+        catch(BuildHousesException exception) {
+            displayMessage(exception.getMessage());
+        }
+        catch(NotEnoughHotelsException exception) {
+            displayMessage(exception.getMessage());
+        }
+        catch(NotEnoughHousesException exception) {
+            displayMessage(exception.getMessage());
+        }
+    }
+
     /**
      * @author Robert Simionescu and Yash Kapoor
      * Handles all button presses in the game. Calls the corresponding methods in GameModel and outputs whatever messages
@@ -182,11 +238,15 @@ public class GameController implements ActionListener
             case "Start" -> start();
             case "Roll" -> roll();
             case "Buy Property" -> buyProperty();
+            case "Build" -> buildOnProperty();
+            case "Get Out of Jail" -> outOfJail();
             case "Pass turn" -> pass();
         }
         for (GameView view : views)
         {
             view.handleGameStatusUpdate(model);
+            view.handleBuildingStatusUpdate(model);
         }
+
     }
 }
