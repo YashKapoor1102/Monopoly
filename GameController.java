@@ -102,12 +102,22 @@ public class GameController extends MouseAdapter implements ActionListener
     }
 
 
+    /**
+     * @author Yash Kapoor
+     *
+     * Sets the building state as "PLAYER_BUILDING"
+     * to indicate that the player is building either houses/hotels
+     * on their properties.
+     */
     private void buildOnProperty() {
+
+        displayMessage("Click on the street that you own that you would like to build a house on.");
+        displayMessage("Ensure that you build the houses evenly.");
 
         model.setBuildingState(GameModel.BuildingState.PLAYER_BUILDING);
 
-    }
 
+    }
 
 
     /**
@@ -189,6 +199,9 @@ public class GameController extends MouseAdapter implements ActionListener
         }
     }
 
+    /**
+     * Allows the player to get out of jail by paying a fine of $50.
+     */
     private void outOfJail() {
 
         model.getCurrentPlayer().removeMoney(50);
@@ -196,6 +209,14 @@ public class GameController extends MouseAdapter implements ActionListener
 
     }
 
+    /**
+     * Handles all the mouse clicks in the game.
+     *
+     * It is used to allow the user to click on the squares of the gameboard.
+     * Specifically, they can click on the squares to build houses/hotels on them one at a time.
+     *
+     * @param e The MouseEvent that has occurred
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         JLabel currentLabel = (JLabel) e.getSource();
@@ -228,7 +249,7 @@ public class GameController extends MouseAdapter implements ActionListener
      * @author Robert Simionescu and Yash Kapoor
      * Handles all button presses in the game. Calls the corresponding methods in GameModel and outputs whatever messages
      * should be output to GameFrame.
-     * @param e The actionevent that has occured.
+     * @param e The ActionEvent that has occurred.
      */
     @Override
     public void actionPerformed(ActionEvent e)

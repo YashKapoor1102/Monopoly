@@ -75,6 +75,7 @@ public abstract class Property implements Square {
      * @param player    a Player object, the player who landed on the owner's property
      * @param gameboard The gameboard on which the square is found. Rent in properties depends on which other properties
      *                  are owned by the same player, so this is necessary.
+     *
      * @return int containing the rent.
      */
     abstract int calculateRent(Player player, Gameboard gameboard);

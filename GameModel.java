@@ -327,8 +327,8 @@ public class GameModel {
 
         int[] rolls = {0, 0};
 
-        rolls[0] = 1;
-        rolls[1] = 0;
+        rolls[0] = die1;
+        rolls[1] = die2;
 
         int dc = players.get(currentPlayer).getDoubleCount();
         players.get(currentPlayer).setTotalRoll(rolls[0] + rolls[1]);
@@ -455,7 +455,7 @@ public class GameModel {
     /**
      * @author Robert Simionescu and Yash Kapoor
      * Changes the current player to the next one in the order, skipping bankrupt players. If the current player rolled
-     * doubles on their previous roll, they go again.
+     * doubles on their previous roll, they go again unless they are in jail.
      *
      * @param  playerBankrupt       a boolean, true if player is bankrupt, false otherwise
      */
@@ -610,24 +610,50 @@ public class GameModel {
         return false;
     }
 
-
-
+    /**
+     * Get the total number of houses that are in the bank.
+     *
+     * There are 32 houses in the bank. Hence, this value is initialized to 32.
+     * @return      an int, representing the total number of houses
+     */
     public int getTotalNumberHouses() {
         return this.totalNumberHouses;
     }
 
+    /**
+     * Set the total number of houses that are in the bank.
+     * @param houses       an int, representing the number of houses.
+     */
     public void setTotalNumberHouses(int houses) {
         this.totalNumberHouses = houses;
     }
 
+    /**
+     * Get the total number of hotels that are in the bank.
+     * @return      an int, representing the total number of hotels
+     */
     public int getTotalNumberHotels() {
         return this.totalNumberHotels;
     }
 
+    /**
+     * Set the total number of hotels that are in the bank.
+     * @param hotels    an int, representing the number of hotels.
+     */
     public void setTotalNumberHotels(int hotels) {
         this.totalNumberHotels = hotels;
     }
 
+    /**
+     * Allows the player to build houses/hotels on the streets that they own.
+     *
+     * Keeps track of the number of houses/hotels on each street that the player clicks on,
+     * ensuring that the number of houses/hotels do not exceed the total number
+     * of houses and hotels in the bank.
+     *
+     * @param buyer     a Player Object, the player who is buying the houses/hotels on the street
+     * @param name      a String, the name of the street that the player clicked on to build a house/hotel on
+     */
     public void buildOnProperty(Player buyer, String name) {
 
         // Iterates over all squares on the gameboard and counts how many are streets of the same colour as this one.
@@ -648,12 +674,15 @@ public class GameModel {
 
                         int totalHouses = 0;
                         for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+                            // iterating through the ArrayList and calculating the total number of houses
+                            // on each street of a specific color set
 
                             totalHouses += ownedSquaresMatching.get(sameStreet).getHouses();
 
                         }
 
 
+                        // calculation below that ensures the player is building houses evenly
                         float average = totalHouses / (float) ownedSquaresMatching.size();
 
                         int numHouses = ((Street) s).getHouses();
@@ -665,22 +694,31 @@ public class GameModel {
                         }
 
                         if (((Street) s).getHouseCost() <= buyer.getMoney()) {
+                            // the cost of the house must be less than or equal to the buyer's total amount of money
 
                             if(!((Street) s).getMaxCapacityReached()) {
+                                // runs as long as the maximum capacity (5 houses) is not reached
+                                // The 5th house is technically the hotel
 
                                 totalNumberHouses--;
 
                                 if (totalNumberHouses >= 0) {
+                                    // runs as long as there are enough houses available in the bank
+                                    // for the player to buy
+
                                     buyer.removeMoney(((Street) s).getHouseCost());
                                     ((Street) s).setHouses(++numHouses);
 
                                     if (totalHouses == (4 * ownedSquaresMatching.size()) - 1) {
+                                        // 4 houses have been built on each street of a specific color set
+
                                         buildingState = BuildingState.ALL_HOUSES_BUILT;
                                     }
 
                                     getCurrentPlayer().setTotalNumberHouses(getCurrentPlayer().getTotalHouses() + 1);
 
                                     if (numHouses == 5) {
+                                        // hotel is built on the street, all houses are returned to the bank
                                         ((Street) s).setMaxCapacityReached(true);
 
                                         totalNumberHouses += 5;
@@ -694,6 +732,8 @@ public class GameModel {
 
                                             int totalHotels = 0;
                                             for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+                                                // iterating through the ArrayList and calculating the total number of hotels
+                                                // on each street of a specific color set
 
                                                 totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
 

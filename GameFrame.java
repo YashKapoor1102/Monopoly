@@ -654,11 +654,24 @@ public class GameFrame extends JFrame implements GameView {
 
     }
 
+    /**
+     * @author Yash Kapoor
+     *
+     * Updates the GUI to reflect any changes made by the previous action.
+     * It is used to allow the user to build houses/hotels on their streets.
+     *
+     * They can do so by clicking on the street in the GUI and building houses one by one.
+     * Then, eventually upgrading to a hotel (indicated by 5 houses) if they wish.
+     *
+     * @param gameModel     a GameModel Class Object, the model to update the GUI to match
+     */
     @Override
     public void handleBuildingStatusUpdate(GameModel gameModel) {
 
         if (gameModel.getBuildingState() == GameModel.BuildingState.PLAYER_BUILDING) {
 
+            // iterating through the jLabelList ArrayList
+            // and assigning a MouseListener to every component
             for(int i = 0; i < jLabelList.size(); i++) {
 
                 // avoiding more than one mouse listener at all times
@@ -683,6 +696,7 @@ public class GameFrame extends JFrame implements GameView {
                     }
 
                     if (((Street) property).getHouses() == 1) {
+                        // player has one house on their street
 
                         JLabel houseLab = new JLabel("");
                         houseLab.setOpaque(true);
@@ -692,8 +706,8 @@ public class GameFrame extends JFrame implements GameView {
                         jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
 
-
                     } else if (((Street) property).getHouses() == 2) {
+                        // player has 2 houses on their street
 
                         for (int k = 0; k < 2; k++) {
 
@@ -706,6 +720,7 @@ public class GameFrame extends JFrame implements GameView {
                         }
 
                     } else if (((Street) property).getHouses() == 3) {
+                        // player has 3 houses on their street
 
                         for (int k = 0; k < 3; k++) {
 
@@ -719,6 +734,7 @@ public class GameFrame extends JFrame implements GameView {
                         }
 
                     } else if (((Street) property).getHouses() == 4) {
+                        // player has 4 houses on their street
 
                         for (int k = 0; k < 4; k++) {
 
@@ -732,6 +748,7 @@ public class GameFrame extends JFrame implements GameView {
                         }
 
                     } else if (((Street) property).getHouses() == 5) {
+                        // player has a hotel (which is technically the same as 5 houses) on their street
 
                         JLabel houseLab = new JLabel("");
                         houseLab.setOpaque(true);
@@ -744,6 +761,7 @@ public class GameFrame extends JFrame implements GameView {
 
                 }
 
+                // updating the owners of each property
                 JPanel propertyPanel = new JPanel();
                 JLabel propertyLabel = new JLabel("Owner: " + property.getOwner().getName());
 
@@ -772,7 +790,7 @@ public class GameFrame extends JFrame implements GameView {
      * @author Robert Simionescu and Yash Kapoor
      * Updates the GUI to reflect any changes made by the previous action. Also, hides certain buttons depending on the
      * state of the game.
-     * @param gameModel The model to update the GUI to match.
+     * @param gameModel      a GameModel Class Object, the model to update the GUI to match.
      */
     @Override
     public void handleGameStatusUpdate(GameModel gameModel) {
@@ -893,7 +911,6 @@ public class GameFrame extends JFrame implements GameView {
         {
             bp.setEnabled(false);
             // disable all buttons except for buy property and pass. Enable buy property only if the property is not owned.
-
             try {
                 if (gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition()) instanceof Property) {
                     if (((Property) gameModel.getGameboard().getSquare(gameModel.getCurrentPlayer().getPosition())).getOwner() == null) {
@@ -905,16 +922,19 @@ public class GameFrame extends JFrame implements GameView {
             }
 
 
+            // player can get out of jail by rolling doubles
             if (gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_IN_JAIL && bp.isEnabled()) {
                 displayMessage("You have rolled doubles, so you get out of jail and your turn ends.");
             }
 
+            // player can go to jail by rolling doubles three times in a row
             if (gameModel.getGameState() == GameModel.GameState.DOUBLES_ROLLED_THRICE) {
                 roll.setEnabled(false);
                 pt.setEnabled(true);
                 displayMessage("You have rolled double three times in a row, so you go to jail.");
             }
 
+            // user turn ends if they are in jail
             if (gameModel.getCurrentPlayer().getInJail()) {
                 displayMessage("You are in jail, so your turn has ended.");
                 displayMessage("Pay $50 to get out of jail or roll doubles once in three turns.");

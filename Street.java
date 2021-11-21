@@ -61,75 +61,94 @@ public class Street extends Property
     }
 
     /**
+     * Get the number of houses on this street
      *
-     * @return
+     * @return      an int, the number of houses built by the player on this street
      */
     public int getHouses() {
         return this.houses;
     }
 
     /**
+     * Get the number of hotels on this street
      *
-     * @return
+     * @return      an int, the number of hotels built by the player on this street
      */
     public int getHotel() {
         return this.hotel;
     }
 
     /**
+     * Get the amount it costs to build a house on this street
      *
-     * @return
+     * @return      an int, the cost of the house
      */
     public int getHouseCost() {
         return this.houseCost;
     }
 
     /**
+     * Get the amount it costs to build a hotel on this street
+     * Precondition: The user must have 4 houses on their street before building a hotel.
      *
-     * @return
+     * @return      an int, the cost of the hotel
      */
     public int getHotelCost() {
         return this.hotelCost;
     }
 
     /**
+     * Set the number of houses there are on this street
      *
-     * @param numHouses
+     * @param numHouses     an int, the total number of houses on this street
      */
     public void setHouses(int numHouses) {
         this.houses = numHouses;
     }
 
     /**
+     * Set the number of hotels there are on this street
      *
-     * @param numHotels
+     * @param numHotels     an int, the total number of hotels on this street
      */
     public void setHotels(int numHotels) {
         this.hotel = numHotels;
     }
 
     /**
+     * Get the maximum capacity of the number of houses/hotels the player
+     * is able to build on the street
      *
-     * @param maxCapacityReached
-     */
-    public void setMaxCapacityReached(boolean maxCapacityReached) {
-        this.maxCapacityReached = maxCapacityReached;
-    }
-
-    /**
-     *
-     * @return
+     * @return      a boolean, true if the maximum capacity is reached, false otherwise
      */
     public boolean getMaxCapacityReached() {
         return this.maxCapacityReached;
     }
 
     /**
+     * Set the maximum capacity of the number of houses/hotels the player
+     * is able to build on this street
+     *
+     * @param maxCapacityReached    a boolean, true if the maximum capacity is reached, false otherwise
+     */
+    public void setMaxCapacityReached(boolean maxCapacityReached) {
+        this.maxCapacityReached = maxCapacityReached;
+    }
+
+
+    /**
      * @author Yash Kapoor
      *
-     * @param player
-     * @param gameboard
-     * @return
+     * Ensures the player owns this street and other streets of the same color as this street.
+     *
+     * @param player        a Player Object, the player that wants to build houses/hotels on this street.
+     * @param gameboard     The gameboard on which the square is found. Rent in properties depends on which other properties
+     *                      are owned by the same player, so this is necessary.
+     *
+     * @return              an ArrayList of all the streets of the same color if the owner owns
+     *                      all the streets of the same color set.
+     *
+     *                      Null is returned if the owner does not own all the streets of the same color.
      */
     public ArrayList<Street> buildHouses(Player player, Gameboard gameboard)  {
 
@@ -165,6 +184,7 @@ public class Street extends Property
             return ownedSquaresMatching;
         }
 
+        // Otherwise, null is returned
         return null;
     }
 
@@ -174,6 +194,10 @@ public class Street extends Property
      * Calculates and returns the rent for players landing on this street. Rent begins at 10% of the cost of the street
      * and goes up to 20% if the owner of the street owns all of the streets with this colour.
      * Houses and Hotels increase the rent of the property even further.
+     *
+     * Each house that is built on the street increases the rent by 10%. Hence, hotels increase the original rent
+     * by 50%.
+     *
      *
      * @param player        a Player object, the player who landed on the owner's property
      * @param gameboard     The gameboard on which the square is found. Rent in properties depends on which other properties

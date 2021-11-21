@@ -213,32 +213,48 @@ public class Player {
     }
 
     /**
+     * @author Yash Kapoor
      *
-     * @return
+     * Get the total number of houses each player has built on
+     * their streets
+     *
+     * @return      an int, the total number of houses the player has
      */
     public int getTotalHouses() {
         return this.totalNumberHouses;
     }
 
     /**
+     * @author Yash Kapoor
      *
-     * @param totalHouses
+     * Set the total number of houses each player has built on
+     * their streets
+     *
+     * @param totalHouses       an int, the total number of houses the player has
      */
     public void setTotalNumberHouses(int totalHouses) {
         this.totalNumberHouses = totalHouses;
     }
 
     /**
+     * @author Yash Kapoor
      *
-     * @return
+     * Get the total number of hotels each player has built
+     * on their streets
+     *
+     * @return      an int, the total number of hotels the player has
      */
     public int getTotalNumberHotels() {
         return this.totalNumberHotels;
     }
 
     /**
+     * @author Yash Kapoor
      *
-     * @param totalHotels
+     * Set the total number of hotels each player has built
+     * on their streets
+     *
+     * @param totalHotels       an int, the total number of hotels the player has
      */
     public void setTotalNumberHotels(int totalHotels) {
         this.totalNumberHotels = totalHotels;
