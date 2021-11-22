@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Yash Kapoor and Robert Simionescu
@@ -131,6 +133,11 @@ public class GameController extends MouseAdapter implements ActionListener
 
         displayMessage(model.getCurrentPlayer().getName() + "'s turn.");
 
+        if (model.getCurrentPlayer() instanceof PlayerAI)
+        {
+            AITurn();
+        }
+
     }
 
     /**
@@ -200,13 +207,121 @@ public class GameController extends MouseAdapter implements ActionListener
     }
 
     /**
+     * @author Robert Simionescu
+     * Adds an AI controlled player to the game with the name of their position and [AI] added to the end (e.g. "2 [AI]")
+     */
+    private void addAIPlayer()
+    {
+        Player newPlayer = new PlayerAI(String.valueOf(model.getPlayers().size() + 1) + " [AI]", GameModel.STARTING_MONEY, model);
+
+        try
+        {
+            model.addPlayer(newPlayer);
+            displayMessage("AI player " + newPlayer.getName() + " added!");
+        }
+        catch (TooManyPlayersException exception)
+        {
+            displayMessage(exception.getMessage());
+        }
+        catch (DuplicateNameException exception)
+        {
+            displayMessage(exception.getMessage());
+        }
+    }
+
+    /**
      * Allows the player to get out of jail by paying a fine of $50.
      */
     private void outOfJail() {
+        if (model.getCurrentPlayer().getMoney() > 50)
+        {
+            model.getCurrentPlayer().removeMoney(50);
+            model.getCurrentPlayer().setInJail(false);
+        }
+        else
+        {
+            displayMessage("You do not have enough money to get out of jail.");
+        }
 
-        model.getCurrentPlayer().removeMoney(50);
-        model.getCurrentPlayer().setInJail(false);
+    }
 
+    /**
+     * @author Robert Simionescu
+     * Allows the AI to build structures on its properties. AI will only build if it will not bring its total money
+     * down below $200. It will attempt to build on a random owned property 5 times. If the AI does not own any streets,
+     * nothing happens.
+     */
+    private void AIBuild()
+    {
+        int numProperties = model.getCurrentPlayer().getProperties().size();
+        Random r = new Random();
+
+        if (numProperties != 0)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Property property = model.getCurrentPlayer().getProperties().get(r.nextInt(numProperties));
+                if (property instanceof Street)
+                {
+                    try {
+                        model.buildOnProperty(model.getCurrentPlayer(), property.getName());
+
+                        for (GameView view : views) {
+                            view.handleGameStatusUpdate(model);
+                            view.handleBuildingStatusUpdate(model);
+                        }
+                    }
+                    catch(InsufficientMoneyException exception)
+                    {
+                        displayMessage(exception.getMessage());
+                    }
+                    catch(BuildHousesException exception) {
+                        displayMessage(exception.getMessage());
+                    }
+                    catch(NotEnoughHotelsException exception) {
+                        displayMessage(exception.getMessage());
+                    }
+                    catch(NotEnoughHousesException exception) {
+                        displayMessage(exception.getMessage());
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * @author Robert Simionescu
+     * Allows the AI to play its turn.
+     */
+    public void AITurn()
+    {
+        String AICommand = "";
+
+        AICommand = ((PlayerAI)model.getCurrentPlayer()).playTurn();
+        switch (AICommand)
+        {
+            case "Roll":
+                roll();
+                break;
+            case "Buy Property":
+                buyProperty();
+                break;
+            case "Build":
+                AIBuild();
+                break;
+            case "Get Out of Jail":
+                outOfJail();
+                break;
+            case "Pass turn":
+                pass();
+                break;
+        }
+
+        if (model.getCurrentPlayer() instanceof PlayerAI)
+        {
+            AITurn();
+        }
     }
 
     /**
@@ -255,7 +370,8 @@ public class GameController extends MouseAdapter implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
         switch (e.getActionCommand()) {
-            case "Add Players" -> addPlayer();
+            case "Add Player" -> addPlayer();
+            case "Add AI" -> addAIPlayer();
             case "Start" -> start();
             case "Roll" -> roll();
             case "Buy Property" -> buyProperty();

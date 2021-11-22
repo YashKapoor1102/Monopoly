@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class GameFrame extends JFrame implements GameView {
 
-    private final JButton addPlayers;
+    private final JButton addPlayer;
+    private final JButton addAIPlayer;
     private final JButton start;
     private final JButton roll;
     private final JButton bp;
@@ -75,7 +76,8 @@ public class GameFrame extends JFrame implements GameView {
         jLabelList = new ArrayList<>();
 
         // Buttons used to interface with the game
-        addPlayers = new JButton("Add Players");
+        addPlayer = new JButton("Add Player");
+        addAIPlayer = new JButton("Add AI");
         start = new JButton("Start");
         roll = new JButton("Roll");
         bp = new JButton("Buy Property");
@@ -87,7 +89,8 @@ public class GameFrame extends JFrame implements GameView {
 
         gameController = new GameController(model);
 
-        addPlayers.addActionListener(gameController);
+        addPlayer.addActionListener(gameController);
+        addAIPlayer.addActionListener(gameController);
         start.addActionListener(gameController);
         roll.addActionListener(gameController);
         bp.addActionListener(gameController);
@@ -97,7 +100,8 @@ public class GameFrame extends JFrame implements GameView {
         save.addActionListener(gameController);
         load.addActionListener(gameController);
 
-        addPlayers.setEnabled(true);
+        addPlayer.setEnabled(true);
+        addAIPlayer.setEnabled(true);
         start.setEnabled(false);
         roll.setEnabled(false);
         bp.setEnabled(false);
@@ -626,9 +630,10 @@ public class GameFrame extends JFrame implements GameView {
 
 
         JPanel buttonPanel = new JPanel();
-        JPanel buttons = new JPanel(new GridLayout(2, 1));
+        JPanel buttons = new JPanel(new GridLayout(2, 5));
 
-        buttons.add(addPlayers);
+        buttons.add(addPlayer);
+        buttons.add(addAIPlayer);
         buttons.add(start);
         buttons.add(roll);
         buttons.add(bp);
@@ -886,7 +891,8 @@ public class GameFrame extends JFrame implements GameView {
         if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
         {
             JOptionPane.showMessageDialog(null, gameModel.getPlayers().get(0).getName() + " wins!");
-            addPlayers.setEnabled(false);
+            addPlayer.setEnabled(false);
+            addAIPlayer.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(false);
             bp.setEnabled(false);
@@ -897,7 +903,8 @@ public class GameFrame extends JFrame implements GameView {
         {
             // disable all buttons except for add player and start. Enable start only if the minimum number of players has been reached.
             start.setEnabled(gameModel.getPlayers().size() >= GameModel.MIN_PLAYERS);
-            addPlayers.setEnabled(true);
+            addPlayer.setEnabled(true);
+            addAIPlayer.setEnabled(true);
             roll.setEnabled(false);
             bp.setEnabled(false);
             jail.setEnabled(false);
@@ -942,7 +949,8 @@ public class GameFrame extends JFrame implements GameView {
                 pt.setEnabled(true);
             }
 
-            addPlayers.setEnabled(false);
+            addPlayer.setEnabled(false);
+            addAIPlayer.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(false);
             jail.setEnabled(false);
@@ -962,7 +970,8 @@ public class GameFrame extends JFrame implements GameView {
                 gameModel.setGameState(GameModel.GameState.PLAYER_ROLLING);
             }
 
-            addPlayers.setEnabled(false);
+            addPlayer.setEnabled(false);
+            addAIPlayer.setEnabled(false);
             start.setEnabled(false);
             roll.setEnabled(true);
             bp.setEnabled(false);

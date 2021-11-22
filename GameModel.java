@@ -283,6 +283,8 @@ public class GameModel {
         }
     }
 
+    
+
     /**
      * @author Robert Simionescu
      * If enough players have been added, sets the game state to PLAYER_ROLLING. If not, throws a

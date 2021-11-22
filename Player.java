@@ -26,6 +26,20 @@ public class Player {
     private int totalNumberHouses;
     private int totalNumberHotels;
 
+    public Player()
+    {
+        this.PROPERTIES = new ArrayList<>();
+        this.name = "";
+        this.money = 0;
+        this.bankrupt = false;
+        this.doubleCount = 0;
+
+        this.inJail = false;
+
+        this.totalNumberHouses = 0;
+        this.totalNumberHotels = 0;
+    }
+
     /**
      * @author Himanshu Singh
      * Instantiates a new Player.
