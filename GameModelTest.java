@@ -6,6 +6,7 @@
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +17,7 @@ public class GameModelTest {
 
     GameModel gm;
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test add game view.
      */
     @Test
@@ -29,7 +30,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test remove game view.
      */
     @Test
@@ -43,10 +44,9 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test create and get gameboard.
      */
-    /*
     @Test
     public void testCreateAndGetGameboard() {
         System.out.println("Testing GetGameboard and CreatingGameboard Function...");
@@ -54,54 +54,92 @@ public class GameModelTest {
         gm.createGameboard();
         ArrayList<Square> squares = new ArrayList<>();
         Collections.addAll(squares, new Square() {
+
+
             @Override
             public String getName() {
                 return "Initial Starting Point";
             }
+
 
             @Override
             public String toString() {
                 return String.format("%s", getName());
             }
 
-        }, new Street("Mediterranean Avenue", "Brown", 40) {
-        }, new Street("Baltic Avenue", "Brown", 60) {
+        }, new Street("Mediterranean Avenue", "Brown", 60, 50, 50) {
+        }, new Street("Baltic Avenue", "Brown", 60, 50, 50) {
 
-        }, new Street("Oriental Avenue", "Blue", 100) {
-        }, new Street("Vermont Avenue", "Blue", 100) {
-        }, new Street("Connecticut Avenue", "Blue", 120) {
+        }, new Railroad("Reading Railroad", 200) {
 
-        }, new Street("St. Charles Place", "Pink", 140) {
-        }, new Street("States Avenue", "Pink", 140) {
-        }, new Street("Virginia Avenue", "Pink", 160) {
+        }, new Street("Oriental Avenue", "Blue", 100, 50, 50) {
+        }, new Street("Vermont Avenue", "Blue", 100, 50, 50) {
+        }, new Street("Connecticut Avenue", "Blue", 120, 50, 50) {
 
-        }, new Street("St. James Place", "Orange", 180) {
-        }, new Street("Tennessee Avenue", "Orange", 180) {
-        }, new Street("New York Avenue", "Orange", 200) {
+        }, new Square() {
 
-        }, new Street("Kentucky Avenue", "Red", 220) {
-        }, new Street("Indiana Avenue", "Red", 220) {
-        }, new Street("Illinois Avenue", "Red", 240) {
 
-        }, new Street("Atlantic Avenue", "Yellow", 260) {
-        }, new Street("Ventnor Avenue", "Yellow", 260) {
-        }, new Street("Marvin Gardens", "Yellow", 280) {
+            @Override
+            public String getName() {
+                return "Jail";
+            }
 
-        }, new Street("Pacific Avenue", "Green", 300) {
-        }, new Street("North Carolina Avenue", "Green", 300) {
-        }, new Street("Pennsylvania Avenue", "Green", 320) {
 
-        }, new Street("Park Place", "Dark Blue", 350) {
-        }, new Street("Board Walk", "Dark Blue", 400));
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+        }, new Street("St. Charles Place", "Pink", 140, 100, 100) {
+        }, new Utility("Electric Company", 150) {
+        }, new Street("States Avenue", "Pink", 140, 100, 100) {
+        }, new Street("Virginia Avenue", "Pink", 160, 100, 100) {
+
+        }, new Railroad("Pennsylvania Railroad", 200) {
+
+        }, new Street("St. James Place", "Orange", 180, 100, 100) {
+        }, new Street("Tennessee Avenue", "Orange", 180, 100, 100) {
+        }, new Street("New York Avenue", "Orange", 200, 100, 100) {
+
+        }, new Street("Kentucky Avenue", "Red", 220, 150, 150) {
+        }, new Street("Indiana Avenue", "Red", 220, 150, 150) {
+        }, new Street("Illinois Avenue", "Red", 240, 150, 150) {
+
+        }, new Railroad("B. & O. Railroad", 200) {
+
+        }, new Street("Atlantic Avenue", "Yellow", 260, 150, 150) {
+        }, new Street("Ventnor Avenue", "Yellow", 260, 150, 150) {
+        }, new Utility("Water Works", 150) {
+        }, new Street("Marvin Gardens", "Yellow", 280, 150, 150) {
+
+        }, new Square() {
+
+
+            @Override
+            public String getName() {
+                return "Go to Jail";
+            }
+
+
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+
+        }, new Street("Pacific Avenue", "Green", 300, 200, 200) {
+        }, new Street("North Carolina Avenue", "Green", 300, 200, 200) {
+        }, new Street("Pennsylvania Avenue", "Green", 320, 200, 200) {
+
+        }, new Railroad("Short Line Railroad", 200) {
+
+        }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
+        }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
         System.out.println("Expected: " + squares.toString() + "" + "\nActual: " +
                 gm.createGameboard().getSquares().toString() + "\n");
         assertEquals(squares.toString(), gm.createGameboard().getSquares().toString());
     }
 
-     */
-
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test initial gamestate.
      */
     @Test
@@ -114,7 +152,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test add player.
      */
     @Test
@@ -133,7 +171,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test one player remaining.
      */
     @Test
@@ -150,7 +188,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test rolls.
      */
     @Test
@@ -168,9 +206,24 @@ public class GameModelTest {
         gm.roll();
         GameModel.GameState testGamestate2 = GameModel.GameState.PLAYER_ROLLED_DOUBLES;
         GameModel.GameState testGamestate3 = GameModel.GameState.PLAYER_ROLLED_NORMAL;
+        GameModel.GameState testGamestate4 = GameModel.GameState.DOUBLES_ROLLED_IN_JAIL;
+        GameModel.GameState testGamestate5 = GameModel.GameState.PLAYER_PASSED_GO;
+        GameModel.GameState testGamestate6 = GameModel.GameState.DOUBLES_ROLLED_THRICE;
         if(gm.getGameState().equals(testGamestate2)){
             System.out.println("Expected: " + testGamestate2 + " | Actual: " + gm.getGameState() + "\n");
             assertEquals(testGamestate2,gm.getGameState());
+        }
+        else if(gm.getGameState().equals(testGamestate4)){
+            System.out.println("Expected: " + testGamestate4 + " | Actual: " + gm.getGameState() + "\n");
+            assertEquals(testGamestate4,gm.getGameState());
+        }
+        else if(gm.getGameState().equals(testGamestate5)){
+            System.out.println("Expected: " + testGamestate5 + " | Actual: " + gm.getGameState() + "\n");
+            assertEquals(testGamestate5,gm.getGameState());
+        }
+        else if(gm.getGameState().equals(testGamestate6)){
+            System.out.println("Expected: " + testGamestate6 + " | Actual: " + gm.getGameState() + "\n");
+            assertEquals(testGamestate6,gm.getGameState());
         }
         else{
             System.out.println("Expected: " + testGamestate3 + " | Actual: " + gm.getGameState() + "\n");
@@ -179,7 +232,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test get players.
      */
     @Test
@@ -211,7 +264,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test remove player.
      */
     @Test
@@ -232,7 +285,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test get current player.
      */
     @Test
@@ -268,7 +321,7 @@ public class GameModelTest {
 
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test player land on square.
      */
     @Test
@@ -276,7 +329,7 @@ public class GameModelTest {
         System.out.println("Testing PlayerLandOnSquare Function...");
         gm = new GameModel();
         Player a = new Player("a",3000000);
-        Player b = new Player("b", 15);
+        Player b = new Player("b", 1);
         gm.createGameboard();
         gm.addPlayer(a);
         gm.addPlayer(b);
@@ -302,16 +355,16 @@ public class GameModelTest {
 
         gm.passTurn(false);
         b.setPosition(total);
-        b.addProperty((Property)gm.getGameboard().getSquare(total - 1));
+        b.addProperty((Property) gm.getGameboard().getSquare(b.getPosition()));
 
         System.out.println("Player B owns " + b.getProperties().get(0));
-        System.out.println();
-        assertTrue(gm.playerLandOnSquare(b,gm.getGameboard().getSquares().get(total)));
+
+        assertTrue(gm.playerLandOnSquare(b, gm.getGameboard().getSquares().get(total)));
     }
 
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test pass turn.
      */
     @Test
@@ -335,7 +388,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test buy property.
      */
     @Test
@@ -364,7 +417,7 @@ public class GameModelTest {
     }
 
     /**
-     * @Author Himanshu Singh
+     * @author Himanshu Singh
      * Test start game.
      */
     @Test
@@ -379,6 +432,87 @@ public class GameModelTest {
         gm.startGame();
         assertEquals(gm.getGameState(),testGameState);
 
+    }
+
+    /**
+     * @author Himanshu Singh
+     * Test building houses/hotels on streets
+     */
+    @Test
+    public void  testBuildOnProperty(){
+        gm = new GameModel();
+        Player a = new Player("a",210000);
+        Player b = new Player("b",2000);
+        gm.createGameboard();
+        gm.addPlayer(a);
+        gm.addPlayer(b);
+        gm.startGame();
+
+        a.setPosition(4);
+
+        gm.buyProperty(a);
+        a.setPosition(5);
+
+        gm.buyProperty(a);
+        a.setPosition(6);
+
+        gm.buyProperty(a);
+        System.out.println("List of Properties: " + a.getProperties());
+        gm.buildOnProperty(a,"Connecticut Avenue");
+
+        ArrayList<Street> ownedSquaresMatching = new ArrayList();
+        int s = 0;
+        for (Property property : a.getProperties()) {
+            if (property instanceof Street) {
+                if (((Street) property).getColour().equals("Blue")) {
+                    ownedSquaresMatching.add((Street) property);
+                    s = s + 1;
+                }
+            }
+        }
+
+        ArrayList<Square> gameboardSquares = gm.getGameboard().getSquares();
+        int f = 0;
+        for (Square square : gameboardSquares) {
+            if (square instanceof Street) {
+                if (((Street) square).getColour().equals("Blue")) {
+                    f++;
+                }
+            }
+        }
+
+        if(f == s){
+            System.out.println("The player has 3 properties of the same set.");
+            assertEquals(f,s,3);
+        }
+        gm.buildOnProperty(a,"Vermont Avenue");
+        gm.buildOnProperty(a,"Oriental Avenue");
+        System.out.println("The player has 3 houses placed evenly.");
+        assertEquals(3,a.getTotalNumberHouses());
+        gm.buildOnProperty(a,"Connecticut Avenue");
+        gm.buildOnProperty(a,"Vermont Avenue");
+        gm.buildOnProperty(a,"Oriental Avenue");
+        System.out.println("The player has 6 houses placed evenly.");
+        assertEquals(6,a.getTotalNumberHouses());
+        gm.buildOnProperty(a,"Connecticut Avenue");
+        gm.buildOnProperty(a,"Vermont Avenue");
+        gm.buildOnProperty(a,"Oriental Avenue");
+        System.out.println("The player has 9 houses placed evenly.");
+        assertEquals(9,a.getTotalNumberHouses());
+        gm.buildOnProperty(a,"Connecticut Avenue");
+        gm.buildOnProperty(a,"Vermont Avenue");
+        gm.buildOnProperty(a,"Oriental Avenue");
+        System.out.println("The player has 12 houses placed evenly.");
+        assertEquals(12,a.getTotalNumberHouses());
+        gm.buildOnProperty(a,"Connecticut Avenue");
+        System.out.println("The player has 13 houses placed evenly, and one hotel.");
+        assertEquals(1,a.getTotalNumberHotels());
+        assertEquals(13,a.getTotalNumberHouses());
+        gm.buildOnProperty(a,"Vermont Avenue");
+        gm.buildOnProperty(a,"Oriental Avenue");
+        assertEquals(3,a.getTotalNumberHotels());
+        //Exceptions thrown for the case of multiple properties on different color or you are all out of hotels or
+        //houses
     }
 
 }

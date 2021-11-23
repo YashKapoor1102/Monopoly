@@ -103,20 +103,31 @@ public class GameModel {
         return gameState;
     }
 
+    /**
+     * @author Yash Kapoor
+     * Get the building state
+     *
+     * @return      a BuildingState Object, the current building state
+     */
     public BuildingState getBuildingState()
     {
         return buildingState;
     }
 
+    /**
+     * @author Yash Kapoor
+     * Set the building state
+     *
+     * @param bs    a BuildingState Object, the current building state
+     */
     public void setBuildingState(BuildingState bs){
         this.buildingState = bs;
     }
 
-
-
     /**
      * @author Robert Simionescu
-     * Meant for testing purposes
+     * Set the game state
+     *
      * @return The current GameState.
      */
     public void setGameState(GameState gm){
@@ -613,6 +624,8 @@ public class GameModel {
     }
 
     /**
+     * @author Yash Kapoor
+     *
      * Get the total number of houses that are in the bank.
      *
      * There are 32 houses in the bank. Hence, this value is initialized to 32.
@@ -623,6 +636,8 @@ public class GameModel {
     }
 
     /**
+     * @author Yash Kapoor
+     *
      * Set the total number of houses that are in the bank.
      * @param houses       an int, representing the number of houses.
      */
@@ -631,6 +646,8 @@ public class GameModel {
     }
 
     /**
+     * @author Yash Kapoor
+     *
      * Get the total number of hotels that are in the bank.
      * @return      an int, representing the total number of hotels
      */
@@ -639,6 +656,8 @@ public class GameModel {
     }
 
     /**
+     * @author Yash Kapoor
+     *
      * Set the total number of hotels that are in the bank.
      * @param hotels    an int, representing the number of hotels.
      */
@@ -647,11 +666,129 @@ public class GameModel {
     }
 
     /**
-     * Allows the player to build houses/hotels on the streets that they own.
+     * @author Yash Kapoor
+     *
+     * Helper method for buildOnProperty()
      *
      * Keeps track of the number of houses/hotels on each street that the player clicks on,
      * ensuring that the number of houses/hotels do not exceed the total number
      * of houses and hotels in the bank.
+     *
+     * @param buyer         a Player Object, the player who is buying the houses/hotels on the street
+     * @param s             a Street Object, the street that the player clicked on to build a house/hotel on
+     */
+    private void assignHouses(Player buyer, Street s) {
+        if (s.buildHouses(getCurrentPlayer(), gameboard) == null) {
+            // player does not own all the properties in the color set
+
+            return;
+        }
+        else {
+            // player owns all the properties in the same color set
+
+            ArrayList<Street> ownedSquaresMatching = s.buildHouses(getCurrentPlayer(), gameboard);
+
+            int totalHouses = 0;
+            for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+                // iterating through the ArrayList and calculating the total number of houses
+                // on each street of a specific color set
+
+                totalHouses += ownedSquaresMatching.get(sameStreet).getHouses();
+
+            }
+
+
+            // calculation below that ensures the player is building houses evenly
+            float average = totalHouses / (float) ownedSquaresMatching.size();
+
+            int numHouses = s.getHouses();
+
+            if (numHouses > average && !s.getMaxCapacityReached()) {
+
+                throw new BuildHousesException("You must build houses evenly! Try again.");
+                // cannot build house since player is not building evenly
+            }
+
+            if (s.getHouseCost() <= buyer.getMoney()) {
+                // the cost of the house must be less than or equal to the buyer's total amount of money
+
+                if(!s.getMaxCapacityReached()) {
+                    // runs as long as the maximum capacity (5 houses) is not reached
+                    // The 5th house is technically the hotel
+
+                    totalNumberHouses--;
+
+                    if (totalNumberHouses >= 0) {
+                        // runs as long as there are enough houses available in the bank
+                        // for the player to buy
+
+                        buyer.removeMoney(s.getHouseCost());
+                        s.setHouses(++numHouses);
+
+                        if (totalHouses == (4 * ownedSquaresMatching.size()) - 1) {
+                            // 4 houses have been built on each street of a specific color set
+
+                            buildingState = BuildingState.ALL_HOUSES_BUILT;
+                        }
+
+                        getCurrentPlayer().setTotalNumberHouses(getCurrentPlayer().getTotalNumberHouses() + 1);
+
+                        if (numHouses == 5) {
+                            // hotel is built on the street, all houses are returned to the bank
+                            s.setMaxCapacityReached(true);
+
+                            totalNumberHouses += 5;
+                            // houses returned to the bank, so plus 5
+
+                            totalNumberHotels--;
+
+                            if(totalNumberHotels >= 0) {
+                                // 5 houses technically equal 1 hotel, so we set hotels = 1
+                                s.setHotels(1);
+
+                                int totalHotels = 0;
+                                for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+                                    // iterating through the ArrayList and calculating the total number of hotels
+                                    // on each street of a specific color set
+
+                                    totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
+
+                                    if (totalHotels == ownedSquaresMatching.size()) {
+                                        buildingState = BuildingState.ALL_HOTELS_BUILT;
+                                    }
+
+                                }
+
+                                getCurrentPlayer().setTotalNumberHotels(getCurrentPlayer().getTotalNumberHotels() + 1);
+
+                                return;
+                                // hotel built
+                            }
+                            else {
+                                throw new NotEnoughHotelsException("There are no more hotels left in the bank. Sorry!");
+
+                            }
+
+                        }
+
+                    }
+                    else {
+                        throw new NotEnoughHousesException("There are no more houses left in the bank. Sorry!");
+                    }
+                }
+            } else {
+                throw new InsufficientMoneyException("You do not have enough money to purchase this house.");
+
+            }
+
+        }
+    }
+
+
+    /**
+     * @author Yash Kapoor
+     *
+     * Allows the player to build houses/hotels on the streets that they own.
      *
      * @param buyer     a Player Object, the player who is buying the houses/hotels on the street
      * @param name      a String, the name of the street that the player clicked on to build a house/hotel on
@@ -664,110 +801,7 @@ public class GameModel {
         for (Square s : gameboardSquares) {
             if (s instanceof Street) {
                 if ((s.getName().equals(name))) {
-                    if (((Street) s).buildHouses(getCurrentPlayer(), gameboard) == null) {
-                        // player does not own all the properties in the color set
-
-                        return;
-                    }
-                    else {
-                        // player owns all the properties in the same color set
-
-                        ArrayList<Street> ownedSquaresMatching = ((Street) s).buildHouses(getCurrentPlayer(), gameboard);
-
-                        int totalHouses = 0;
-                        for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
-                            // iterating through the ArrayList and calculating the total number of houses
-                            // on each street of a specific color set
-
-                            totalHouses += ownedSquaresMatching.get(sameStreet).getHouses();
-
-                        }
-
-
-                        // calculation below that ensures the player is building houses evenly
-                        float average = totalHouses / (float) ownedSquaresMatching.size();
-
-                        int numHouses = ((Street) s).getHouses();
-
-                        if (numHouses > average && !((Street) s).getMaxCapacityReached()) {
-
-                            throw new BuildHousesException("You must build houses evenly! Try again.");
-                            // cannot build house since player is not building evenly
-                        }
-
-                        if (((Street) s).getHouseCost() <= buyer.getMoney()) {
-                            // the cost of the house must be less than or equal to the buyer's total amount of money
-
-                            if(!((Street) s).getMaxCapacityReached()) {
-                                // runs as long as the maximum capacity (5 houses) is not reached
-                                // The 5th house is technically the hotel
-
-                                totalNumberHouses--;
-
-                                if (totalNumberHouses >= 0) {
-                                    // runs as long as there are enough houses available in the bank
-                                    // for the player to buy
-
-                                    buyer.removeMoney(((Street) s).getHouseCost());
-                                    ((Street) s).setHouses(++numHouses);
-
-                                    if (totalHouses == (4 * ownedSquaresMatching.size()) - 1) {
-                                        // 4 houses have been built on each street of a specific color set
-
-                                        buildingState = BuildingState.ALL_HOUSES_BUILT;
-                                    }
-
-                                    getCurrentPlayer().setTotalNumberHouses(getCurrentPlayer().getTotalHouses() + 1);
-
-                                    if (numHouses == 5) {
-                                        // hotel is built on the street, all houses are returned to the bank
-                                        ((Street) s).setMaxCapacityReached(true);
-
-                                        totalNumberHouses += 5;
-                                        // houses returned to the bank, so plus 5
-
-                                        totalNumberHotels--;
-
-                                        if(totalNumberHotels >= 0) {
-                                            // 5 houses technically equal 1 hotel, so we set hotels = 1
-                                            ((Street) s).setHotels(1);
-
-                                            int totalHotels = 0;
-                                            for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
-                                                // iterating through the ArrayList and calculating the total number of hotels
-                                                // on each street of a specific color set
-
-                                                totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
-
-                                                if (totalHotels == ownedSquaresMatching.size()) {
-                                                    buildingState = BuildingState.ALL_HOTELS_BUILT;
-                                                }
-
-                                            }
-
-                                            getCurrentPlayer().setTotalNumberHotels(getCurrentPlayer().getTotalNumberHotels() + 1);
-
-                                            return;
-                                            // hotel built
-                                        }
-                                        else {
-                                            throw new NotEnoughHotelsException("There are no more hotels left in the bank. Sorry!");
-
-                                        }
-
-                                    }
-
-                                }
-                                else {
-                                    throw new NotEnoughHousesException("There are no more houses left in the bank. Sorry!");
-                                }
-                            }
-                        } else {
-                            throw new InsufficientMoneyException("You do not have enough money to purchase this house.");
-
-                        }
-
-                    }
+                    assignHouses(buyer, (Street) s);
                 }
             }
         }

@@ -83,6 +83,7 @@ public class GameFrame extends JFrame implements GameView {
         bp = new JButton("Buy Property");
         pt = new JButton("Pass turn");
         jail = new JButton("Get Out of Jail");
+
         build = new JButton("Build");
         save = new JButton("Save");
         load = new JButton("Load");
@@ -314,9 +315,7 @@ public class GameFrame extends JFrame implements GameView {
         funopoly.setIcon(bd);
         center.add(funopoly, BorderLayout.CENTER);
 
-
-        JPanel buttonPanel = new JPanel();
-        JPanel buttons = new JPanel(new GridLayout(2, 5));
+        JPanel buttons = new JPanel(new GridLayout(3, 4));
 
         buttons.add(addPlayer);
         buttons.add(addAIPlayer);
@@ -332,9 +331,7 @@ public class GameFrame extends JFrame implements GameView {
         buttons.add(save);
         buttons.add(load);
 
-        buttonPanel.setBackground(new Color(187, 255, 202));
-
-        buttons.add(buttonPanel);
+        buttons.setBackground(new Color(187, 255, 202));
 
         center.add(buttons, BorderLayout.PAGE_START);
 
@@ -531,10 +528,10 @@ public class GameFrame extends JFrame implements GameView {
             else        // Otherwise, player is bankrupt
             {
                 // player bankrupt, returning all houses to the bank
-                gameModel.setTotalNumberHouses(gameModel.getTotalNumberHouses() + gameModel.getPlayers().get(i).getTotalHouses());
+                gameModel.setTotalNumberHouses(gameModel.getTotalNumberHouses() + gameModel.getPlayers().get(i).getTotalNumberHouses());
 
                 // player bankrupt, returning all hotels to the bank
-                gameModel.setTotalNumberHotels(gameModel.getTotalNumberHotels() + gameModel.getPlayers().get(i).getTotalHouses());
+                gameModel.setTotalNumberHotels(gameModel.getTotalNumberHotels() + gameModel.getPlayers().get(i).getTotalNumberHouses());
 
                 fullPlayerPanels[i].removeAll();
 

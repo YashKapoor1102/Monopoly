@@ -4,7 +4,7 @@
  */
 public interface GameView
 {
-    void handleGameStatusUpdate(GameModel gameModel);
+    public void handleGameStatusUpdate(GameModel gameModel);
 
-    void handleBuildingStatusUpdate(GameModel gameModel);
+    public void handleBuildingStatusUpdate(GameModel gameModel);
 }

@@ -234,7 +234,7 @@ public class Player {
      *
      * @return      an int, the total number of houses the player has
      */
-    public int getTotalHouses() {
+    public int getTotalNumberHouses() {
         return this.totalNumberHouses;
     }
 
