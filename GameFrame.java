@@ -306,9 +306,8 @@ public class GameFrame extends JFrame implements GameView {
     private JPanel getCenter() {
         JPanel center = new JPanel(new BorderLayout());
 
-
         JLabel funopoly = new JLabel();
-        ImageIcon fun = new ImageIcon("Images/Funopoly.png");
+        ImageIcon fun = new ImageIcon(this.getClass().getResource("Images/Funopoly.png"));
         Image f = fun.getImage().getScaledInstance(600, 800, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(f);
 

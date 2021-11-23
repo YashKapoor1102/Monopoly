@@ -13,35 +13,35 @@ public class GameLabelsInitialization
      * Initializes all the labels on the south side of the board with their names and images.
      */
     public static void initializeSouthLabels(ArrayList<JLabel> jLabelList) {
-        ImageIcon mediterraneanAvenue = new ImageIcon("Images/MediterraneanAvenue.PNG");
+        ImageIcon mediterraneanAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/MediterraneanAvenue.PNG"));
         Image ma = mediterraneanAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon mt = new ImageIcon(ma);
 
-        ImageIcon balticAvenue = new ImageIcon("Images/BalticAvenue.PNG");
+        ImageIcon balticAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/BalticAvenue.PNG"));
         Image ba = balticAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon b = new ImageIcon(ba);
 
-        ImageIcon readingRailroad = new ImageIcon("Images/ReadingRailroad.PNG");
+        ImageIcon readingRailroad = new ImageIcon(GameLabelsInitialization.class.getResource("Images/ReadingRailroad.PNG"));
         Image rr = readingRailroad.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon r = new ImageIcon(rr);
 
-        ImageIcon orientalAvenue = new ImageIcon("Images/OrientalAvenue.PNG");
+        ImageIcon orientalAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/OrientalAvenue.PNG"));
         Image oa = orientalAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon o = new ImageIcon(oa);
 
-        ImageIcon vermontAvenue = new ImageIcon("Images/VermontAvenue.PNG");
+        ImageIcon vermontAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/VermontAvenue.PNG"));
         Image vma = vermontAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon vm = new ImageIcon(vma);
 
-        ImageIcon connecticutAvenue = new ImageIcon("Images/ConnecticutAvenue.PNG");
+        ImageIcon connecticutAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/ConnecticutAvenue.PNG"));
         Image ca = connecticutAvenue.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon c = new ImageIcon(ca);
 
-        ImageIcon startingPoint = new ImageIcon("Images/StartingPoint.PNG");
+        ImageIcon startingPoint = new ImageIcon(GameLabelsInitialization.class.getResource("Images/StartingPoint.PNG"));
         Image sp = startingPoint.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon s = new ImageIcon(sp);
 
-        ImageIcon jail = new ImageIcon("Images/Jail.PNG");
+        ImageIcon jail = new ImageIcon(GameLabelsInitialization.class.getResource("Images/Jail.PNG"));
         Image jl = jail.getImage().getScaledInstance(118, 140, Image.SCALE_DEFAULT);
         ImageIcon j = new ImageIcon(jl);
 
@@ -93,35 +93,35 @@ public class GameLabelsInitialization
      * Initializes all the labels on the west side of the board with their names and images.
      */
     public static void initializeWestLabels(ArrayList<JLabel> jLabelList) {
-        ImageIcon newYorkAvenue = new ImageIcon("Images/NewYorkAvenue.PNG");
+        ImageIcon newYorkAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/NewYorkAvenue.PNG"));
         Image nya = newYorkAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon ny = new ImageIcon(nya);
 
-        ImageIcon tennesseeAvenue = new ImageIcon("Images/TennesseeAvenue.PNG");
+        ImageIcon tennesseeAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/TennesseeAvenue.PNG"));
         Image ta = tennesseeAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon t = new ImageIcon(ta);
 
-        ImageIcon stJamesPlace = new ImageIcon("Images/StJamesPlace.PNG");
+        ImageIcon stJamesPlace = new ImageIcon(GameLabelsInitialization.class.getResource("Images/StJamesPlace.PNG"));
         Image sjp = stJamesPlace.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon sj = new ImageIcon(sjp);
 
-        ImageIcon pennsylvaniaRailroad = new ImageIcon("Images/PennsylvaniaRailroad.PNG");
+        ImageIcon pennsylvaniaRailroad = new ImageIcon(GameLabelsInitialization.class.getResource("Images/PennsylvaniaRailroad.PNG"));
         Image pr = pennsylvaniaRailroad.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon p = new ImageIcon(pr);
 
-        ImageIcon virginiaAvenue = new ImageIcon("Images/VirginiaAvenue.PNG");
+        ImageIcon virginiaAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/VirginiaAvenue.PNG"));
         Image vga = virginiaAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon vg = new ImageIcon(vga);
 
-        ImageIcon statesAvenue = new ImageIcon("Images/StatesAvenue.PNG");
+        ImageIcon statesAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/StatesAvenue.PNG"));
         Image sta = statesAvenue.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon st = new ImageIcon(sta);
 
-        ImageIcon electricCompany = new ImageIcon("Images/ElectricCompany.PNG");
+        ImageIcon electricCompany = new ImageIcon(GameLabelsInitialization.class.getResource("Images/ElectricCompany.PNG"));
         Image ec = electricCompany.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon e = new ImageIcon(ec);
 
-        ImageIcon stCharlesPlace = new ImageIcon("Images/StCharlesPlace.PNG");
+        ImageIcon stCharlesPlace = new ImageIcon(GameLabelsInitialization.class.getResource("Images/StCharlesPlace.PNG"));
         Image scp = stCharlesPlace.getImage().getScaledInstance(141, 88, Image.SCALE_DEFAULT);
         ImageIcon sc = new ImageIcon(scp);
 
@@ -175,39 +175,39 @@ public class GameLabelsInitialization
      */
     public static void initializeNorthLabels(ArrayList<JLabel> jLabelList) {
 
-        ImageIcon kentuckyAvenue = new ImageIcon("Images/KentuckyAvenue.PNG");
+        ImageIcon kentuckyAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/KentuckyAvenue.PNG"));
         Image ka = kentuckyAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon k = new ImageIcon(ka);
 
-        ImageIcon indianaAvenue = new ImageIcon("Images/IndianaAvenue.PNG");
+        ImageIcon indianaAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/IndianaAvenue.PNG"));
         Image ina = indianaAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon in = new ImageIcon(ina);
 
-        ImageIcon illinoisAvenue = new ImageIcon("Images/IllinoisAvenue.PNG");
+        ImageIcon illinoisAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/IllinoisAvenue.PNG"));
         Image ia = illinoisAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon i = new ImageIcon(ia);
 
-        ImageIcon boRailroad = new ImageIcon("Images/B. & O. Railroad.PNG");
+        ImageIcon boRailroad = new ImageIcon(GameLabelsInitialization.class.getResource("Images/B. & O. Railroad.PNG"));
         Image bor = boRailroad.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon bo = new ImageIcon(bor);
 
-        ImageIcon atlanticAvenue = new ImageIcon("Images/AtlanticAvenue.PNG");
+        ImageIcon atlanticAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/AtlanticAvenue.PNG"));
         Image aa = atlanticAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon a = new ImageIcon(aa);
 
-        ImageIcon ventnorAvenue = new ImageIcon("Images/VentnorAvenue.PNG");
+        ImageIcon ventnorAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/VentnorAvenue.PNG"));
         Image va = ventnorAvenue.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon v = new ImageIcon(va);
 
-        ImageIcon waterWorks = new ImageIcon("Images/WaterWorks.PNG");
+        ImageIcon waterWorks = new ImageIcon(GameLabelsInitialization.class.getResource("Images/WaterWorks.PNG"));
         Image ww = waterWorks.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon w = new ImageIcon(ww);
 
-        ImageIcon marvinGardens = new ImageIcon("Images/MarvinGardens.PNG");
+        ImageIcon marvinGardens = new ImageIcon(GameLabelsInitialization.class.getResource("Images/MarvinGardens.PNG"));
         Image mg = marvinGardens.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon m = new ImageIcon(mg);
 
-        ImageIcon goToJail = new ImageIcon("Images/GoToJail.PNG");
+        ImageIcon goToJail = new ImageIcon(GameLabelsInitialization.class.getResource("Images/GoToJail.PNG"));
         Image gtj = goToJail.getImage().getScaledInstance(105, 140, Image.SCALE_DEFAULT);
         ImageIcon gt = new ImageIcon(gtj);
 
@@ -265,27 +265,27 @@ public class GameLabelsInitialization
      */
     public static void initializeEastLabels(ArrayList<JLabel> jLabelList) {
 
-        ImageIcon pacificAvenue = new ImageIcon("Images/PacificAvenue.PNG");
+        ImageIcon pacificAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/PacificAvenue.PNG"));
         Image pa = pacificAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon p = new ImageIcon(pa);
 
-        ImageIcon northCarolinaAvenue = new ImageIcon("Images/NorthCarolinaAvenue.PNG");
+        ImageIcon northCarolinaAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/NorthCarolinaAvenue.PNG"));
         Image nca = northCarolinaAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon nc = new ImageIcon(nca);
 
-        ImageIcon pennsylvaniaAvenue = new ImageIcon("Images/PennsylvaniaAvenue.PNG");
+        ImageIcon pennsylvaniaAvenue = new ImageIcon(GameLabelsInitialization.class.getResource("Images/PennsylvaniaAvenue.PNG"));
         Image pna = pennsylvaniaAvenue.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon pn = new ImageIcon(pna);
 
-        ImageIcon shortLineRailroad = new ImageIcon("Images/ShortLineRailroad.PNG");
+        ImageIcon shortLineRailroad = new ImageIcon(GameLabelsInitialization.class.getResource("Images/ShortLineRailroad.PNG"));
         Image slr = shortLineRailroad.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon sl = new ImageIcon(slr);
 
-        ImageIcon parkPlace = new ImageIcon("Images/ParkPlace.PNG");
+        ImageIcon parkPlace = new ImageIcon(GameLabelsInitialization.class.getResource("Images/ParkPlace.PNG"));
         Image park = parkPlace.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon pp = new ImageIcon(park);
 
-        ImageIcon boardWalk = new ImageIcon("Images/BoardWalk.PNG");
+        ImageIcon boardWalk = new ImageIcon(GameLabelsInitialization.class.getResource("Images/BoardWalk.PNG"));
         Image bdw = boardWalk.getImage().getScaledInstance(141, 117, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(bdw);
 
