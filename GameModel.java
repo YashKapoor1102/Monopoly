@@ -502,7 +502,6 @@ public class GameModel implements Serializable {
         }
     }
 
-
     /**
      * @author Yash Kapoor and Robert Simionescu
      * Handles bankuptcy of a player. Bankrupt player forfeits all their properties to the player they are indepted to
@@ -812,6 +811,10 @@ public class GameModel implements Serializable {
         }
     }
 
+    public void setGameboard(Gameboard gameboard) {
+        this.gameboard = gameboard;
+    }
+
     public void save(File file) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -820,6 +823,7 @@ public class GameModel implements Serializable {
             objectStream.writeObject(getGameState());
             objectStream.writeObject(getBuildingState());
             objectStream.writeObject(getPlayers());
+            objectStream.writeObject(getGameboard());
 
             System.out.println("Saved");
 
@@ -833,9 +837,9 @@ public class GameModel implements Serializable {
 
     public void load(File file) {
         ArrayList<Player> player;
-        ArrayList<Properties> properties;
         GameState gs;
         BuildingState bs;
+        Gameboard gb;
 
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -844,21 +848,16 @@ public class GameModel implements Serializable {
             gs = (GameState) objectInputStream.readObject();
             bs = (BuildingState) objectInputStream.readObject();
             player = (ArrayList<Player>) objectInputStream.readObject();
+            gb = (Gameboard) objectInputStream.readObject();
 
-            for(int i = 0; i < getPlayers().size(); i++) {
-                System.out.println(getPlayers().get(i).getProperties());
-            }
-
-            /*
             for(int i = 0; i < player.size(); i++) {
-                player.get(i).setProperties((ArrayList<Property>) objectInputStream.readObject());
+                System.out.println(player.get(i).getProperties().toString());
             }
-
-             */
 
             setPlayers(player);
             setGameState(gs);
             setBuildingState(bs);
+            setGameboard(gb);
 
             System.out.println(player.toString());
             System.out.println(gs.toString());

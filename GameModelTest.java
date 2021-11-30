@@ -5,6 +5,7 @@
 
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * The type Game model test.
  */
-public class GameModelTest {
+public class GameModelTest implements Serializable {
 
     GameModel gm;
     /**

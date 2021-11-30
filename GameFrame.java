@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Robert Simionescu and Yash Kapoor
  * Class handling the UI for Monopoly to the user.
  */
-public class GameFrame extends JFrame implements GameView {
+public class GameFrame extends JFrame implements GameView, Serializable {
 
     private final JButton addPlayer;
     private final JButton addAIPlayer;
@@ -455,6 +455,7 @@ public class GameFrame extends JFrame implements GameView {
                 propertyPanel.add(propertyLabel);
 
                 propertyPanel.setPreferredSize(new Dimension(104, 25));
+
                 jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
 
             }
@@ -505,8 +506,6 @@ public class GameFrame extends JFrame implements GameView {
                 fullPlayerPanels[i] = new JPanel(new GridLayout(1, 2));
                 fullPlayerPanels[i].setPreferredSize(new Dimension(50, 50));
                 fullPlayerPanels[i].setEnabled(false);
-
-
 
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());

@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * @author Robert Simionescu and Yash Kapoor
  * @version Milestone 3
@@ -7,8 +9,7 @@
  * implemented in this milestone. This interface exists mostly to make expanding the types of squares in later
  * milestones easier.
  */
-public interface Square
-{
+public interface Square extends Serializable {
     /**
      * @author Robert Simionescu
      * Returns the name of the square.

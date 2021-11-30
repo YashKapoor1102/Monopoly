@@ -1,8 +1,10 @@
+import java.io.Serializable;
+
 /**
  * @author Robert Simionescu
  * Subclass of Player handling AI controlled players.
  */
-public class PlayerAI extends Player
+public class PlayerAI extends Player implements Serializable
 {
     private GameModel model;
 

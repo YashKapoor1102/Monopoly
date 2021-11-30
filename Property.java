@@ -1,5 +1,3 @@
-import java.io.Serializable;
-
 /**
  * @author Himanshu Singh and Robert Simionescu
  * @version Milestone 3
@@ -10,7 +8,7 @@ import java.io.Serializable;
  * This has information about a typical property in
  * Monopoly.
  */
-public abstract class Property implements Square, Serializable {
+public abstract class Property implements Square {
 
     private final String PROPERTY_NAME;
     private final int COST;

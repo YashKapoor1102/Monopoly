@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Robert Simionescu
  * Initializes all the labels for the squares on the gameboard
  */
-public class GameLabelsInitialization
+public class GameLabelsInitialization implements Serializable
 {
     /**
      * @author Yash Kapoor
