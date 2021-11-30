@@ -825,13 +825,11 @@ public class GameModel implements Serializable {
             objectStream.writeObject(getPlayers());
             objectStream.writeObject(getGameboard());
 
-            System.out.println("Saved");
-
             fileOutputStream.close();
             objectStream.close();
         }
         catch (Exception e) {
-            System.out.println("Unable to save: " + e);
+            System.out.println("Unable to save: " + e.getMessage());
         }
     }
 
@@ -850,24 +848,16 @@ public class GameModel implements Serializable {
             player = (ArrayList<Player>) objectInputStream.readObject();
             gb = (Gameboard) objectInputStream.readObject();
 
-            for(int i = 0; i < player.size(); i++) {
-                System.out.println(player.get(i).getProperties().toString());
-            }
-
             setPlayers(player);
             setGameState(gs);
             setBuildingState(bs);
             setGameboard(gb);
 
-            System.out.println(player.toString());
-            System.out.println(gs.toString());
-            System.out.println(bs.toString());
-
             fileInputStream.close();
             objectInputStream.close();
         }
         catch (Exception e) {
-            System.out.println("Unable to load saved data: " + e);
+            System.out.println("Unable to load saved data: " + e.getMessage());
         }
     }
 

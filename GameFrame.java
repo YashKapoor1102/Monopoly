@@ -6,14 +6,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Robert Simionescu and Yash Kapoor
  * Class handling the UI for Monopoly to the user.
  */
-public class GameFrame extends JFrame implements GameView, Serializable {
+public class GameFrame extends JFrame implements GameView {
 
     private final JButton addPlayer;
     private final JButton addAIPlayer;
