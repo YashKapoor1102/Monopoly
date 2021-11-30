@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * @author Yash Kapoor
  * @version Milestone 3
@@ -8,7 +10,7 @@
  * If a player owns 3 railroads, rent is $100.
  * If a player owns 4 railroads, rent is $200.
  */
-public class Railroad extends Property {
+public class Railroad extends Property implements Serializable {
 
     /**
      * @author Yash Kapoor

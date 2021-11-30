@@ -6,6 +6,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -325,8 +326,6 @@ public class GameFrame extends JFrame implements GameView {
         buttons.add(jail);
         buttons.add(pt);
 
-        save.setEnabled(false);
-        load.setEnabled(false);
         buttons.add(save);
         buttons.add(load);
 

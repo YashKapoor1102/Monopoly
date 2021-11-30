@@ -2,7 +2,7 @@
  * @author Robert Simionescu and Yash Kapoor
  * @version Milestone 3
  */
-
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +12,7 @@ import java.util.*;
  * of the same colour, the rent of all of those streets doubles from 10% of the cost to 20%. In future milestones, once
  * players reach this point they may build houses and hotels on their streets.
  */
-public class Street extends Property
+public class Street extends Property implements Serializable
 {
     /**
      * The colour of the street as a String.

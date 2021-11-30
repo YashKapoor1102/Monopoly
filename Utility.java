@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * @author Yash Kapoor
  * @version Milestone 3
@@ -8,7 +10,7 @@
  * If one utility is owned, then the rent is 4 times the amount shown on the dice.
  * If two utilities are owned, then the rent is 10 times the amount shown on the dice.
  */
-public class Utility extends Property {
+public class Utility extends Property implements Serializable {
 
     /**
      * @author Yash Kapoor

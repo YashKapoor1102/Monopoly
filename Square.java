@@ -14,7 +14,7 @@ public interface Square
      * Returns the name of the square.
      * @return The name of the square as a String.
      */
-    public String getName();
+    String getName();
 
     /**
      * @author Yash Kapoor
@@ -22,5 +22,5 @@ public interface Square
      *
      * @return      a String, the name of the square
      */
-    public String toString();
+    String toString();
 }

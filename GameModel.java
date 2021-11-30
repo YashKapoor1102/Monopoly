@@ -5,6 +5,7 @@
 
 import gameexceptions.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -14,7 +15,7 @@ import java.util.*;
  * and uses GameFrame to print out important commands for each
  * player that is playing the game.
  */
-public class GameModel {
+public class GameModel implements Serializable {
 
     public static final int MAX_PLAYERS = 8;
     public static final int MIN_PLAYERS = 2;
@@ -553,6 +554,10 @@ public class GameModel {
         return players;
     }
 
+    public void setPlayers(ArrayList<Player> player) {
+        this.players = player;
+    }
+
     /**
      * @author Yash Kapoor and Robert Simionescu
      * Attempts to purchase the property the player is on. Fails if the player is not on a property, the property is
@@ -806,6 +811,67 @@ public class GameModel {
             }
         }
     }
+
+    public void save(File file) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileOutputStream);
+
+            objectStream.writeObject(getGameState());
+            objectStream.writeObject(getBuildingState());
+            objectStream.writeObject(getPlayers());
+
+            System.out.println("Saved");
+
+            fileOutputStream.close();
+            objectStream.close();
+        }
+        catch (Exception e) {
+            System.out.println("Unable to save: " + e);
+        }
+    }
+
+    public void load(File file) {
+        ArrayList<Player> player;
+        ArrayList<Properties> properties;
+        GameState gs;
+        BuildingState bs;
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            gs = (GameState) objectInputStream.readObject();
+            bs = (BuildingState) objectInputStream.readObject();
+            player = (ArrayList<Player>) objectInputStream.readObject();
+
+            for(int i = 0; i < getPlayers().size(); i++) {
+                System.out.println(getPlayers().get(i).getProperties());
+            }
+
+            /*
+            for(int i = 0; i < player.size(); i++) {
+                player.get(i).setProperties((ArrayList<Property>) objectInputStream.readObject());
+            }
+
+             */
+
+            setPlayers(player);
+            setGameState(gs);
+            setBuildingState(bs);
+
+            System.out.println(player.toString());
+            System.out.println(gs.toString());
+            System.out.println(bs.toString());
+
+            fileInputStream.close();
+            objectInputStream.close();
+        }
+        catch (Exception e) {
+            System.out.println("Unable to load saved data: " + e);
+        }
+    }
+
 }
 
 

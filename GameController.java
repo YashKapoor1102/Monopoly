@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +24,7 @@ public class GameController extends MouseAdapter implements ActionListener
 {
     private GameModel model;
     private List<GameView> views;
+    private File file;
 
     /**
      * Constructor for a GameController. Takes a model and generates its list of views from the model.
@@ -32,6 +34,7 @@ public class GameController extends MouseAdapter implements ActionListener
     {
         this.model = model;
         this.views = model.getGameViews();
+        this.file = new File("SavedGame.txt");
     }
 
     /**
@@ -323,6 +326,14 @@ public class GameController extends MouseAdapter implements ActionListener
         }
     }
 
+    public void save() {
+        model.save(file);
+    }
+
+    public void load() {
+        model.load(file);
+    }
+
     /**
      * Handles all the mouse clicks in the game.
      *
@@ -377,6 +388,8 @@ public class GameController extends MouseAdapter implements ActionListener
             case "Build" -> buildOnProperty();
             case "Get Out of Jail" -> outOfJail();
             case "Pass turn" -> pass();
+            case "Save" -> save();
+            case "Load" -> load();
         }
         for (GameView view : views)
         {

@@ -3,6 +3,7 @@
  * @version Milestone 3
  */
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,11 +11,11 @@ import java.util.*;
  * in the game of Monopoly.
  *
  */
-public class Player {
+public class Player implements Serializable {
 
     private int money;
     private final String name;
-    private final List<Property> PROPERTIES;
+    private ArrayList<Property> PROPERTIES;
     private int position;
     private boolean bankrupt;
     private int doubleCount;
@@ -104,7 +105,7 @@ public class Player {
      *
      * @return      a List, the PROPERTIES
      */
-    public List<Property> getProperties() {
+    public ArrayList<Property> getProperties() {
         return this.PROPERTIES;
     }
 

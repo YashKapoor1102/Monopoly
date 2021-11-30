@@ -3,6 +3,7 @@
  * @version Milestone 3
  */
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,7 +11,7 @@ import java.util.*;
  * Class representing the Monopoly gameboard. The gameboard consists of a number of squares in a fixed order. When
  * players reach the end of the board, they return to the start and continue.
  */
-public class Gameboard
+public class Gameboard implements Serializable
 {
     /**
      * @author Robert Simionescu
