@@ -17,9 +17,11 @@ import java.util.*;
  */
 public class GameModel implements Serializable {
 
-    public static final int MAX_PLAYERS = 8;
-    public static final int MIN_PLAYERS = 2;
-    public static final int STARTING_MONEY = 1500;
+    public static final int MAX_PLAYERS = 8;    // Maximum number of players.
+    public static final int MIN_PLAYERS = 2;    // Minimum number of players before the game can begin.
+    public static final int STARTING_MONEY = 1500;  // Initial amount of money for players.
+    public static final int GO_MONEY = 200; // Money given when passing Go.
+    public static final int MAX_HOUSES = 4; // Max houses that can be built on a street before a hotel is built.
 
     public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, PLAYER_PASSED_GO,
         DOUBLES_ROLLED_THRICE, DOUBLES_ROLLED_IN_JAIL, GAME_OVER}
@@ -330,29 +332,19 @@ public class GameModel implements Serializable {
      * @return      an array of integers, the dice rolls
      */
     public int[] roll() {
-
-        int die1;
-        int die2;
-
         Die d = new Die();
-
-        die1 = d.roll();
-        die2 = d.roll();
-
         int[] rolls = {0, 0};
 
-        rolls[0] = die1;
-        rolls[1] = die2;
+        rolls[0] = d.roll();
+        rolls[1] = d.roll();
 
-        int dc = players.get(currentPlayer).getDoubleCount();
         players.get(currentPlayer).setTotalRoll(rolls[0] + rolls[1]);
 
         if (players.get(currentPlayer).getInJail()) {
             if (rolls[0] != rolls[1]) {
                 gameState = GameState.PLAYER_ROLLED_NORMAL;
                 // doubles are not rolled
-                dc++;
-                players.get(currentPlayer).setDoubleCount(dc);
+                players.get(currentPlayer).incrementDoubleCount();
 
             }
             if (rolls[0] == rolls[1] || players.get(currentPlayer).getDoubleCount() == 3) {
@@ -361,7 +353,7 @@ public class GameModel implements Serializable {
                     // third attempt, must pay if doubles are not rolled
 
                     players.get(currentPlayer).removeMoney(50);
-                    players.get(currentPlayer).setDoubleCount(0);
+                    players.get(currentPlayer).resetDoubleCount();
 
                     players.get(currentPlayer).setInJail(false);
 
@@ -398,14 +390,13 @@ public class GameModel implements Serializable {
 
             if (rolls[0] == rolls[1])
             {
-                dc++;
-                players.get(currentPlayer).setDoubleCount(dc);
+                players.get(currentPlayer).incrementDoubleCount();
 
                 if (players.get(currentPlayer).getDoubleCount() == 3) {
                     // player rolls doubles 3 times in a row
                     // goes to jail immediately on 3rd double roll
 
-                    players.get(currentPlayer).setPosition(7);
+                    players.get(currentPlayer).setPosition(gameboard.getJail());
                     players.get(currentPlayer).setInJail(true);
 
                     gameState = GameState.DOUBLES_ROLLED_THRICE;
@@ -418,7 +409,7 @@ public class GameModel implements Serializable {
             else
             {
                 // resetting counter if doubles not rolled
-                players.get(currentPlayer).setDoubleCount(0);
+                players.get(currentPlayer).resetDoubleCount();
 
                 gameState = GameState.PLAYER_ROLLED_NORMAL;
             }
@@ -427,26 +418,46 @@ public class GameModel implements Serializable {
 
             int oldPosition = players.get(currentPlayer).getPosition();
 
-            while(oldPosition != newPosition && !players.get(currentPlayer).getInJail()) {
-
-                oldPosition = (oldPosition + 1) % gameboard.getSquares().size();
-
-                if (newPosition == 24) {
-                    // user lands on "Go to Jail"
-                    // set position to "Jail"
-                    players.get(currentPlayer).setPosition(7);
-                    players.get(currentPlayer).setInJail(true);
-                }
-                else {
-                    players.get(currentPlayer).setPosition(oldPosition);
-                }
-
-                if (oldPosition == 0) {
-                    // User passes go, award them $200
-                    players.get(currentPlayer).addMoney(200);
-                    gameState = GameState.PLAYER_PASSED_GO;
-                }
+            // Since the player's position resets to 0 when reaching go, this condition will only occur when the player
+            // has passed go.
+            if (newPosition != oldPosition + rolls[0] + rolls[1])
+            {
+                players.get(currentPlayer).addMoney(GO_MONEY);
+                gameState = GameState.PLAYER_PASSED_GO;
             }
+
+            // Player has landed on "Go to Jail"
+            if (newPosition == gameboard.getGoToJail())
+            {
+                // set position to "Jail"
+                players.get(currentPlayer).setPosition(gameboard.getJail());
+                players.get(currentPlayer).setInJail(true);
+            }
+            else
+            {
+                players.get(currentPlayer).setPosition(newPosition);
+            }
+
+//            while(oldPosition != newPosition && !players.get(currentPlayer).getInJail()) {
+//
+//                oldPosition = (oldPosition + 1) % gameboard.getSquares().size();
+//
+//                if (newPosition == 24) {
+//                    // user lands on "Go to Jail"
+//                    // set position to "Jail"
+//                    players.get(currentPlayer).setPosition(7);
+//                    players.get(currentPlayer).setInJail(true);
+//                }
+//                else {
+//                    players.get(currentPlayer).setPosition(oldPosition);
+//                }
+//
+//                if (oldPosition == 0) {
+//                    // User passes go, award them $200
+//                    players.get(currentPlayer).addMoney(200);
+//                    gameState = GameState.PLAYER_PASSED_GO;
+//                }
+//            }
 
             if (!players.get(currentPlayer).getInJail()) {
                 // player isn't in jail, so rent must be paid to the other player
@@ -508,7 +519,6 @@ public class GameModel implements Serializable {
      * and is removed from the game.
      * @param debtor Player who is in dept and has gone bankrupt.
      * @param creditor Player who is owed money by the bankrupt Player.
-     *
      * @return     a boolean, returns true indicating that the player has gone bankrupt
      */
     private boolean bankruptcy(Player debtor, Player creditor)
@@ -553,8 +563,8 @@ public class GameModel implements Serializable {
         return players;
     }
 
-    public void setPlayers(ArrayList<Player> player) {
-        this.players = player;
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
     }
 
     /**
@@ -682,15 +692,14 @@ public class GameModel implements Serializable {
      * @param s             a Street Object, the street that the player clicked on to build a house/hotel on
      */
     private void assignHouses(Player buyer, Street s) {
-        if (s.buildHouses(getCurrentPlayer(), gameboard) == null) {
+        ArrayList<Street> ownedSquaresMatching = s.getBuildableColour(getCurrentPlayer(), gameboard);
+        if (ownedSquaresMatching == null) {
             // player does not own all the properties in the color set
 
-            return;
+            return; // This is unnecessary, but if anything gets added after the else it will become necessary.
         }
         else {
             // player owns all the properties in the same color set
-
-            ArrayList<Street> ownedSquaresMatching = s.buildHouses(getCurrentPlayer(), gameboard);
 
             int totalHouses = 0;
             for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
@@ -707,7 +716,7 @@ public class GameModel implements Serializable {
 
             int numHouses = s.getHouses();
 
-            if (numHouses > average && !s.getMaxCapacityReached()) {
+            if (numHouses > average && numHouses != MAX_HOUSES) {
 
                 throw new BuildHousesException("You must build houses evenly! Try again.");
                 // cannot build house since player is not building evenly
@@ -716,78 +725,67 @@ public class GameModel implements Serializable {
             if (s.getHouseCost() <= buyer.getMoney()) {
                 // the cost of the house must be less than or equal to the buyer's total amount of money
 
-                if(!s.getMaxCapacityReached()) {
-                    // runs as long as the maximum capacity (5 houses) is not reached
-                    // The 5th house is technically the hotel
+
+                if (totalNumberHouses >= 0 || numHouses == MAX_HOUSES) {
+                    // runs as long as there are enough houses available in the bank to build another or the player
+                    // has reached the max number of houses and will attempt to build a hotel.
 
                     totalNumberHouses--;
+                    buyer.removeMoney(s.getHouseCost());
+                    numHouses += 1;
+                    s.setHouses(numHouses);
 
-                    if (totalNumberHouses >= 0) {
-                        // runs as long as there are enough houses available in the bank
-                        // for the player to buy
+                    if (totalHouses == (MAX_HOUSES * ownedSquaresMatching.size()) - 1) {
+                        // max number houses have been built on each street of a specific color set
 
-                        buyer.removeMoney(s.getHouseCost());
-                        s.setHouses(++numHouses);
+                        buildingState = BuildingState.ALL_HOUSES_BUILT;
+                    }
 
-                        if (totalHouses == (4 * ownedSquaresMatching.size()) - 1) {
-                            // 4 houses have been built on each street of a specific color set
+                    getCurrentPlayer().incrementTotalNumberHouses();
 
-                            buildingState = BuildingState.ALL_HOUSES_BUILT;
-                        }
+                    if (numHouses == MAX_HOUSES + 1) {
 
-                        getCurrentPlayer().setTotalNumberHouses(getCurrentPlayer().getTotalNumberHouses() + 1);
-
-                        if (numHouses == 5) {
-                            // hotel is built on the street, all houses are returned to the bank
-                            s.setMaxCapacityReached(true);
-
-                            totalNumberHouses += 5;
-                            // houses returned to the bank, so plus 5
+                        if(totalNumberHotels >= 0) {
+                            totalNumberHouses += MAX_HOUSES + 1;
+                            // houses returned to the bank, plus the newly added extra.
 
                             totalNumberHotels--;
 
-                            if(totalNumberHotels >= 0) {
-                                // 5 houses technically equal 1 hotel, so we set hotels = 1
-                                s.setHotels(1);
+                            // 5 houses technically equal 1 hotel, so we set hotels = 1
+                            s.setHotels(1);
 
-                                int totalHotels = 0;
-                                for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
-                                    // iterating through the ArrayList and calculating the total number of hotels
-                                    // on each street of a specific color set
+                            int totalHotels = 0;
+                            for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
+                                // iterating through the ArrayList and calculating the total number of hotels
+                                // on each street of a specific color set
 
-                                    totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
+                                totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
 
-                                    if (totalHotels == ownedSquaresMatching.size()) {
-                                        buildingState = BuildingState.ALL_HOTELS_BUILT;
-                                    }
-
+                                if (totalHotels == ownedSquaresMatching.size()) {
+                                    buildingState = BuildingState.ALL_HOTELS_BUILT;
                                 }
 
-                                getCurrentPlayer().setTotalNumberHotels(getCurrentPlayer().getTotalNumberHotels() + 1);
-
-                                return;
-                                // hotel built
-                            }
-                            else {
-                                throw new NotEnoughHotelsException("There are no more hotels left in the bank. Sorry!");
-
                             }
 
+                            getCurrentPlayer().incrementTotalNumberHotels();
+
+                            return;
+                            // hotel built
                         }
-
-                    }
-                    else {
-                        throw new NotEnoughHousesException("There are no more houses left in the bank. Sorry!");
+                        else {
+                            throw new NotEnoughHotelsException("There are no more hotels left in the bank. Sorry!");
+                        }
                     }
                 }
-            } else {
-                throw new InsufficientMoneyException("You do not have enough money to purchase this house.");
-
+                else {
+                    throw new NotEnoughHousesException("There are no more houses left in the bank. Sorry!");
+                }
             }
-
+            else {
+                throw new InsufficientMoneyException("You do not have enough money to purchase this house.");
+            }
         }
     }
-
 
     /**
      * @author Yash Kapoor

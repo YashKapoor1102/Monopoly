@@ -6,5 +6,5 @@ public interface GameView
 {
     void handleGameStatusUpdate(GameModel gameModel);
 
-    void handleBuildingStatusUpdate(GameModel gameModel);
+    //void handleBuildingStatusUpdate(GameModel gameModel);
 }

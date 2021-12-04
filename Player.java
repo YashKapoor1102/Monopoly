@@ -183,8 +183,26 @@ public class Player implements Serializable {
      * Set the number of times the player rolls doubles in a row
      * @param dc   an int, number of times the player rolls doubles
      */
-    public void setDoubleCount(int dc) {
-        this.doubleCount = dc;
+//    public void setDoubleCount(int dc) {
+//        this.doubleCount = dc;
+//    }
+
+    /**
+     * @author Robert Simionescu
+     * Increment the number of times the player rolled doubles in a row.
+     */
+    public void incrementDoubleCount()
+    {
+        this.doubleCount++;
+    }
+
+    /**
+     * @author Robert Simionescu
+     * Reset the number of times the player rolled doubles in a row to zero.
+     */
+    public void resetDoubleCount()
+    {
+        this.doubleCount = 0;
     }
 
     /**
@@ -247,8 +265,17 @@ public class Player implements Serializable {
      *
      * @param totalHouses       an int, the total number of houses the player has
      */
-    public void setTotalNumberHouses(int totalHouses) {
+    private void setTotalNumberHouses(int totalHouses) {
         this.totalNumberHouses = totalHouses;
+    }
+
+    /**
+     * @author Robert Simionescu
+     * Increments the number of houses the player has built
+     */
+    public void incrementTotalNumberHouses()
+    {
+        totalNumberHouses++;
     }
 
     /**
@@ -271,8 +298,17 @@ public class Player implements Serializable {
      *
      * @param totalHotels       an int, the total number of hotels the player has
      */
-    public void setTotalNumberHotels(int totalHotels) {
+    private void setTotalNumberHotels(int totalHotels) {
         this.totalNumberHotels = totalHotels;
+    }
+
+    /**
+     * @author Robert Simionescu
+     * Increments the number of hotels the player has built
+     */
+    public void incrementTotalNumberHotels()
+    {
+        totalNumberHotels++;
     }
 
 }

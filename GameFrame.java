@@ -350,8 +350,7 @@ public class GameFrame extends JFrame implements GameView {
      *
      * @param gameModel     a GameModel Class Object, the model to update the GUI to match
      */
-    @Override
-    public void handleBuildingStatusUpdate(GameModel gameModel) {
+    private void handleBuildingStatusUpdate(GameModel gameModel) {
 
         if (gameModel.getBuildingState() == GameModel.BuildingState.PLAYER_BUILDING) {
 
@@ -373,7 +372,7 @@ public class GameFrame extends JFrame implements GameView {
 
                 if (property instanceof Street) {
 
-                    if (((Street) property).buildHouses(gameModel.getCurrentPlayer(), gameModel.getGameboard()) != null) {
+                    if (((Street) property).getBuildableColour(gameModel.getCurrentPlayer(), gameModel.getGameboard()) != null) {
                         // player owns all the properties in the color set
 
                         build.setEnabled(true);
@@ -566,6 +565,8 @@ public class GameFrame extends JFrame implements GameView {
             gameboardPanel.revalidate();
             gameboardPanel.repaint();
         }
+
+        handleBuildingStatusUpdate(gameModel);
 
         if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
         {

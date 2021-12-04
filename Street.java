@@ -116,27 +116,6 @@ public class Street extends Property implements Serializable
     }
 
     /**
-     * Get the maximum capacity of the number of houses/hotels the player
-     * is able to build on the street
-     *
-     * @return      a boolean, true if the maximum capacity is reached, false otherwise
-     */
-    public boolean getMaxCapacityReached() {
-        return this.maxCapacityReached;
-    }
-
-    /**
-     * Set the maximum capacity of the number of houses/hotels the player
-     * is able to build on this street
-     *
-     * @param maxCapacityReached    a boolean, true if the maximum capacity is reached, false otherwise
-     */
-    public void setMaxCapacityReached(boolean maxCapacityReached) {
-        this.maxCapacityReached = maxCapacityReached;
-    }
-
-
-    /**
      * @author Yash Kapoor
      *
      * Ensures the player owns this street and other streets of the same color as this street.
@@ -150,9 +129,9 @@ public class Street extends Property implements Serializable
      *
      *                      Null is returned if the owner does not own all the streets of the same color.
      */
-    public ArrayList<Street> buildHouses(Player player, Gameboard gameboard)  {
+    public ArrayList<Street> getBuildableColour(Player player, Gameboard gameboard)  {
 
-        ArrayList<Street> ownedSquaresMatching = new ArrayList();
+        ArrayList<Street> ownedSquaresMatching = new ArrayList<Street>();
 
         // Iterates over all owned properties and counts how many are streets of the same colour as this one.
         int ownedSquaresMatchingColour = 0;
@@ -212,13 +191,13 @@ public class Street extends Property implements Serializable
         Player ownerProperty = this.getOwner();
 
         // If the owner of this square does not own all of the streets of this colour, the rent is 10% of the cost.
-        if (buildHouses(ownerProperty, gameboard) == null) {
+        if (getBuildableColour(ownerProperty, gameboard) == null) {
             return (int) rent;
         }
 
         // If the owner of the square owns all streets of this colour, the rent is 20% of the cost.
         // Houses and hotels are accounted below
-        if (this.houses == 0 && buildHouses(ownerProperty, gameboard) != null) {
+        if (this.houses == 0 && getBuildableColour(ownerProperty, gameboard) != null) {
             // all streets of the same color are owned
             return (int) (rent * 2);
         }

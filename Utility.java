@@ -12,6 +12,9 @@ import java.io.Serializable;
  */
 public class Utility extends Property implements Serializable {
 
+    private static final int ONE_UTILITY_OWNED_MULTIPLIER = 4;
+    private static final int TWO_UTILITIES_OWNED_MULTIPLIER = 10;
+
     /**
      * @author Yash Kapoor
      * Instantiates a utility.
@@ -53,11 +56,11 @@ public class Utility extends Property implements Serializable {
 
         if (ownedUtilities == 1) {
             // 1 utility owned -> rent is 4 times the amount shown on dice
-            rent = player.getTotalRoll() * 4;
+            rent = player.getTotalRoll() * ONE_UTILITY_OWNED_MULTIPLIER;
         }
         else {
             // Otherwise, 2 utilities owned -> rent is 10 times the amount shown on dice
-            rent = player.getTotalRoll() * 10;
+            rent = player.getTotalRoll() * TWO_UTILITIES_OWNED_MULTIPLIER;
         }
 
         return rent;

@@ -27,6 +27,18 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     private List<GameView> views;
     private File file;
 
+    // Strings representing all of the commands that players can execute.
+    private static final String ADD_PLAYER = "Add Player";
+    private static final String ADD_AI = "Add AI";
+    private static final String START = "Start";
+    private static final String ROLL = "Roll";
+    private static final String BUY_PROPERTY = "Buy Property";
+    private static final String BUILD = "Build";
+    private static final String GET_OUT_OF_JAIL = "Get Out of Jail";
+    private static final String PASS_TURN = "Pass turn";
+    private static final String SAVE = "Save";
+    private static final String LOAD = "Load";
+
     /**
      * Constructor for a GameController. Takes a model and generates its list of views from the model.
      * @param model The model this is a controller for.
@@ -98,7 +110,6 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
         catch(PropertyOwnedException exception)
         {
             displayMessage(exception.getMessage());
-
         }
         catch(InvalidSquareTypeException exception)
         {
@@ -120,8 +131,6 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
         displayMessage("Ensure that you build the houses evenly.");
 
         model.setBuildingState(GameModel.BuildingState.PLAYER_BUILDING);
-
-
     }
 
 
@@ -235,7 +244,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     /**
      * Allows the player to get out of jail by paying a fine of $50.
      */
-    private void outOfJail() {
+    private void getOutOfJail() {
         if (model.getCurrentPlayer().getMoney() > 50)
         {
             model.getCurrentPlayer().removeMoney(50);
@@ -271,7 +280,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
 
                         for (GameView view : views) {
                             view.handleGameStatusUpdate(model);
-                            view.handleBuildingStatusUpdate(model);
+                            //view.handleBuildingStatusUpdate(model);
                         }
                     }
                     catch(InsufficientMoneyException exception)
@@ -302,23 +311,12 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
         String AICommand = "";
 
         AICommand = ((PlayerAI)model.getCurrentPlayer()).playTurn();
-        switch (AICommand)
-        {
-            case "Roll":
-                roll();
-                break;
-            case "Buy Property":
-                buyProperty();
-                break;
-            case "Build":
-                AIBuild();
-                break;
-            case "Get Out of Jail":
-                outOfJail();
-                break;
-            case "Pass turn":
-                pass();
-                break;
+        switch (AICommand) {
+            case ROLL -> roll();
+            case BUY_PROPERTY -> buyProperty();
+            case BUILD -> AIBuild();
+            case GET_OUT_OF_JAIL -> getOutOfJail();
+            case PASS_TURN -> pass();
         }
 
         if (model.getCurrentPlayer() instanceof PlayerAI)
@@ -352,7 +350,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
 
             for (GameView view : views) {
                 view.handleGameStatusUpdate(model);
-                view.handleBuildingStatusUpdate(model);
+                //view.handleBuildingStatusUpdate(model);
             }
 
         }
@@ -381,21 +379,21 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     public void actionPerformed(ActionEvent e)
     {
         switch (e.getActionCommand()) {
-            case "Add Player" -> addPlayer();
-            case "Add AI" -> addAIPlayer();
-            case "Start" -> start();
-            case "Roll" -> roll();
-            case "Buy Property" -> buyProperty();
-            case "Build" -> buildOnProperty();
-            case "Get Out of Jail" -> outOfJail();
-            case "Pass turn" -> pass();
-            case "Save" -> save();
-            case "Load" -> load();
+            case ADD_PLAYER -> addPlayer();
+            case ADD_AI -> addAIPlayer();
+            case START -> start();
+            case ROLL -> roll();
+            case BUY_PROPERTY -> buyProperty();
+            case BUILD -> buildOnProperty();
+            case GET_OUT_OF_JAIL -> getOutOfJail();
+            case PASS_TURN -> pass();
+            case SAVE -> save();
+            case LOAD -> load();
         }
         for (GameView view : views)
         {
             view.handleGameStatusUpdate(model);
-            view.handleBuildingStatusUpdate(model);
+            //view.handleBuildingStatusUpdate(model);
         }
 
     }

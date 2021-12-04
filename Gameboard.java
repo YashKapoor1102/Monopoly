@@ -48,5 +48,35 @@ public class Gameboard implements Serializable
         return this.squares.get(position);
     }
 
+    /**
+     * @author Robert Simionescu
+     * Returns the position of the square with the specified name. Strings should never be passed directly into this.
+     * Instead, user the appropriate LocalizationHandler method for the desired square to ensure it works regardless
+     * of the language.
+     * @param squareName The name of the square whose position should be returned.
+     * @return The position of the square with the specified name.
+     */
+    public int getPosition(String squareName)
+    {
+        for (int i = 0; i < squares.size(); i++)
+        {
+            if (squares.get(i).getName().equals(squareName))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getJail()
+    {
+        return getPosition(LocalizationHandler.getJailName());
+    }
+
+    public int getGoToJail()
+    {
+        return getPosition(LocalizationHandler.getGoToJailName());
+    }
+
 
 }
