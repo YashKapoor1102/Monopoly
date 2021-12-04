@@ -847,8 +847,8 @@ public class GameModel implements Serializable {
             gb = (Gameboard) objectInputStream.readObject();
 
             setPlayers(player);
-            setGameState(gs);
             setBuildingState(bs);
+            setGameState(gs);
             setGameboard(gb);
 
             fileInputStream.close();

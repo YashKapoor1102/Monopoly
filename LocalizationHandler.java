@@ -1,7 +1,7 @@
 public class LocalizationHandler
 {
     public static final String JAIL = "Jail";
-    public static final String GO_TO_JAIL = "Go to jail";
+    public static final String GO_TO_JAIL = "Go to Jail";
 
     public static String getGoToJailName()
     {

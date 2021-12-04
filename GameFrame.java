@@ -370,6 +370,8 @@ public class GameFrame extends JFrame implements GameView {
             // Update all the property indicators on the board
             for (Property property : gameModel.getPlayers().get(i).getProperties()) {
 
+                jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
+
                 if (property instanceof Street) {
 
                     if (((Street) property).getBuildableColour(gameModel.getCurrentPlayer(), gameModel.getGameboard()) != null) {
@@ -389,7 +391,6 @@ public class GameFrame extends JFrame implements GameView {
 
                         jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
-
                     } else if (((Street) property).getHouses() == 2) {
                         // player has 2 houses on their street
 
@@ -401,6 +402,7 @@ public class GameFrame extends JFrame implements GameView {
                             houseLab.setBackground(Color.GREEN);
 
                             jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
                         }
 
                     } else if (((Street) property).getHouses() == 3) {
@@ -440,6 +442,7 @@ public class GameFrame extends JFrame implements GameView {
                         houseLab.setBackground(Color.RED);
 
                         jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).removeMouseListener(gameController);
 
                     }
 
@@ -494,6 +497,7 @@ public class GameFrame extends JFrame implements GameView {
             // Update player positions on the gameboard. Only display players that are not bankrupt.
             if (!gameModel.getPlayers().get(i).isBankrupt())
             {
+                // player is not bankrupt
                 // initializing panels
                 simplePlayerPanels[i] = new JPanel();
                 playerNames[i] = new JLabel();
