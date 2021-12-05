@@ -4,6 +4,7 @@
  */
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton save;
     private final JButton load;
 
-    private ArrayList<JLabel> jLabelList;
+    private ArrayList<JPanel> jPanelList;
     private final JPanel gameboardPanel;
     private final JPanel playerPanel;
     private final JPanel bodyPanel;
@@ -73,7 +74,7 @@ public class GameFrame extends JFrame implements GameView {
         displayMessage("Welcome to Funopoly! Add at least 2 players to begin.");
 
         // List of labels used to represent each square
-        jLabelList = new ArrayList<>();
+        jPanelList = new ArrayList<>();
 
         // Buttons used to interface with the game
         addPlayer = new JButton("Add Player");
@@ -123,17 +124,17 @@ public class GameFrame extends JFrame implements GameView {
         bodyPanel.add(playerPanel, BorderLayout.LINE_END);
 
         // Add all squares to the gameboardPanel
-        GameLabelsInitialization.initializeSouthLabels(jLabelList);
-        GameLabelsInitialization.initializeWestLabels(jLabelList);
-        GameLabelsInitialization.initializeNorthLabels(jLabelList);
-        GameLabelsInitialization.initializeEastLabels(jLabelList);
+        GamePanelsInitialization.initializeSouthPanels(jPanelList, model.getGameboard());
+        GamePanelsInitialization.initializeWestPanels(jPanelList, model.getGameboard());
+        GamePanelsInitialization.initializeNorthPanels(jPanelList, model.getGameboard());
+        GamePanelsInitialization.initializeEastPanels(jPanelList, model.getGameboard());
 
         gameboardPanel.add(getNorth(), BorderLayout.NORTH);
         gameboardPanel.add(getSouth(), BorderLayout.SOUTH);
         gameboardPanel.add(getCenter(), BorderLayout.CENTER);
         gameboardPanel.add(getEast(), BorderLayout.EAST);
         gameboardPanel.add(getWest(), BorderLayout.WEST);
-        gameboardPanel.setPreferredSize(new Dimension(1000, 1000));
+        gameboardPanel.setPreferredSize(new Dimension(1000, 1250));
 
         // ADD the window listener
         // we no longer want the frame to close immediately when we press "x"
@@ -178,24 +179,22 @@ public class GameFrame extends JFrame implements GameView {
 
         JPanel south = new JPanel();
 
-        JPanel labelPanel = new JPanel(new BorderLayout());
-        BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.X_AXIS);
-        labelPanel.setLayout(boxlayout);
+        JPanel squarePanel = new JPanel(new BorderLayout());
+        BoxLayout boxlayout = new BoxLayout(squarePanel, BoxLayout.X_AXIS);
+        squarePanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(7));
-        labelPanel.add(jLabelList.get(6));
-        labelPanel.add(jLabelList.get(5));
-        labelPanel.add(jLabelList.get(4));
-        labelPanel.add(jLabelList.get(3));
-        labelPanel.add(jLabelList.get(2));
-        labelPanel.add(jLabelList.get(1));
-        labelPanel.add(jLabelList.get(0));
+        int startIndex = GamePanelsInitialization.SOUTH_SQUARES - 1;
+        int endIndex = 0;
+        for (int i = startIndex; i >= endIndex; i--)
+        {
+            squarePanel.add(jPanelList.get(i));
+        }
 
-        south.setLayout(new GridBagLayout());
-        south.add(labelPanel);
+        south.setLayout(new GridLayout());
+        south.add(squarePanel);
 
         south.setBackground(new Color(187, 255, 202));
-        south.setPreferredSize(new Dimension(500, 145));
+        south.setPreferredSize(new Dimension(500, 150));
 
         return south;
     }
@@ -209,24 +208,22 @@ public class GameFrame extends JFrame implements GameView {
 
         JPanel west = new JPanel();
 
-        JPanel labelPanel = new JPanel();
-        BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.Y_AXIS);
-        labelPanel.setLayout(boxlayout);
+        JPanel squarePanel = new JPanel();
+        BoxLayout boxlayout = new BoxLayout(squarePanel, BoxLayout.Y_AXIS);
+        squarePanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(15));
-        labelPanel.add(jLabelList.get(14));
-        labelPanel.add(jLabelList.get(13));
-        labelPanel.add(jLabelList.get(12));
-        labelPanel.add(jLabelList.get(11));
-        labelPanel.add(jLabelList.get(10));
-        labelPanel.add(jLabelList.get(9));
-        labelPanel.add(jLabelList.get(8));
+        int startIndex = GamePanelsInitialization.SOUTH_SQUARES + GamePanelsInitialization.WEST_SQUARES - 1;
+        int endIndex = GamePanelsInitialization.SOUTH_SQUARES;
+        for (int i = startIndex; i >= endIndex; i--)
+        {
+            squarePanel.add(jPanelList.get(i));
+        }
 
-        west.setLayout(new GridBagLayout());
-        west.add(labelPanel);
+        west.setLayout(new GridLayout());
+        west.add(squarePanel);
         west.setBackground(new Color(187, 255, 202));
 
-        west.setPreferredSize(new Dimension(200, 200));
+        west.setPreferredSize(new Dimension(110, 2000));
 
         return west;
     }
@@ -240,28 +237,22 @@ public class GameFrame extends JFrame implements GameView {
 
         JPanel north = new JPanel();
 
-        JPanel labelPanel = new JPanel();
-        BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.X_AXIS);
-        labelPanel.setLayout(boxlayout);
+        JPanel squarePanel = new JPanel();
+        BoxLayout boxlayout = new BoxLayout(squarePanel, BoxLayout.X_AXIS);
+        squarePanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(16));
+        int startIndex = GamePanelsInitialization.SOUTH_SQUARES + GamePanelsInitialization.WEST_SQUARES;
+        int endIndex = GamePanelsInitialization.SOUTH_SQUARES + GamePanelsInitialization.WEST_SQUARES + GamePanelsInitialization.NORTH_SQUARES - 1;
+        for (int i = startIndex; i <= endIndex; i++)
+        {
+            squarePanel.add(jPanelList.get(i));
+        }
 
-        labelPanel.add(jLabelList.get(17));
-
-        labelPanel.add(jLabelList.get(18));
-        labelPanel.add(jLabelList.get(19));
-
-        labelPanel.add(jLabelList.get(20));
-        labelPanel.add(jLabelList.get(21));
-        labelPanel.add(jLabelList.get(22));
-        labelPanel.add(jLabelList.get(23));
-        labelPanel.add(jLabelList.get(24));
-
-        north.setLayout(new GridBagLayout());
-        north.add(labelPanel);
+        north.setLayout(new GridLayout());
+        north.add(squarePanel);
 
         north.setBackground(new Color(187, 255, 202));
-        north.setPreferredSize(new Dimension(500, 145));
+        north.setPreferredSize(new Dimension(500, 150));
 
         return north;
     }
@@ -275,24 +266,22 @@ public class GameFrame extends JFrame implements GameView {
 
         JPanel east = new JPanel();
 
-        JPanel labelPanel = new JPanel();
-        BoxLayout boxlayout = new BoxLayout(labelPanel, BoxLayout.Y_AXIS);
-        labelPanel.setLayout(boxlayout);
+        JPanel squarePanel = new JPanel();
+        BoxLayout boxlayout = new BoxLayout(squarePanel, BoxLayout.Y_AXIS);
+        squarePanel.setLayout(boxlayout);
 
-        labelPanel.add(jLabelList.get(25));
-        labelPanel.add(jLabelList.get(26));
+        int startIndex = GamePanelsInitialization.SOUTH_SQUARES + GamePanelsInitialization.WEST_SQUARES + GamePanelsInitialization.NORTH_SQUARES;
+        int endIndex = GamePanelsInitialization.SOUTH_SQUARES + GamePanelsInitialization.WEST_SQUARES + GamePanelsInitialization.NORTH_SQUARES + GamePanelsInitialization.EAST_SQUARES - 1;
+        for (int i = startIndex; i <= endIndex; i++)
+        {
+            squarePanel.add(jPanelList.get(i));
+        }
 
-        labelPanel.add(jLabelList.get(27));
-        labelPanel.add(jLabelList.get(28));
-
-        labelPanel.add(jLabelList.get(29));
-        labelPanel.add(jLabelList.get(30));
-
-        east.setLayout(new GridBagLayout());
-        east.add(labelPanel);
+        east.setLayout(new GridLayout());
+        east.add(squarePanel);
 
         east.setBackground(new Color(187, 255, 202));
-        east.setPreferredSize(new Dimension(200, 200));
+        east.setPreferredSize(new Dimension(110, 200));
 
         return east;
     }
@@ -356,11 +345,11 @@ public class GameFrame extends JFrame implements GameView {
 
             // iterating through the jLabelList ArrayList
             // and assigning a MouseListener to every component
-            for(int i = 0; i < jLabelList.size(); i++) {
+            for(int i = 0; i < jPanelList.size(); i++) {
 
                 // avoiding more than one mouse listener at all times
-                jLabelList.get(i).removeMouseListener(gameController);
-                jLabelList.get(i).addMouseListener(gameController);
+                jPanelList.get(i).removeMouseListener(gameController);
+                jPanelList.get(i).addMouseListener(gameController);
             }
 
         }
@@ -370,7 +359,7 @@ public class GameFrame extends JFrame implements GameView {
             // Update all the property indicators on the board
             for (Property property : gameModel.getPlayers().get(i).getProperties()) {
 
-                jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
+                jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).setLayout(new FlowLayout());
 
                 if (property instanceof Street) {
 
@@ -389,7 +378,7 @@ public class GameFrame extends JFrame implements GameView {
                         houseLab.setPreferredSize(new Dimension(20, 10));
                         houseLab.setBackground(Color.GREEN);
 
-                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
                     } else if (((Street) property).getHouses() == 2) {
                         // player has 2 houses on their street
@@ -401,7 +390,7 @@ public class GameFrame extends JFrame implements GameView {
                             houseLab.setPreferredSize(new Dimension(20, 10));
                             houseLab.setBackground(Color.GREEN);
 
-                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
                         }
 
@@ -415,7 +404,7 @@ public class GameFrame extends JFrame implements GameView {
                             houseLab.setPreferredSize(new Dimension(20, 10));
                             houseLab.setBackground(Color.GREEN);
 
-                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
                         }
 
@@ -429,7 +418,7 @@ public class GameFrame extends JFrame implements GameView {
                             houseLab.setPreferredSize(new Dimension(20, 10));
                             houseLab.setBackground(Color.GREEN);
 
-                            jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
 
                         }
 
@@ -441,8 +430,8 @@ public class GameFrame extends JFrame implements GameView {
                         houseLab.setPreferredSize(new Dimension(20, 10));
                         houseLab.setBackground(Color.RED);
 
-                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
-                        jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).removeMouseListener(gameController);
+                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).removeMouseListener(gameController);
 
                     }
 
@@ -454,10 +443,31 @@ public class GameFrame extends JFrame implements GameView {
 
                 propertyLabel.setFont(new Font("Sans Serif", Font.BOLD, 11));
                 propertyPanel.add(propertyLabel);
+                propertyPanel.setBackground(new Color(255, 255, 255));
+                Border blackBorder = BorderFactory.createLineBorder(Color.black);
+                propertyPanel.setBorder(blackBorder);
 
                 propertyPanel.setPreferredSize(new Dimension(104, 25));
 
-                jLabelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
+                // There is an explanation for how this works in handleGameStatusUpdate()
+                for (Component c: jPanelList.get(gameModel.getPlayers().get(i).getPosition()).getComponents())
+                {
+                    if (c instanceof JPanel)
+                    {
+                        if (((JPanel)c).getLayout() instanceof BorderLayout)
+                        {
+                            for (Component c2: ((JPanel)c).getComponents())
+                            {
+                                if (c2 instanceof JPanel)
+                                {
+                                    ((JPanel)c2).add(propertyPanel, new GridLayout(3, 3));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
 
             }
         }
@@ -484,10 +494,20 @@ public class GameFrame extends JFrame implements GameView {
     public void handleGameStatusUpdate(GameModel gameModel) {
 
         // Clear everything in the UI to prevent duplicate entries from appearing
-        for(JLabel label: jLabelList)
+        for(JPanel panel: jPanelList)
         {
-            label.removeAll();
+            panel.removeAll();
         }
+
+        jPanelList = new ArrayList<>();
+
+        GamePanelsInitialization.initializeSouthPanels(jPanelList, gameModel.getGameboard());
+        GamePanelsInitialization.initializeWestPanels(jPanelList, gameModel.getGameboard());
+        GamePanelsInitialization.initializeNorthPanels(jPanelList, gameModel.getGameboard());
+        GamePanelsInitialization.initializeEastPanels(jPanelList, gameModel.getGameboard());
+
+        handleBuildingStatusUpdate(gameModel);
+
 
         playerPanel.removeAll();
 
@@ -501,8 +521,11 @@ public class GameFrame extends JFrame implements GameView {
                 // initializing panels
                 simplePlayerPanels[i] = new JPanel();
                 playerNames[i] = new JLabel();
-                simplePlayerPanels[i].setPreferredSize(new Dimension(52, 25));
+                simplePlayerPanels[i].setPreferredSize(new Dimension(40, 25));
+                simplePlayerPanels[i].setBackground(new Color(255, 255, 255));
                 simplePlayerPanels[i].setEnabled(false);
+                Border blackBorder = BorderFactory.createLineBorder(Color.black);
+                simplePlayerPanels[i].setBorder(blackBorder);
                 simplePlayerPanels[i].add(playerNames[i]);
 
                 fullPlayerPanels[i] = new JPanel(new GridLayout(1, 2));
@@ -511,8 +534,27 @@ public class GameFrame extends JFrame implements GameView {
 
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());
-                jLabelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
-                jLabelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
+                jPanelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
+
+                // Player icons are added to a JPanel with a GridLayout located inside a JPanel with a BorderLayout at
+                // BorderLayout.CENTER, which is itself placed inside a BorderLayout. It's overly complex, but it works.
+                // Swing is gross.
+                for (Component c: jPanelList.get(gameModel.getPlayers().get(i).getPosition()).getComponents())
+                {
+                    if (c instanceof JPanel)
+                    {
+                        if (((JPanel)c).getLayout() instanceof BorderLayout)
+                        {
+                            for (Component c2: ((JPanel)c).getComponents())
+                            {
+                                if (c2 instanceof JPanel)
+                                {
+                                    ((JPanel)c2).add(simplePlayerPanels[i], new GridLayout(3, 3));
+                                }
+                            }
+                        }
+                    }
+                }
                 // adding players to the GUI gameboard
 
                 fullPlayerPanels[i].removeAll();
@@ -542,7 +584,7 @@ public class GameFrame extends JFrame implements GameView {
 
                 playerPanel.add(fullPlayerPanels[(i + 1) % gameModel.getPlayers().size()]);
 
-                jLabelList.get(gameModel.getPlayers().get((i + 1) % gameModel.getPlayers().size()).getPosition()).add(simplePlayerPanels[(i + 1) % gameModel.getPlayers().size()], new GridLayout(4, 4));
+                jPanelList.get(gameModel.getPlayers().get((i + 1) % gameModel.getPlayers().size()).getPosition()).add(simplePlayerPanels[(i + 1) % gameModel.getPlayers().size()], new GridLayout(4, 4));
 
                 revalidate();
                 repaint();
@@ -570,7 +612,6 @@ public class GameFrame extends JFrame implements GameView {
             gameboardPanel.repaint();
         }
 
-        handleBuildingStatusUpdate(gameModel);
 
         if (gameModel.getGameState() == GameModel.GameState.GAME_OVER)
         {

@@ -264,7 +264,7 @@
         <mxCell id="kfgi2sBqW_4C3qd6xdu4-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;endSize=10;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="kfgi2sBqW_4C3qd6xdu4-4" target="paI8Il_EuwSy5qUbTORu-16" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="kfgi2sBqW_4C3qd6xdu4-4" value="GameLabelsInitialization" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="kfgi2sBqW_4C3qd6xdu4-4" value="GamePanelsInitialization" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-510" y="260" width="170" height="100" as="geometry" />
         </mxCell>
         <mxCell id="kfgi2sBqW_4C3qd6xdu4-5" value="+&amp;nbsp;&lt;u&gt;initializeSouthLabels(): void&lt;/u&gt;&lt;br&gt;+ &lt;u&gt;initializeWestLabels(): void&lt;/u&gt;&lt;br&gt;+ &lt;u&gt;initializeNorthLabels(): void&lt;/u&gt;&lt;br&gt;+ &lt;u&gt;initializeEastLabels(): void&lt;/u&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0;html=1;" parent="kfgi2sBqW_4C3qd6xdu4-4" vertex="1">

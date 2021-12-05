@@ -5,6 +5,8 @@
 
 import gameexceptions.*;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.*;
 
@@ -22,6 +24,8 @@ public class GameModel implements Serializable {
     public static final int STARTING_MONEY = 1500;  // Initial amount of money for players.
     public static final int GO_MONEY = 200; // Money given when passing Go.
     public static final int MAX_HOUSES = 4; // Max houses that can be built on a street before a hotel is built.
+
+    public static final String GAMEBOARD_XML = "Standard_Gameboard.xml";
 
     public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, PLAYER_PASSED_GO,
         DOUBLES_ROLLED_THRICE, DOUBLES_ROLLED_IN_JAIL, GAME_OVER}
@@ -146,115 +150,131 @@ public class GameModel implements Serializable {
      */
     public Gameboard createGameboard()
     {
-        ArrayList<Square> squares = new ArrayList<>();
+//        ArrayList<Square> squares = new ArrayList<>();
+//
+//        // adding all squares to the ArrayList
+//        Collections.addAll(squares, new Square() {
+//
+//            /**
+//             * Getting the name of the square
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String getName() {
+//                return "Initial Starting Point";
+//            }
+//
+//            /**
+//             * Shows the user a text representation of what square they are currently on.
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String toString() {
+//                return String.format("%s", getName());
+//            }
+//
+//        }, new Street("Mediterranean Avenue", "Brown", 60, 50, 50) {
+//        }, new Street("Baltic Avenue", "Brown", 60, 50, 50) {
+//
+//        }, new Railroad("Reading Railroad", 200) {
+//
+//        }, new Street("Oriental Avenue", "Blue", 100, 50, 50) {
+//        }, new Street("Vermont Avenue", "Blue", 100, 50, 50) {
+//        }, new Street("Connecticut Avenue", "Blue", 120, 50, 50) {
+//
+//        }, new Square() {
+//
+//            /**
+//             * Getting the name of the square
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String getName() {
+//                return "Jail";
+//            }
+//
+//            /**
+//             * Shows the user a text representation of what square they are currently on.
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String toString() {
+//                return String.format("%s", getName());
+//            }
+//        }, new Street("St. Charles Place", "Pink", 140, 100, 100) {
+//        }, new Utility("Electric Company", 150) {
+//        }, new Street("States Avenue", "Pink", 140, 100, 100) {
+//        }, new Street("Virginia Avenue", "Pink", 160, 100, 100) {
+//
+//        }, new Railroad("Pennsylvania Railroad", 200) {
+//
+//        }, new Street("St. James Place", "Orange", 180, 100, 100) {
+//        }, new Street("Tennessee Avenue", "Orange", 180, 100, 100) {
+//        }, new Street("New York Avenue", "Orange", 200, 100, 100) {
+//
+//        }, new Street("Kentucky Avenue", "Red", 220, 150, 150) {
+//        }, new Street("Indiana Avenue", "Red", 220, 150, 150) {
+//        }, new Street("Illinois Avenue", "Red", 240, 150, 150) {
+//
+//        }, new Railroad("B. & O. Railroad", 200) {
+//
+//        }, new Street("Atlantic Avenue", "Yellow", 260, 150, 150) {
+//        }, new Street("Ventnor Avenue", "Yellow", 260, 150, 150) {
+//        }, new Utility("Water Works", 150) {
+//        }, new Street("Marvin Gardens", "Yellow", 280, 150, 150) {
+//
+//        }, new Square() {
+//
+//            /**
+//             * Getting the name of the square
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String getName() {
+//                return "Go to Jail";
+//            }
+//
+//            /**
+//             * Shows the user a text representation of what square they are currently on.
+//             *
+//             * @return a String, the name of the square
+//             */
+//            @Override
+//            public String toString() {
+//                return String.format("%s", getName());
+//            }
+//
+//        }, new Street("Pacific Avenue", "Green", 300, 200, 200) {
+//        }, new Street("North Carolina Avenue", "Green", 300, 200, 200) {
+//        }, new Street("Pennsylvania Avenue", "Green", 320, 200, 200) {
+//
+//        }, new Railroad("Short Line Railroad", 200) {
+//
+//        }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
+//        }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
+//
+//        return new Gameboard(squares);
 
-        // adding all squares to the ArrayList
-        Collections.addAll(squares, new Square() {
+        try
+        {
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            SAXParser s = spf.newSAXParser();
+            GameboardHandler gameboardHandler = new GameboardHandler();
 
-            /**
-             * Getting the name of the square
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String getName() {
-                return "Initial Starting Point";
-            }
+            s.parse(GAMEBOARD_XML, gameboardHandler);
+            return gameboardHandler.getGameboard();
 
-            /**
-             * Shows the user a text representation of what square they are currently on.
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String toString() {
-                return String.format("%s", getName());
-            }
-
-        }, new Street("Mediterranean Avenue", "Brown", 60, 50, 50) {
-        }, new Street("Baltic Avenue", "Brown", 60, 50, 50) {
-
-        }, new Railroad("Reading Railroad", 200) {
-
-        }, new Street("Oriental Avenue", "Blue", 100, 50, 50) {
-        }, new Street("Vermont Avenue", "Blue", 100, 50, 50) {
-        }, new Street("Connecticut Avenue", "Blue", 120, 50, 50) {
-
-        }, new Square() {
-
-            /**
-             * Getting the name of the square
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String getName() {
-                return "Jail";
-            }
-
-            /**
-             * Shows the user a text representation of what square they are currently on.
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String toString() {
-                return String.format("%s", getName());
-            }
-        }, new Street("St. Charles Place", "Pink", 140, 100, 100) {
-        }, new Utility("Electric Company", 150) {
-        }, new Street("States Avenue", "Pink", 140, 100, 100) {
-        }, new Street("Virginia Avenue", "Pink", 160, 100, 100) {
-
-        }, new Railroad("Pennsylvania Railroad", 200) {
-
-        }, new Street("St. James Place", "Orange", 180, 100, 100) {
-        }, new Street("Tennessee Avenue", "Orange", 180, 100, 100) {
-        }, new Street("New York Avenue", "Orange", 200, 100, 100) {
-
-        }, new Street("Kentucky Avenue", "Red", 220, 150, 150) {
-        }, new Street("Indiana Avenue", "Red", 220, 150, 150) {
-        }, new Street("Illinois Avenue", "Red", 240, 150, 150) {
-
-        }, new Railroad("B. & O. Railroad", 200) {
-
-        }, new Street("Atlantic Avenue", "Yellow", 260, 150, 150) {
-        }, new Street("Ventnor Avenue", "Yellow", 260, 150, 150) {
-        }, new Utility("Water Works", 150) {
-        }, new Street("Marvin Gardens", "Yellow", 280, 150, 150) {
-
-        }, new Square() {
-
-            /**
-             * Getting the name of the square
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String getName() {
-                return "Go to Jail";
-            }
-
-            /**
-             * Shows the user a text representation of what square they are currently on.
-             *
-             * @return a String, the name of the square
-             */
-            @Override
-            public String toString() {
-                return String.format("%s", getName());
-            }
-
-        }, new Street("Pacific Avenue", "Green", 300, 200, 200) {
-        }, new Street("North Carolina Avenue", "Green", 300, 200, 200) {
-        }, new Street("Pennsylvania Avenue", "Green", 320, 200, 200) {
-
-        }, new Railroad("Short Line Railroad", 200) {
-
-        }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
-        }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
-
-        return new Gameboard(squares);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
