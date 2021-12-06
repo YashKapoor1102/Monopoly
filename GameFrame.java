@@ -329,6 +329,21 @@ public class GameFrame extends JFrame implements GameView {
 
     /**
      * @author Yash Kapoor
+     * Creating a new JLabel that resembles a house in Monopoly
+     *
+     * @return      a JLabel, the house that is going to be displayed on the street
+     */
+    private JLabel createHouseLabels() {
+        JLabel houseLab = new JLabel("");
+        houseLab.setOpaque(true);
+        houseLab.setPreferredSize(new Dimension(20, 10));
+        houseLab.setBackground(Color.GREEN);
+
+        return houseLab;
+    }
+
+    /**
+     * @author Yash Kapoor
      *
      * Updates the GUI to reflect any changes made by the previous action.
      * It is used to allow the user to build houses/hotels on their streets.
@@ -369,12 +384,7 @@ public class GameFrame extends JFrame implements GameView {
                     if (((Street) property).getHouses() == 1) {
                         // player has one house on their street
 
-                        JLabel houseLab = new JLabel("");
-                        houseLab.setOpaque(true);
-                        houseLab.setPreferredSize(new Dimension(20, 10));
-                        houseLab.setBackground(Color.GREEN);
-
-                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(createHouseLabels());
 
 
                     } else if (((Street) property).getHouses() == 2) {
@@ -382,12 +392,7 @@ public class GameFrame extends JFrame implements GameView {
 
                         for (int k = 0; k < 2; k++) {
 
-                            JLabel houseLab = new JLabel("");
-                            houseLab.setOpaque(true);
-                            houseLab.setPreferredSize(new Dimension(20, 10));
-                            houseLab.setBackground(Color.GREEN);
-
-                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(createHouseLabels());
 
                         }
 
@@ -396,12 +401,7 @@ public class GameFrame extends JFrame implements GameView {
 
                         for (int k = 0; k < 3; k++) {
 
-                            JLabel houseLab = new JLabel("");
-                            houseLab.setOpaque(true);
-                            houseLab.setPreferredSize(new Dimension(20, 10));
-                            houseLab.setBackground(Color.GREEN);
-
-                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(createHouseLabels());
 
                         }
 
@@ -410,24 +410,17 @@ public class GameFrame extends JFrame implements GameView {
 
                         for (int k = 0; k < 4; k++) {
 
-                            JLabel houseLab = new JLabel("");
-                            houseLab.setOpaque(true);
-                            houseLab.setPreferredSize(new Dimension(20, 10));
-                            houseLab.setBackground(Color.GREEN);
-
-                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                            jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(createHouseLabels());
 
                         }
 
                     } else if (((Street) property).getHouses() == 5) {
                         // player has a hotel (which is technically the same as 5 houses) on their street
 
-                        JLabel houseLab = new JLabel("");
-                        houseLab.setOpaque(true);
-                        houseLab.setPreferredSize(new Dimension(20, 10));
-                        houseLab.setBackground(Color.RED);
+                        JLabel hotelLabel = createHouseLabels();
+                        hotelLabel.setBackground(Color.RED);
 
-                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(hotelLabel);
 
                     }
 
