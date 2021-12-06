@@ -29,7 +29,7 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton save;
     private final JButton load;
 
-    private final ArrayList<JPanel> jPanelList;
+    private ArrayList<JPanel> jPanelList;
     private final JPanel gameboardPanel;
     private final JPanel playerPanel;
     private final JPanel bodyPanel;
@@ -295,7 +295,7 @@ public class GameFrame extends JFrame implements GameView {
         JPanel center = new JPanel(new BorderLayout());
 
         JLabel funopoly = new JLabel();
-        ImageIcon fun = new ImageIcon(this.getClass().getResource("Images/Funopoly.png"));
+        ImageIcon fun = new ImageIcon(this.getClass().getResource("Images/Funopoly.PNG"));
         Image f = fun.getImage().getScaledInstance(600, 800, Image.SCALE_DEFAULT);
         ImageIcon bd = new ImageIcon(f);
 
