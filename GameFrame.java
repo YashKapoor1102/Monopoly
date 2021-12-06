@@ -29,7 +29,7 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton save;
     private final JButton load;
 
-    private ArrayList<JPanel> jPanelList;
+    private final ArrayList<JPanel> jPanelList;
     private final JPanel gameboardPanel;
     private final JPanel playerPanel;
     private final JPanel bodyPanel;
@@ -345,6 +345,22 @@ public class GameFrame extends JFrame implements GameView {
     /**
      * @author Yash Kapoor
      *
+     * Remove the houses/hotels from the street when the player goes bankrupt
+     *
+     * @param gameModel     a GameModel Class Object, the model to update the GUI to match
+     */
+    private void removeHouses(GameModel gameModel) {
+        for(Property property: gameModel.getCurrentPlayer().getProperties()) {
+            if (property instanceof Street) {
+                ((Street) property).setHouses(0);
+                ((Street) property).setHotels(0);
+            }
+        }
+    }
+
+    /**
+     * @author Yash Kapoor
+     *
      * Updates the GUI to reflect any changes made by the previous action.
      * It is used to allow the user to build houses/hotels on their streets.
      *
@@ -506,10 +522,13 @@ public class GameFrame extends JFrame implements GameView {
             else        // Otherwise, player is bankrupt
             {
                 // player bankrupt, returning all houses to the bank
-                gameModel.setTotalHouses(gameModel.getTotalHouses() + gameModel.getPlayers().get(i).getTotalNumberHouses());
+                gameModel.setHousesInBank(gameModel.getHousesInBank() + gameModel.getPlayers().get(i).getTotalNumberHouses());
 
                 // player bankrupt, returning all hotels to the bank
                 gameModel.setHotelsInBank(gameModel.getHotelsInBank() + gameModel.getPlayers().get(i).getTotalNumberHouses());
+
+                // removing all the houses from the streets that the player owned
+                removeHouses(gameModel);
 
                 fullPlayerPanels[i].removeAll();
 

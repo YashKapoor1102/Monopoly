@@ -51,7 +51,7 @@ public class Gameboard implements Serializable
     /**
      * @author Robert Simionescu
      * Returns the position of the square with the specified name. Strings should never be passed directly into this.
-     * Instead, user the appropriate LocalizationHandler method for the desired square to ensure it works regardless
+     * Instead, use the appropriate LocalizationHandler method for the desired square to ensure it works regardless
      * of the language.
      * @param squareName The name of the square whose position should be returned.
      * @return The position of the square with the specified name.

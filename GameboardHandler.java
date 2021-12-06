@@ -38,6 +38,7 @@ public class GameboardHandler extends DefaultHandler
     /**
      * @author Robert Simionescu
      *  Get the characters that are in between the start element and the end element
+     *  and add the information a StringBuilder
      *
      * @param ch        a char array, the list of characters that lie in between the start and end element
      * @param start     an int, the position in the XML document where the characters start
@@ -72,7 +73,8 @@ public class GameboardHandler extends DefaultHandler
 
     /**
      * @author Robert Simionescu
-     * Get the start elements in an XML file
+     * Get the start elements in an XML file and instantiate a new
+     * StringBuilder
      *
      * @param uri           a String
      * @param localName     a String
@@ -102,7 +104,8 @@ public class GameboardHandler extends DefaultHandler
 
     /**
      * @author Robert Simionescu
-     * Get the end elements in an XML file
+     * Get the end elements in an XML file and add each type of square
+     * to the Squares ArrayList
      *
      * @param uri               a String
      * @param localName         a String
@@ -129,7 +132,7 @@ public class GameboardHandler extends DefaultHandler
      * @author Robert Simionescu
      * Get the gameboard that is initialized with squares
      *
-     * @return      a Gameboard Object, the current gameboard that is being used
+     * @return      a Gameboard Object, the new gameboard that is going to be used
      */
     public Gameboard getGameboard()
     {

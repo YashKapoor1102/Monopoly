@@ -16,8 +16,6 @@ import java.util.*;
  */
 public class Street extends Property implements Serializable
 {
-    private final String COLOUR;
-
     private static final double STARTING_RENT_PERCENT = 0.1;
     private static final double SAME_COLOUR_RENT_PERCENT = 0.2;
     private static final double ONE_HOUSE_RENT_PERCENT = 0.3;
@@ -25,6 +23,8 @@ public class Street extends Property implements Serializable
     private static final double THREE_HOUSES_RENT_PERCENT = 0.5;
     private static final double FOUR_HOUSES_RENT_PERCENT = 0.6;
     private static final double HOTEL_RENT_PERCENT = 0.7;
+
+    private final String COLOUR;
 
     private final int HOUSE_COST;
     private final int HOTEL_COST;

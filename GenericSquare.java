@@ -2,7 +2,7 @@
  * @author Robert Simionescu and Yash Kapoor
  * @version Milestone 4
  *
- * Contains all generic squares on the gameboard
+ * Represents all generic squares on the gameboard
  * (i.e., all squares that are not streets, utilities,
  * and railroads. In these simplified versions of Monopoly,
  * they are "Go to Jail", "Jail", and "Go")

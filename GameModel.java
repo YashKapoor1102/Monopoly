@@ -537,7 +537,7 @@ public class GameModel implements Serializable {
      * There are 32 houses in the bank. Hence, this value is initialized to 32.
      * @return      an int, representing the total number of houses
      */
-    public int getTotalHouses() {
+    public int getHousesInBank() {
         return this.housesInBank;
     }
 
@@ -547,7 +547,7 @@ public class GameModel implements Serializable {
      * Set the total number of houses that are in the bank.
      * @param houses       an int, representing the number of houses.
      */
-    public void setTotalHouses(int houses) {
+    public void setHousesInBank(int houses) {
         this.housesInBank = houses;
     }
 
@@ -691,15 +691,15 @@ public class GameModel implements Serializable {
     public void save(File file) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-            ObjectOutputStream objectStream = new ObjectOutputStream(fileOutputStream);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
-            objectStream.writeInt(currentPlayer);
-            objectStream.writeObject(getGameState());
-            objectStream.writeObject(getPlayers());
-            objectStream.writeObject(getGameboard());
+            objectOutputStream.writeInt(currentPlayer);
+            objectOutputStream.writeObject(getGameState());
+            objectOutputStream.writeObject(getPlayers());
+            objectOutputStream.writeObject(getGameboard());
 
             fileOutputStream.close();
-            objectStream.close();
+            objectOutputStream.close();
         }
         catch (Exception e) {
             System.out.println("Unable to save: " + e.getMessage());

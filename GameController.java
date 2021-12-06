@@ -47,6 +47,10 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     /**
      * @author Yash Kapoor
      * Constructor for a GameController. Takes a model and generates its list of views from the model.
+     *
+     * Also provides the user with a drop-down menu, so they can select the version
+     * (regular or international) that they would like to play
+     *
      * @param model The model this is a controller for.
      */
     public GameController(GameModel model)
@@ -332,7 +336,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      * @author Robert Simionescu
      * Allows the AI to play its turn.
      */
-    public void AITurn()
+    private void AITurn()
     {
         String AICommand = "";
 
@@ -355,7 +359,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      * @author Yash Kapoor
      * Saves the game in a text file called SavedGame.txt
      */
-    public void save() {
+    private void save() {
         model.save(FILE);
 
         JOptionPane.showMessageDialog(null, "Your game has been saved!");
@@ -365,7 +369,7 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      * @author Yash Kapoor
      * loads the game from a text file called SavedGame.txt
      */
-    public void load() {
+    private void load() {
 
         model.load(FILE);
 
