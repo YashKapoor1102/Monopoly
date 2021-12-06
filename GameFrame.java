@@ -1,6 +1,6 @@
 /**
  * @author Robert Simionescu and Yash Kapoor
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import javax.swing.*;
@@ -24,13 +24,12 @@ public class GameFrame extends JFrame implements GameView {
     private final JButton jail;
     private final JButton build;
 
-    private GameController gameController;
+    private final GameController gameController;
 
-    // Buttons to be implemented in Milestone 4
     private final JButton save;
     private final JButton load;
 
-    private ArrayList<JPanel> jPanelList;
+    private final ArrayList<JPanel> jPanelList;
     private final JPanel gameboardPanel;
     private final JPanel playerPanel;
     private final JPanel bodyPanel;
@@ -134,7 +133,7 @@ public class GameFrame extends JFrame implements GameView {
         gameboardPanel.add(getCenter(), BorderLayout.CENTER);
         gameboardPanel.add(getEast(), BorderLayout.EAST);
         gameboardPanel.add(getWest(), BorderLayout.WEST);
-        gameboardPanel.setPreferredSize(new Dimension(1000, 1250));
+        gameboardPanel.setPreferredSize(new Dimension(1000, 1000));
 
         // ADD the window listener
         // we no longer want the frame to close immediately when we press "x"
@@ -194,7 +193,7 @@ public class GameFrame extends JFrame implements GameView {
         south.add(squarePanel);
 
         south.setBackground(new Color(187, 255, 202));
-        south.setPreferredSize(new Dimension(500, 150));
+        south.setPreferredSize(new Dimension(500, 130));
 
         return south;
     }
@@ -223,7 +222,7 @@ public class GameFrame extends JFrame implements GameView {
         west.add(squarePanel);
         west.setBackground(new Color(187, 255, 202));
 
-        west.setPreferredSize(new Dimension(110, 2000));
+        west.setPreferredSize(new Dimension(200, 200));
 
         return west;
     }
@@ -252,7 +251,7 @@ public class GameFrame extends JFrame implements GameView {
         north.add(squarePanel);
 
         north.setBackground(new Color(187, 255, 202));
-        north.setPreferredSize(new Dimension(500, 150));
+        north.setPreferredSize(new Dimension(500, 145));
 
         return north;
     }
@@ -281,7 +280,7 @@ public class GameFrame extends JFrame implements GameView {
         east.add(squarePanel);
 
         east.setBackground(new Color(187, 255, 202));
-        east.setPreferredSize(new Dimension(110, 200));
+        east.setPreferredSize(new Dimension(200, 200));
 
         return east;
     }
@@ -341,16 +340,13 @@ public class GameFrame extends JFrame implements GameView {
      */
     private void handleBuildingStatusUpdate(GameModel gameModel) {
 
-        if (gameModel.getBuildingState() == GameModel.BuildingState.PLAYER_BUILDING) {
+        // iterating through the jPanelList ArrayList
+        // and assigning a MouseListener to every component
+        for(int i = 0; i < jPanelList.size(); i++) {
 
-            // iterating through the jLabelList ArrayList
-            // and assigning a MouseListener to every component
-            for(int i = 0; i < jPanelList.size(); i++) {
-
-                // avoiding more than one mouse listener at all times
-                jPanelList.get(i).removeMouseListener(gameController);
-                jPanelList.get(i).addMouseListener(gameController);
-            }
+            // avoiding more than one mouse listener at all times
+            jPanelList.get(i).removeMouseListener(gameController);
+            jPanelList.get(i).addMouseListener(gameController);
 
         }
 
@@ -379,6 +375,7 @@ public class GameFrame extends JFrame implements GameView {
                         houseLab.setBackground(Color.GREEN);
 
                         jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
+
 
                     } else if (((Street) property).getHouses() == 2) {
                         // player has 2 houses on their street
@@ -431,7 +428,6 @@ public class GameFrame extends JFrame implements GameView {
                         houseLab.setBackground(Color.RED);
 
                         jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(houseLab);
-                        jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).removeMouseListener(gameController);
 
                     }
 
@@ -443,44 +439,14 @@ public class GameFrame extends JFrame implements GameView {
 
                 propertyLabel.setFont(new Font("Sans Serif", Font.BOLD, 11));
                 propertyPanel.add(propertyLabel);
-                propertyPanel.setBackground(new Color(255, 255, 255));
-                Border blackBorder = BorderFactory.createLineBorder(Color.black);
-                propertyPanel.setBorder(blackBorder);
 
                 propertyPanel.setPreferredSize(new Dimension(104, 25));
 
-                // There is an explanation for how this works in handleGameStatusUpdate()
-                for (Component c: jPanelList.get(gameModel.getPlayers().get(i).getPosition()).getComponents())
-                {
-                    if (c instanceof JPanel)
-                    {
-                        if (((JPanel)c).getLayout() instanceof BorderLayout)
-                        {
-                            for (Component c2: ((JPanel)c).getComponents())
-                            {
-                                if (c2 instanceof JPanel)
-                                {
-                                    ((JPanel)c2).add(propertyPanel, new GridLayout(3, 3));
-                                }
-                            }
-                        }
-                    }
-                }
 
-                //jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
+                jPanelList.get(gameModel.getGameboard().getSquares().indexOf(property)).add(propertyPanel);
 
             }
         }
-
-        if (gameModel.getBuildingState() == GameModel.BuildingState.ALL_HOUSES_BUILT) {
-            displayMessage("You have built all four houses. Click again on the streets to upgrade to a hotel!");
-        }
-
-        if (gameModel.getBuildingState() == GameModel.BuildingState.ALL_HOTELS_BUILT) {
-            displayMessage("You cannot build anymore hotels on these set of streets.");
-        }
-
-        gameModel.setBuildingState(GameModel.BuildingState.PLAYER_NOT_BUILDING);
 
     }
 
@@ -499,15 +465,12 @@ public class GameFrame extends JFrame implements GameView {
             panel.removeAll();
         }
 
-        jPanelList = new ArrayList<>();
-
         GamePanelsInitialization.initializeSouthPanels(jPanelList, gameModel.getGameboard());
         GamePanelsInitialization.initializeWestPanels(jPanelList, gameModel.getGameboard());
         GamePanelsInitialization.initializeNorthPanels(jPanelList, gameModel.getGameboard());
         GamePanelsInitialization.initializeEastPanels(jPanelList, gameModel.getGameboard());
 
         handleBuildingStatusUpdate(gameModel);
-
 
         playerPanel.removeAll();
 
@@ -535,28 +498,9 @@ public class GameFrame extends JFrame implements GameView {
                 simplePlayerPanels[i].setEnabled(true);
                 playerNames[i].setText(gameModel.getPlayers().get(i).getName());
                 jPanelList.get(gameModel.getPlayers().get(i).getPosition()).setLayout(new FlowLayout());
+                jPanelList.get(gameModel.getPlayers().get(i).getPosition()).add(simplePlayerPanels[i], new GridLayout(4, 4));
 
-                // Player icons are added to a JPanel with a GridLayout located inside a JPanel with a BorderLayout at
-                // BorderLayout.CENTER, which is itself placed inside a BorderLayout. It's overly complex, but it works.
-                // Swing is gross.
-                for (Component c: jPanelList.get(gameModel.getPlayers().get(i).getPosition()).getComponents())
-                {
-                    if (c instanceof JPanel)
-                    {
-                        if (((JPanel)c).getLayout() instanceof BorderLayout)
-                        {
-                            for (Component c2: ((JPanel)c).getComponents())
-                            {
-                                if (c2 instanceof JPanel)
-                                {
-                                    ((JPanel)c2).add(simplePlayerPanels[i], new GridLayout(3, 3));
-                                }
-                            }
-                        }
-                    }
-                }
                 // adding players to the GUI gameboard
-
                 fullPlayerPanels[i].removeAll();
 
                 fullPlayerPanels[i].setBackground(new Color(255, 204, 204));
@@ -569,10 +513,10 @@ public class GameFrame extends JFrame implements GameView {
             else        // Otherwise, player is bankrupt
             {
                 // player bankrupt, returning all houses to the bank
-                gameModel.setTotalNumberHouses(gameModel.getTotalNumberHouses() + gameModel.getPlayers().get(i).getTotalNumberHouses());
+                gameModel.setTotalHouses(gameModel.getTotalHouses() + gameModel.getPlayers().get(i).getTotalNumberHouses());
 
                 // player bankrupt, returning all hotels to the bank
-                gameModel.setTotalNumberHotels(gameModel.getTotalNumberHotels() + gameModel.getPlayers().get(i).getTotalNumberHouses());
+                gameModel.setHotelsInBank(gameModel.getHotelsInBank() + gameModel.getPlayers().get(i).getTotalNumberHouses());
 
                 fullPlayerPanels[i].removeAll();
 

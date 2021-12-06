@@ -1,3 +1,8 @@
+/**
+ * @author Robert Simionescu
+ * @version Milestone 4
+ */
+
 import java.io.Serializable;
 
 /**

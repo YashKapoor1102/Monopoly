@@ -1,8 +1,13 @@
+/**
+ * @author Robert Simionescu and Yash Kapoor
+ * @version Milestone 4
+ *
+ */
+
 import java.io.Serializable;
 
 /**
  * @author Robert Simionescu and Yash Kapoor
- * @version Milestone 3
  *
  * Interface representing a square on the gameboard. Used primarily to allow Gameboard to have a list of all squares and
  * have them share a type. There are a number of different types of squares in the game, most of which have not been

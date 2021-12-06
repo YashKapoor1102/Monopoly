@@ -1,6 +1,6 @@
 /**
  * @author Robert Simionescu and Yash Kapoor
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import gameexceptions.*;
@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -25,7 +26,6 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
 {
     private GameModel model;
     private List<GameView> views;
-    private File file;
 
     // Strings representing all of the commands that players can execute.
     private static final String ADD_PLAYER = "Add Player";
@@ -39,7 +39,13 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     private static final String SAVE = "Save";
     private static final String LOAD = "Load";
 
+    private static final String REGULAR_VERSION = "Regular Monopoly";
+    private static final String INTERNATIONAL_VERSION = "Nintendo Monopoly";
+
+    private static final File FILE = new File("SavedGame.txt");
+
     /**
+     * @author Yash Kapoor
      * Constructor for a GameController. Takes a model and generates its list of views from the model.
      * @param model The model this is a controller for.
      */
@@ -47,7 +53,31 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
     {
         this.model = model;
         this.views = model.getGameViews();
-        this.file = new File("SavedGame.txt");
+
+        String[] versions = new String[2];
+        versions[0] = REGULAR_VERSION;
+        versions[1] = INTERNATIONAL_VERSION;
+
+        try {
+            // drop-down menu using a JOptionPane at the beginning of the game
+            // allowing the user to select the version that they would like to play
+            Object selectionObject = JOptionPane.showInputDialog(null,
+                    "Choose your version", "Version Selection",
+                    JOptionPane.QUESTION_MESSAGE, null, versions, REGULAR_VERSION);
+
+            if (selectionObject.equals(REGULAR_VERSION)) {
+                model.createGameboard("Standard_Gameboard.xml");
+            }
+            else {
+                model.createGameboard("International_Gameboard.xml");
+            }
+
+        }
+        catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Oops! You did not select a version of Monopoly.");
+            System.exit(0);
+        }
+
     }
 
     /**
@@ -126,11 +156,8 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      * on their properties.
      */
     private void buildOnProperty() {
-
         displayMessage("Click on the street that you own that you would like to build a house on.");
         displayMessage("Ensure that you build the houses evenly.");
-
-        model.setBuildingState(GameModel.BuildingState.PLAYER_BUILDING);
     }
 
 
@@ -140,7 +167,6 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      */
     private void pass()
     {
-
         model.passTurn(false);
 
         displayMessage(model.getCurrentPlayer().getName() + "'s turn.");
@@ -325,15 +351,29 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
         }
     }
 
+    /**
+     * @author Yash Kapoor
+     * Saves the game in a text file called SavedGame.txt
+     */
     public void save() {
-        model.save(file);
-    }
+        model.save(FILE);
 
-    public void load() {
-        model.load(file);
+        JOptionPane.showMessageDialog(null, "Your game has been saved!");
     }
 
     /**
+     * @author Yash Kapoor
+     * loads the game from a text file called SavedGame.txt
+     */
+    public void load() {
+
+        model.load(FILE);
+
+        JOptionPane.showMessageDialog(null, "Your game has been loaded!");
+    }
+
+    /**
+     * @author Yash Kapoor
      * Handles all the mouse clicks in the game.
      *
      * It is used to allow the user to click on the squares of the gameboard.
@@ -343,14 +383,32 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        JLabel currentLabel = (JLabel) e.getSource();
+
+        JPanel currentLabel = (JPanel) e.getSource();
 
         try {
-            model.buildOnProperty(model.getCurrentPlayer(), currentLabel.getName());
+
+            ArrayList<Square> gameboardSquares = model.getGameboard().getSquares();
+            boolean streetMaximumCapacityReached = false;
+
+            for (Square s : gameboardSquares) {
+                if (s instanceof Street) {
+                    if ((s.getName().equals(currentLabel.getName()))) {
+                        streetMaximumCapacityReached = ((Street) s).getMaxCapacityReached();
+                    }
+                }
+            }
+
+            if(streetMaximumCapacityReached) {
+                JOptionPane.showMessageDialog(null,
+                        "This street has reached its maximum capacity. No more houses/hotels can be built.");
+            }
+            else {
+                model.buildOnProperty(model.getCurrentPlayer(), currentLabel.getName());
+            }
 
             for (GameView view : views) {
                 view.handleGameStatusUpdate(model);
-                //view.handleBuildingStatusUpdate(model);
             }
 
         }
@@ -393,7 +451,6 @@ public class GameController extends MouseAdapter implements ActionListener, Seri
         for (GameView view : views)
         {
             view.handleGameStatusUpdate(model);
-            //view.handleBuildingStatusUpdate(model);
         }
 
     }

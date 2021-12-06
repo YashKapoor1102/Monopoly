@@ -1,8 +1,13 @@
+/**
+ * @author Yash Kapoor
+ * @version Milestone 4
+ *
+ */
+
 import java.io.Serializable;
 
 /**
  * @author Yash Kapoor
- * @version Milestone 3
  *
  * Class representing the different utilities available in Monopoly.
  * There are only two utilities.

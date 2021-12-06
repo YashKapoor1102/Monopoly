@@ -1,9 +1,19 @@
+/**
+ * @author Robert Simionescu
+ * @version Milestone 4
+ */
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 
+/**
+ * @author Robert Simionescu
+ *
+ * Used to read the gameboard from an XML File
+ */
 public class GameboardHandler extends DefaultHandler
 {
     private static final String SQUARE = "Square";
@@ -25,6 +35,16 @@ public class GameboardHandler extends DefaultHandler
     private ArrayList<Square> squares;
     private StringBuilder stringBuilder;
 
+    /**
+     * @author Robert Simionescu
+     *  Get the characters that are in between the start element and the end element
+     *
+     * @param ch        a char array, the list of characters that lie in between the start and end element
+     * @param start     an int, the position in the XML document where the characters start
+     * @param length    an int, the total number of characters
+     *
+     * @throws SAXException     Handling Exceptions
+     */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException
     {
@@ -38,76 +58,79 @@ public class GameboardHandler extends DefaultHandler
         }
     }
 
+    /**
+     * @author Robert Simionescu
+     * Initializing the Squares ArrayList at the beginning of the XML document
+     *
+     * @throws SAXException     Handling exceptions
+     */
     @Override
     public void startDocument() throws SAXException
     {
         squares = new ArrayList<>();
     }
 
+    /**
+     * @author Robert Simionescu
+     * Get the start elements in an XML file
+     *
+     * @param uri           a String
+     * @param localName     a String
+     * @param qName         a String, the name of the start element in the XML file
+     * @param attributes    an Attributes Object
+     *
+     * @throws SAXException     Handling exceptions
+     */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         switch (qName)
         {
             case SQUARE:
-                break;
+            case UTILITY:
             case STREET:
-                break;
             case RAILROAD:
                 break;
-            case UTILITY:
-                break;
             case NAME:
-                stringBuilder = new StringBuilder();
-                break;
             case COLOUR:
-                stringBuilder = new StringBuilder();
-                break;
             case PROPERTY_COST:
-                stringBuilder = new StringBuilder();
-                break;
             case HOUSE_COST:
-                stringBuilder = new StringBuilder();
-                break;
             case HOTEL_COST:
                 stringBuilder = new StringBuilder();
                 break;
         }
     }
 
+    /**
+     * @author Robert Simionescu
+     * Get the end elements in an XML file
+     *
+     * @param uri               a String
+     * @param localName         a String
+     * @param qName             a String, the name of the end element in the XML file
+     *
+     * @throws SAXException         Handling exceptions
+     */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        switch (qName)
-        {
-            case SQUARE:
-                squares.add(new GenericSquare(name));
-                break;
-            case STREET:
-                squares.add(new Street(name, colour, cost, houseCost, hotelCost));
-                break;
-            case RAILROAD:
-                squares.add(new Railroad(name, cost));
-                break;
-            case UTILITY:
-                squares.add(new Utility(name, cost));
-                break;
-            case NAME:
-                name = stringBuilder.toString();
-                break;
-            case COLOUR:
-                colour = stringBuilder.toString();
-                break;
-            case PROPERTY_COST:
-                cost = Integer.parseInt(stringBuilder.toString());
-                break;
-            case HOUSE_COST:
-                houseCost = Integer.parseInt(stringBuilder.toString());
-                break;
-            case HOTEL_COST:
-                hotelCost = Integer.parseInt(stringBuilder.toString());
-                break;
+        switch (qName) {
+            case SQUARE -> squares.add(new GenericSquare(name));
+            case STREET -> squares.add(new Street(name, colour, cost, houseCost, hotelCost));
+            case RAILROAD -> squares.add(new Railroad(name, cost));
+            case UTILITY -> squares.add(new Utility(name, cost));
+            case NAME -> name = stringBuilder.toString();
+            case COLOUR -> colour = stringBuilder.toString();
+            case PROPERTY_COST -> cost = Integer.parseInt(stringBuilder.toString());
+            case HOUSE_COST -> houseCost = Integer.parseInt(stringBuilder.toString());
+            case HOTEL_COST -> hotelCost = Integer.parseInt(stringBuilder.toString());
         }
     }
 
+    /**
+     * @author Robert Simionescu
+     * Get the gameboard that is initialized with squares
+     *
+     * @return      a Gameboard Object, the current gameboard that is being used
+     */
     public Gameboard getGameboard()
     {
         return new Gameboard(squares);

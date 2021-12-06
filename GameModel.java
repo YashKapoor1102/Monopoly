@@ -1,6 +1,6 @@
 /**
  * @author Oliver Lu, Yash Kapoor, and Robert Simionescu
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import gameexceptions.*;
@@ -22,27 +22,27 @@ public class GameModel implements Serializable {
     public static final int MAX_PLAYERS = 8;    // Maximum number of players.
     public static final int MIN_PLAYERS = 2;    // Minimum number of players before the game can begin.
     public static final int STARTING_MONEY = 1500;  // Initial amount of money for players.
-    public static final int GO_MONEY = 200; // Money given when passing Go.
-    public static final int MAX_HOUSES = 4; // Max houses that can be built on a street before a hotel is built.
-
-    public static final String GAMEBOARD_XML = "Standard_Gameboard.xml";
+    private static final int GO_MONEY = 200; // Money given when passing Go.
+    private static final int MAX_HOUSES = 4; // Max houses that can be built on a street before a hotel is built.
+    private static final int MAX_HOTELS = 1;
+    private static final int MAX_CAPACITY = MAX_HOUSES + MAX_HOTELS;
+    private static final int TOTAL_HOUSES = 32;
+    private static final int TOTAL_HOTELS = 12;
 
     public enum GameState {ADDING_PLAYERS, PLAYER_ROLLING, PLAYER_ROLLED_DOUBLES, PLAYER_ROLLED_NORMAL, PLAYER_PASSED_GO,
         DOUBLES_ROLLED_THRICE, DOUBLES_ROLLED_IN_JAIL, GAME_OVER}
 
-    public enum BuildingState {PLAYER_NOT_BUILDING, PLAYER_BUILDING, ALL_HOUSES_BUILT, ALL_HOTELS_BUILT}
-
     private List<GameView> views;
 
-    private BuildingState buildingState;
     private GameState gameState;
     private ArrayList<Player> players;
 
     private Gameboard gameboard;
 
     private int currentPlayer;
-    private int totalNumberHouses;
-    private int totalNumberHotels;
+
+    private int housesInBank;
+    private int hotelsInBank;
 
     /**
      * @author Robert Simionescu
@@ -50,14 +50,13 @@ public class GameModel implements Serializable {
      */
     public GameModel()
     {
-        this.gameboard = createGameboard();
         this.players = new ArrayList<Player>();
         currentPlayer = 0;
         gameState = GameState.ADDING_PLAYERS;
         views = new ArrayList<GameView>();
 
-        this.totalNumberHouses = 32;
-        this.totalNumberHotels = 12;
+        this.housesInBank = TOTAL_HOUSES;
+        this.hotelsInBank = TOTAL_HOTELS;
 
     }
 
@@ -91,6 +90,16 @@ public class GameModel implements Serializable {
     }
 
     /**
+     * @author Yash Kapoor
+     *
+     * Sets the current player of the game
+     * @param currentPlayer     an int, the index of the current player in the game
+     */
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    /**
      * @author Robert Simionescu
      * Removes a view from the list of views.
      * @param view The view to be removed.
@@ -111,27 +120,6 @@ public class GameModel implements Serializable {
     }
 
     /**
-     * @author Yash Kapoor
-     * Get the building state
-     *
-     * @return      a BuildingState Object, the current building state
-     */
-    public BuildingState getBuildingState()
-    {
-        return buildingState;
-    }
-
-    /**
-     * @author Yash Kapoor
-     * Set the building state
-     *
-     * @param bs    a BuildingState Object, the current building state
-     */
-    public void setBuildingState(BuildingState bs){
-        this.buildingState = bs;
-    }
-
-    /**
      * @author Robert Simionescu
      * Set the game state
      *
@@ -146,145 +134,48 @@ public class GameModel implements Serializable {
      * Creating the gameboard by adding squares to it.
      * Those squares can represent properties (e.g., streets) and the initial starting point.
      * Jail, GO, and Utilities will be added in later milestones.
-     * @return The gameboard that will be used for the game.
+     *
+     * @return      a Gameboard Object, the gameboard that is going to be used in the game
      */
-    public Gameboard createGameboard()
+    public Gameboard createGameboard(String fileName)
     {
-//        ArrayList<Square> squares = new ArrayList<>();
-//
-//        // adding all squares to the ArrayList
-//        Collections.addAll(squares, new Square() {
-//
-//            /**
-//             * Getting the name of the square
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String getName() {
-//                return "Initial Starting Point";
-//            }
-//
-//            /**
-//             * Shows the user a text representation of what square they are currently on.
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String toString() {
-//                return String.format("%s", getName());
-//            }
-//
-//        }, new Street("Mediterranean Avenue", "Brown", 60, 50, 50) {
-//        }, new Street("Baltic Avenue", "Brown", 60, 50, 50) {
-//
-//        }, new Railroad("Reading Railroad", 200) {
-//
-//        }, new Street("Oriental Avenue", "Blue", 100, 50, 50) {
-//        }, new Street("Vermont Avenue", "Blue", 100, 50, 50) {
-//        }, new Street("Connecticut Avenue", "Blue", 120, 50, 50) {
-//
-//        }, new Square() {
-//
-//            /**
-//             * Getting the name of the square
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String getName() {
-//                return "Jail";
-//            }
-//
-//            /**
-//             * Shows the user a text representation of what square they are currently on.
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String toString() {
-//                return String.format("%s", getName());
-//            }
-//        }, new Street("St. Charles Place", "Pink", 140, 100, 100) {
-//        }, new Utility("Electric Company", 150) {
-//        }, new Street("States Avenue", "Pink", 140, 100, 100) {
-//        }, new Street("Virginia Avenue", "Pink", 160, 100, 100) {
-//
-//        }, new Railroad("Pennsylvania Railroad", 200) {
-//
-//        }, new Street("St. James Place", "Orange", 180, 100, 100) {
-//        }, new Street("Tennessee Avenue", "Orange", 180, 100, 100) {
-//        }, new Street("New York Avenue", "Orange", 200, 100, 100) {
-//
-//        }, new Street("Kentucky Avenue", "Red", 220, 150, 150) {
-//        }, new Street("Indiana Avenue", "Red", 220, 150, 150) {
-//        }, new Street("Illinois Avenue", "Red", 240, 150, 150) {
-//
-//        }, new Railroad("B. & O. Railroad", 200) {
-//
-//        }, new Street("Atlantic Avenue", "Yellow", 260, 150, 150) {
-//        }, new Street("Ventnor Avenue", "Yellow", 260, 150, 150) {
-//        }, new Utility("Water Works", 150) {
-//        }, new Street("Marvin Gardens", "Yellow", 280, 150, 150) {
-//
-//        }, new Square() {
-//
-//            /**
-//             * Getting the name of the square
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String getName() {
-//                return "Go to Jail";
-//            }
-//
-//            /**
-//             * Shows the user a text representation of what square they are currently on.
-//             *
-//             * @return a String, the name of the square
-//             */
-//            @Override
-//            public String toString() {
-//                return String.format("%s", getName());
-//            }
-//
-//        }, new Street("Pacific Avenue", "Green", 300, 200, 200) {
-//        }, new Street("North Carolina Avenue", "Green", 300, 200, 200) {
-//        }, new Street("Pennsylvania Avenue", "Green", 320, 200, 200) {
-//
-//        }, new Railroad("Short Line Railroad", 200) {
-//
-//        }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
-//        }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
-//
-//        return new Gameboard(squares);
-
         try
         {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser s = spf.newSAXParser();
             GameboardHandler gameboardHandler = new GameboardHandler();
 
-            s.parse(GAMEBOARD_XML, gameboardHandler);
-            return gameboardHandler.getGameboard();
+            s.parse(fileName, gameboardHandler);
 
+            gameboard = gameboardHandler.getGameboard();
+
+            return gameboard;
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return null;
         }
 
+        return null;
     }
 
     /**
      * @author Robert Simionescu
      * Returns the gameboard.
-     * @return The gameboard, stored as a Gameboard.
+     * @return      a Gameboard Object, the gameboard that is going to be used in the game
      */
     public Gameboard getGameboard() {
         return gameboard;
+    }
+
+    /**
+     * @author Yash Kapoor
+     * Sets the gameboard (containing a list of squares) to be used in the game
+     *
+     * @param gameboard     a Gameboard Object, the gameboard that is going to be used in the game
+     */
+    public void setGameboard(Gameboard gameboard) {
+        this.gameboard = gameboard;
     }
 
     /**
@@ -316,8 +207,6 @@ public class GameModel implements Serializable {
             throw new InvalidStateException("You cannot add new players right now.");
         }
     }
-
-    
 
     /**
      * @author Robert Simionescu
@@ -458,27 +347,6 @@ public class GameModel implements Serializable {
                 players.get(currentPlayer).setPosition(newPosition);
             }
 
-//            while(oldPosition != newPosition && !players.get(currentPlayer).getInJail()) {
-//
-//                oldPosition = (oldPosition + 1) % gameboard.getSquares().size();
-//
-//                if (newPosition == 24) {
-//                    // user lands on "Go to Jail"
-//                    // set position to "Jail"
-//                    players.get(currentPlayer).setPosition(7);
-//                    players.get(currentPlayer).setInJail(true);
-//                }
-//                else {
-//                    players.get(currentPlayer).setPosition(oldPosition);
-//                }
-//
-//                if (oldPosition == 0) {
-//                    // User passes go, award them $200
-//                    players.get(currentPlayer).addMoney(200);
-//                    gameState = GameState.PLAYER_PASSED_GO;
-//                }
-//            }
-
             if (!players.get(currentPlayer).getInJail()) {
                 // player isn't in jail, so rent must be paid to the other player
                 playerLandOnSquare(players.get(currentPlayer), gameboard.getSquare(newPosition));
@@ -583,6 +451,11 @@ public class GameModel implements Serializable {
         return players;
     }
 
+    /**
+     * Sets the list of players in the game
+     *
+     * @param players       an ArrayList, containing all the players in the game
+     */
     public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
@@ -633,7 +506,6 @@ public class GameModel implements Serializable {
      *
      * @return      a boolean, true if player landing on the square has no money left (becomes bankrupt), false otherwise
      */
-
     public boolean playerLandOnSquare(Player player, Square square)
     {
         // If the player lands on a property
@@ -665,8 +537,8 @@ public class GameModel implements Serializable {
      * There are 32 houses in the bank. Hence, this value is initialized to 32.
      * @return      an int, representing the total number of houses
      */
-    public int getTotalNumberHouses() {
-        return this.totalNumberHouses;
+    public int getTotalHouses() {
+        return this.housesInBank;
     }
 
     /**
@@ -675,8 +547,8 @@ public class GameModel implements Serializable {
      * Set the total number of houses that are in the bank.
      * @param houses       an int, representing the number of houses.
      */
-    public void setTotalNumberHouses(int houses) {
-        this.totalNumberHouses = houses;
+    public void setTotalHouses(int houses) {
+        this.housesInBank = houses;
     }
 
     /**
@@ -685,8 +557,8 @@ public class GameModel implements Serializable {
      * Get the total number of hotels that are in the bank.
      * @return      an int, representing the total number of hotels
      */
-    public int getTotalNumberHotels() {
-        return this.totalNumberHotels;
+    public int getHotelsInBank() {
+        return this.hotelsInBank;
     }
 
     /**
@@ -695,8 +567,8 @@ public class GameModel implements Serializable {
      * Set the total number of hotels that are in the bank.
      * @param hotels    an int, representing the number of hotels.
      */
-    public void setTotalNumberHotels(int hotels) {
-        this.totalNumberHotels = hotels;
+    public void setHotelsInBank(int hotels) {
+        this.hotelsInBank = hotels;
     }
 
     /**
@@ -712,7 +584,9 @@ public class GameModel implements Serializable {
      * @param s             a Street Object, the street that the player clicked on to build a house/hotel on
      */
     private void assignHouses(Player buyer, Street s) {
+
         ArrayList<Street> ownedSquaresMatching = s.getBuildableColour(getCurrentPlayer(), gameboard);
+
         if (ownedSquaresMatching == null) {
             // player does not own all the properties in the color set
 
@@ -730,66 +604,46 @@ public class GameModel implements Serializable {
 
             }
 
-
             // calculation below that ensures the player is building houses evenly
             float average = totalHouses / (float) ownedSquaresMatching.size();
 
             int numHouses = s.getHouses();
 
-            if (numHouses > average && numHouses != MAX_HOUSES) {
+            if (numHouses > average && numHouses != MAX_CAPACITY) {
 
                 throw new BuildHousesException("You must build houses evenly! Try again.");
-                // cannot build house since player is not building evenly
             }
 
             if (s.getHouseCost() <= buyer.getMoney()) {
                 // the cost of the house must be less than or equal to the buyer's total amount of money
 
-
-                if (totalNumberHouses >= 0 || numHouses == MAX_HOUSES) {
+                if (housesInBank >= 0 || numHouses == MAX_HOUSES) {
                     // runs as long as there are enough houses available in the bank to build another or the player
                     // has reached the max number of houses and will attempt to build a hotel.
 
-                    totalNumberHouses--;
+                    housesInBank--;
+
                     buyer.removeMoney(s.getHouseCost());
                     numHouses += 1;
                     s.setHouses(numHouses);
 
-                    if (totalHouses == (MAX_HOUSES * ownedSquaresMatching.size()) - 1) {
-                        // max number houses have been built on each street of a specific color set
-
-                        buildingState = BuildingState.ALL_HOUSES_BUILT;
-                    }
-
                     getCurrentPlayer().incrementTotalNumberHouses();
 
-                    if (numHouses == MAX_HOUSES + 1) {
+                    if (numHouses == MAX_CAPACITY) {
 
-                        if(totalNumberHotels >= 0) {
-                            totalNumberHouses += MAX_HOUSES + 1;
+                        s.setMaxCapacityReached(true);
+
+                        if(hotelsInBank >= 0) {
+                            housesInBank += MAX_CAPACITY;
                             // houses returned to the bank, plus the newly added extra.
 
-                            totalNumberHotels--;
+                            hotelsInBank--;
 
                             // 5 houses technically equal 1 hotel, so we set hotels = 1
                             s.setHotels(1);
 
-                            int totalHotels = 0;
-                            for(int sameStreet = 0; sameStreet < ownedSquaresMatching.size(); sameStreet++) {
-                                // iterating through the ArrayList and calculating the total number of hotels
-                                // on each street of a specific color set
-
-                                totalHotels += ownedSquaresMatching.get(sameStreet).getHotel();
-
-                                if (totalHotels == ownedSquaresMatching.size()) {
-                                    buildingState = BuildingState.ALL_HOTELS_BUILT;
-                                }
-
-                            }
-
                             getCurrentPlayer().incrementTotalNumberHotels();
 
-                            return;
                             // hotel built
                         }
                         else {
@@ -829,17 +683,18 @@ public class GameModel implements Serializable {
         }
     }
 
-    public void setGameboard(Gameboard gameboard) {
-        this.gameboard = gameboard;
-    }
-
+    /**
+     * Save the game to a specific file
+     *
+     * @param file      a File Object, the file that the game is going to get saved to
+     */
     public void save(File file) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             ObjectOutputStream objectStream = new ObjectOutputStream(fileOutputStream);
 
+            objectStream.writeInt(currentPlayer);
             objectStream.writeObject(getGameState());
-            objectStream.writeObject(getBuildingState());
             objectStream.writeObject(getPlayers());
             objectStream.writeObject(getGameboard());
 
@@ -851,25 +706,30 @@ public class GameModel implements Serializable {
         }
     }
 
+    /**
+     * Load the game from a specific file
+     *
+     * @param file      a File Object, the file that the game is going to get saved to
+     */
     public void load(File file) {
         ArrayList<Player> player;
         GameState gs;
-        BuildingState bs;
         Gameboard gb;
+        int cp;
 
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
+            cp = objectInputStream.readInt();
             gs = (GameState) objectInputStream.readObject();
-            bs = (BuildingState) objectInputStream.readObject();
             player = (ArrayList<Player>) objectInputStream.readObject();
             gb = (Gameboard) objectInputStream.readObject();
 
             setPlayers(player);
-            setBuildingState(bs);
             setGameState(gs);
             setGameboard(gb);
+            setCurrentPlayer(cp);
 
             fileInputStream.close();
             objectInputStream.close();

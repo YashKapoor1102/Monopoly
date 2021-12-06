@@ -1,10 +1,11 @@
 /**
  * @author Himanshu Singh
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,11 +13,17 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 /**
- * The type Game model test.
+ * Test Class for GameModel
+ *
+ * NOTE: We did not test certain setters (e.g., setPlayers, setCurrentPlayer)
+ * because our save/load methods pass all the tests. Since those methods
+ * use those setters, they do not need to be tested separately.
  */
 public class GameModelTest implements Serializable {
 
-    GameModel gm;
+    private GameModel gm;
+    private static final File FILE = new File("TestSaveGame.txt");
+
     /**
      * @author Himanshu Singh
      * Test add game view.
@@ -46,20 +53,20 @@ public class GameModelTest implements Serializable {
 
     /**
      * @author Himanshu Singh
-     * Test create and get gameboard.
+     * Test the Regular Version of Monopoly Gameboard
      */
     @Test
-    public void testCreateAndGetGameboard() {
+    public void testStandardGameboard() {
         System.out.println("Testing GetGameboard and CreatingGameboard Function...");
         gm = new GameModel();
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         ArrayList<Square> squares = new ArrayList<>();
         Collections.addAll(squares, new Square() {
 
 
             @Override
             public String getName() {
-                return "Initial Starting Point";
+                return "Go";
             }
 
 
@@ -135,9 +142,105 @@ public class GameModelTest implements Serializable {
         }, new Street("Park Place", "Dark Blue", 350, 200, 200) {
         }, new Street("Board Walk", "Dark Blue", 400, 200, 200));
         System.out.println("Expected: " + squares.toString() + "" + "\nActual: " +
-                gm.createGameboard().getSquares().toString() + "\n");
-        assertEquals(squares.toString(), gm.createGameboard().getSquares().toString());
+                gm.createGameboard("Standard_Gameboard.xml").getSquares().toString() + "\n");
+        assertEquals(squares.toString(), gm.createGameboard("Standard_Gameboard.xml").getSquares().toString());
     }
+
+    /**
+     * @author Himanshu Singh
+     * Test International Version of the Monopoly Gameboard
+     */
+    @Test
+    public void testInternationalGameboard() {
+        System.out.println("Testing GetGameboard and CreatingGameboard Function...");
+        gm = new GameModel();
+        gm.createGameboard("International_Gameboard.xml");
+        ArrayList<Square> squares = new ArrayList<>();
+        Collections.addAll(squares, new Square() {
+
+
+            @Override
+            public String getName() {
+                return "Go";
+            }
+
+
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+
+        }, new Street("Waluigi", "Brown", 80, 60, 60) {
+        }, new Street("Wario", "Brown", 80, 60, 60) {
+
+        }, new Railroad("Mario Kart", 100) {
+
+        }, new Street("Rosie the Cat", "Blue", 120, 70, 70) {
+        }, new Street("K.K. Slider", "Blue", 120, 70, 70) {
+        }, new Street("Tom Nook", "Blue", 120, 70, 70) {
+
+        }, new Square() {
+
+
+            @Override
+            public String getName() {
+                return "Jail";
+            }
+
+
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+        }, new Street("Meta Knight", "Pink", 160, 120, 120) {
+        }, new Utility("Piranha Plant", 200) {
+        }, new Street("King Dedede", "Pink", 160, 120, 120) {
+        }, new Street("Kirby", "Pink", 160, 120, 120) {
+
+        }, new Railroad("Gunship", 100) {
+
+        }, new Street("Morph Ball", "Orange", 200, 140, 140) {
+        }, new Street("Ridley", "Orange", 200, 140, 140) {
+        }, new Street("Samus Aran", "Orange", 200, 140, 140) {
+
+        }, new Street("Toad", "Red", 220, 145, 145) {
+        }, new Street("Princess Peach", "Red", 220, 145, 145) {
+        }, new Street("Yoshi", "Red", 220, 145, 145) {
+
+        }, new Railroad("Pikmin Onion", 200) {
+
+        }, new Street("Dixie Kong", "Yellow", 250, 160, 160) {
+        }, new Street("Diddy Kong", "Yellow", 250, 160, 160) {
+        }, new Utility("Pipe", 250) {
+        }, new Street("Donkey Kong", "Yellow", 250, 160, 160) {
+
+        }, new Square() {
+
+
+            @Override
+            public String getName() {
+                return "Go to Jail";
+            }
+
+
+            @Override
+            public String toString() {
+                return String.format("%s", getName());
+            }
+
+        }, new Street("Midna", "Green", 280, 180, 180) {
+        }, new Street("Princess Zelda", "Green", 280, 180, 180) {
+        }, new Street("Link", "Green", 280, 180, 180) {
+
+        }, new Railroad("Epona", 200) {
+
+        }, new Street("Luigi", "Dark Blue", 400, 250, 250) {
+        }, new Street("Mario", "Dark Blue", 500, 300, 300));
+        System.out.println("Expected: " + squares.toString() + "" + "\nActual: " +
+                gm.createGameboard("International_Gameboard.xml").getSquares().toString() + "\n");
+        assertEquals(squares.toString(), gm.createGameboard("International_Gameboard.xml").getSquares().toString());
+    }
+
 
     /**
      * @author Himanshu Singh
@@ -196,6 +299,7 @@ public class GameModelTest implements Serializable {
     public void testRolls(){
         System.out.println("Testing Roll Function...");
         gm = new GameModel();
+        gm.createGameboard("Standard_Gameboard.xml");
         Player a = new Player("Yash",1500);
         Player b = new Player("Himanshu",1500);
         gm.addPlayer(a);
@@ -295,6 +399,7 @@ public class GameModelTest implements Serializable {
         Player a = new Player("Himanshu",1500);
         Player b = new Player("Yash", 1500);
         gm = new GameModel();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         gm.startGame();
@@ -331,7 +436,7 @@ public class GameModelTest implements Serializable {
         gm = new GameModel();
         Player a = new Player("a",3000000);
         Player b = new Player("b", 1);
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         gm.startGame();
@@ -373,7 +478,7 @@ public class GameModelTest implements Serializable {
         gm = new GameModel();
         Player a = new Player("a",3000000);
         Player b = new Player("b", 15);
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         gm.startGame();
@@ -398,7 +503,7 @@ public class GameModelTest implements Serializable {
         gm = new GameModel();
         Player a = new Player("a",1500);
         Player b = new Player("b", 1500);
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         gm.startGame();
@@ -426,7 +531,7 @@ public class GameModelTest implements Serializable {
         gm = new GameModel();
         Player a = new Player("a",1500);
         Player b = new Player("b", 1500);
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         GameModel.GameState testGameState = GameModel.GameState.PLAYER_ROLLING;
@@ -444,7 +549,7 @@ public class GameModelTest implements Serializable {
         gm = new GameModel();
         Player a = new Player("a",210000);
         Player b = new Player("b",2000);
-        gm.createGameboard();
+        gm.createGameboard("Standard_Gameboard.xml");
         gm.addPlayer(a);
         gm.addPlayer(b);
         gm.startGame();
@@ -514,6 +619,58 @@ public class GameModelTest implements Serializable {
         assertEquals(3,a.getTotalNumberHotels());
         //Exceptions thrown for the case of multiple properties on different color or you are all out of hotels or
         //houses
+    }
+
+    /**
+     * @author Himanshu Singh
+     * Test Save/Load Methods in GameModel
+     *
+     * There is no need to test save/load separately since they are
+     * closely related to one another.
+     *
+     */
+    @Test
+    public void testSave() {
+        gm = new GameModel();
+
+        Player a = new Player("a",1500);
+        Player b = new Player("b",1500);
+        gm.createGameboard("International_Gameboard.xml");
+        gm.addPlayer(a);
+        gm.addPlayer(b);
+        gm.startGame();
+
+        gm.roll();
+
+        gm.passTurn(false);
+
+        gm.roll();
+
+        gm.getCurrentPlayer().setPosition(4);
+        gm.buyProperty(gm.getCurrentPlayer());
+
+        gm.save(FILE);
+
+
+        GameModel testSavedGameModel = new GameModel();
+        testSavedGameModel.load(FILE);
+
+
+        // ensuring loaded model has the same game state as saved model
+        assertEquals(gm.getGameState(), testSavedGameModel.getGameState());
+
+        // ensuring loaded model has the same number of players as saved model
+        assertEquals(gm.getPlayers().size(), testSavedGameModel.getPlayers().size());
+
+        // ensuring loaded model has the same gameboard squares (Nintendo Monopoly Gameboard)
+        // as saved model
+        assertEquals(gm.getGameboard().getSquares().toString(), testSavedGameModel.getGameboard().getSquares().toString());
+
+        // ensuring the current player is at the same position after loading model as he/she previously was
+        assertEquals(gm.getCurrentPlayer().getPosition(), testSavedGameModel.getCurrentPlayer().getPosition());
+
+        // ensuring the current player has the same owned properties after loading model as he/she previously did
+        assertEquals(gm.getCurrentPlayer().getProperties().size(), testSavedGameModel.getCurrentPlayer().getProperties().size());
     }
 
 }

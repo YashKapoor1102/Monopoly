@@ -1,6 +1,6 @@
 /**
  * @author Robert Simionescu
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import java.io.Serializable;
@@ -68,11 +68,21 @@ public class Gameboard implements Serializable
         return -1;
     }
 
+    /**
+     * @author Robert Simionescu
+     * Get the position of the "Jail" square on the gameboard
+     * @return      an int, the position of the "Jail" square
+     */
     public int getJail()
     {
         return getPosition(LocalizationHandler.getJailName());
     }
 
+    /**
+     * @author Robert Simionescu
+     * Get the position of the "Go to Jail" square on the gameboard
+     * @return      an int, the position of the "Go to Jail" square
+     */
     public int getGoToJail()
     {
         return getPosition(LocalizationHandler.getGoToJailName());

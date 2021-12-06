@@ -1,14 +1,18 @@
+/**
+ * @author Robert Simionescu
+ * @version Milestone 4
+ */
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Robert Simionescu
  * Initializes all the labels for the squares on the gameboard
  */
-public class GamePanelsInitialization implements Serializable
+public class GamePanelsInitialization
 {
     public static final int SOUTH_SQUARES = 8;
     public static final int WEST_SQUARES = 8;
@@ -24,10 +28,18 @@ public class GamePanelsInitialization implements Serializable
     public static final String GREEN = "Green";
     public static final String DARK_BLUE = "Dark Blue";
 
-    private static JPanel createPanel(int i, Gameboard gameboard)
+    /**
+     * @author Robert Simionescu
+     * Create a JPanel at the specified square on the gameboard
+     *
+     * @param position      an int, the position where the gameboard square is located
+     * @param gameboard     a Gameboard Object, the gameboard that is being used for the game
+     *
+     * @return              a JPanel, panel that is created to display information about the specific square
+     */
+    private static JPanel createPanel(int position, Gameboard gameboard)
     {
-        // Swing is gross and awful and disgusting and I hope I never have to deal with it again in my life.
-        Square square = gameboard.getSquare(i);
+        Square square = gameboard.getSquare(position);
 
         String name = square.getName();
         JPanel squarePanel = new JPanel();
@@ -41,7 +53,7 @@ public class GamePanelsInitialization implements Serializable
         {
             JPanel colourPanel = new JPanel();
             colourPanel.setBorder(blackBorder);
-            switch (((Street) gameboard.getSquare(i)).getColour()) {
+            switch (((Street) gameboard.getSquare(position)).getColour()) {
                 case BROWN -> colourPanel.setBackground(new Color(104, 55, 0));
                 case BLUE -> colourPanel.setBackground(new Color(0, 0, 255));
                 case PINK -> colourPanel.setBackground(new Color(255, 0, 190));
@@ -51,12 +63,11 @@ public class GamePanelsInitialization implements Serializable
                 case GREEN -> colourPanel.setBackground(new Color(0, 255, 0));
                 case DARK_BLUE -> colourPanel.setBackground(new Color(0, 0, 150));
             }
-            colourPanel.setPreferredSize(new Dimension(300, 30));
+            colourPanel.setPreferredSize(new Dimension(300, 10));
             squarePanel.add(colourPanel, BorderLayout.PAGE_START);
 
-            // This awful looking garbage allows for player icons to be displayed over top of the squares by adding the
+            // allows for player icons to be displayed over top of the squares by adding the
             // icon to the GridLayout.
-
             JPanel centerPanel = new JPanel();
             centerPanel.setLayout(new BorderLayout());
             centerPanel.add(new JLabel("<html><body style='text-align: center'>"+ name+"</html>", SwingConstants.CENTER), BorderLayout.PAGE_START);
@@ -68,14 +79,12 @@ public class GamePanelsInitialization implements Serializable
 
             squarePanel.add(centerPanel, BorderLayout.CENTER);
 
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>"+ name+"</html>", SwingConstants.CENTER), BorderLayout.CENTER);
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>$"+ ((Street)square).getCost() +"</html>", SwingConstants.CENTER), BorderLayout.PAGE_END);
         }
         else if (square instanceof Railroad)
         {
             // Blank panel added so that the names of non-streets align with those of streets.
             JPanel blankPanel = new JPanel();
-            blankPanel.setPreferredSize(new Dimension(100, 25));
+            blankPanel.setPreferredSize(new Dimension(20, 10));
             blankPanel.setBackground(new Color(187, 255, 202));
             squarePanel.add(blankPanel, BorderLayout.PAGE_START);
 
@@ -90,14 +99,12 @@ public class GamePanelsInitialization implements Serializable
 
             squarePanel.add(centerPanel, BorderLayout.CENTER);
 
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>"+ name+"</html>", SwingConstants.CENTER), BorderLayout.CENTER);
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>$"+ ((Railroad)square).getCost() +"</html>", SwingConstants.CENTER), BorderLayout.PAGE_END);
         }
         else if (square instanceof Utility)
         {
             // Blank panel added so that the names of non-streets align with those of streets.
             JPanel blankPanel = new JPanel();
-            blankPanel.setPreferredSize(new Dimension(100, 25));
+            blankPanel.setPreferredSize(new Dimension(20, 10));
             blankPanel.setBackground(new Color(187, 255, 202));
             squarePanel.add(blankPanel, BorderLayout.PAGE_START);
 
@@ -112,14 +119,12 @@ public class GamePanelsInitialization implements Serializable
 
             squarePanel.add(centerPanel, BorderLayout.CENTER);
 
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>"+ name+"</html", SwingConstants.CENTER), BorderLayout.CENTER);
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>$"+ ((Utility)square).getCost() +"</html", SwingConstants.CENTER), BorderLayout.PAGE_END);
         }
         else
         {
             // Blank panel added so that the names of non-streets align with those of streets.
             JPanel blankPanel = new JPanel();
-            blankPanel.setPreferredSize(new Dimension(100, 25));
+            blankPanel.setPreferredSize(new Dimension(20, 10));
             blankPanel.setBackground(new Color(187, 255, 202));
             squarePanel.add(blankPanel, BorderLayout.PAGE_START);
 
@@ -132,11 +137,8 @@ public class GamePanelsInitialization implements Serializable
             centerPanel.setBackground(new Color(187, 255, 202));
 
             squarePanel.add(centerPanel, BorderLayout.CENTER);
-            // Blank label added for the same reason.
-            //squarePanel.add(new JLabel("<html><body style='text-align: center'>"+ name+"</html", SwingConstants.CENTER), BorderLayout.PAGE_START);
             squarePanel.add(new JLabel(" "), BorderLayout.PAGE_END);
         }
-
 
         squarePanel.setVisible(true);
         squarePanel.setBackground(new Color(187, 255, 202));

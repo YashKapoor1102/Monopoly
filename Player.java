@@ -1,6 +1,6 @@
 /**
  * @author Himanshu Singh, Yash Kapoor, and Robert Simionescu
- * @version Milestone 3
+ * @version Milestone 4
  */
 
 import java.io.Serializable;
@@ -9,13 +9,12 @@ import java.util.*;
 /**
  * Player Class that has information about a typical player
  * in the game of Monopoly.
- *
  */
 public class Player implements Serializable {
 
     private int money;
     private final String name;
-    private ArrayList<Property> PROPERTIES;
+    private final List<Property> PROPERTIES;
     private int position;
     private boolean bankrupt;
     private int doubleCount;
@@ -105,7 +104,7 @@ public class Player implements Serializable {
      *
      * @return      a List, the PROPERTIES
      */
-    public ArrayList<Property> getProperties() {
+    public List<Property> getProperties() {
         return this.PROPERTIES;
     }
 
@@ -167,6 +166,7 @@ public class Player implements Serializable {
         this.position = position;
     }
 
+
     /**
      * @author Yash Kapoor
      *
@@ -176,16 +176,6 @@ public class Player implements Serializable {
     public int getDoubleCount() {
         return this.doubleCount;
     }
-
-    /**
-     * @author Yash Kapoor
-     *
-     * Set the number of times the player rolls doubles in a row
-     * @param dc   an int, number of times the player rolls doubles
-     */
-//    public void setDoubleCount(int dc) {
-//        this.doubleCount = dc;
-//    }
 
     /**
      * @author Robert Simionescu
@@ -258,18 +248,6 @@ public class Player implements Serializable {
     }
 
     /**
-     * @author Yash Kapoor
-     *
-     * Set the total number of houses each player has built on
-     * their streets
-     *
-     * @param totalHouses       an int, the total number of houses the player has
-     */
-    private void setTotalNumberHouses(int totalHouses) {
-        this.totalNumberHouses = totalHouses;
-    }
-
-    /**
      * @author Robert Simionescu
      * Increments the number of houses the player has built
      */
@@ -290,17 +268,6 @@ public class Player implements Serializable {
         return this.totalNumberHotels;
     }
 
-    /**
-     * @author Yash Kapoor
-     *
-     * Set the total number of hotels each player has built
-     * on their streets
-     *
-     * @param totalHotels       an int, the total number of hotels the player has
-     */
-    private void setTotalNumberHotels(int totalHotels) {
-        this.totalNumberHotels = totalHotels;
-    }
 
     /**
      * @author Robert Simionescu
