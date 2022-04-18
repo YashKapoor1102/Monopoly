@@ -1,5 +1,5 @@
 /**
- * @author Robert Simionescu and Yash Kapoor
+ * @author Robert Simionescu and Yash Kapoor and Himanshu Singh
  * @version Milestone 4
  */
 
@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
- * @author Robert Simionescu and Yash Kapoor
+ * @author Robert Simionescu and Yash Kapoor and Himanshu Singh
  * Class handling the UI for Monopoly to the user.
  */
 public class GameFrame extends JFrame implements GameView {
@@ -41,7 +41,7 @@ public class GameFrame extends JFrame implements GameView {
     private final JPanel[] simplePlayerPanels;
 
     /**
-     * @author Robert Simionescu and Yash Kapoor
+     * @author Robert Simionescu and Yash Kapoor and Himanshu Singh
      * Constructor for a GameFrame. Initializes all the necessary Swing components to begin the game.
      */
     public GameFrame() {
@@ -159,7 +159,7 @@ public class GameFrame extends JFrame implements GameView {
 
     /**
      * @param message The message that will be displayed to the message board.
-     * @author Robert Simionescu
+     * @author Robert Simionescu and Himanshu Singh
      * Displays a message on the bottom of the message field. Shifts the existing messages up and removes the oldest one.
      */
     public void displayMessage(String message) {
@@ -200,7 +200,7 @@ public class GameFrame extends JFrame implements GameView {
 
     /**
      * @return A JPanel with all the labels for the west side of the board.
-     * @author Yash Kapoor
+     * @author Yash Kapoor and Himanshu Singh
      * Getter for the squares on the west side of the board.
      */
     private JPanel getWest() {
