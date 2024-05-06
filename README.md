@@ -61,6 +61,6 @@ that does not go bankrupt (money does not equal $0) wins.
 
 Credits:
 --------
-Yash Kapoor  
-Robert Simionescu  
-Himanshu Singh
+- Yash Kapoor  
+- Robert Simionescu  
+- Himanshu Singh
