@@ -1,6 +1,6 @@
 # Monopoly Game Engine
 
-# Description
+## Description
 This project is a Java-based implementation of the classic board game Monopoly. It features a fully 
 functional game environment where players can interact with the game board, manage properties, and
 compete against other players controlled by AI or other human players. The game includes features
@@ -12,7 +12,7 @@ The users can either use a regular monopoly game board or an international game 
 For the international game board, we chose to do a Nintendo-themed Monopoly game board. 
 This board features unique properties, each priced differently. 
 
-# Installation
+## Installation
 Most versions of Java will be able to run this program, but JDK 11 or higher is recommended 
 for optimal performance.
 
@@ -28,7 +28,7 @@ https://www.eclipse.org/downloads/packages/installer
 **IntelliJ Installation:**
 https://www.jetbrains.com/idea/download
 
-# Usage
+## Usage
 **Step 1:** Clone the repository:
 ```
 git clone https://github.com/YashKapoor1102/Monopoly-Game-Engine.git
@@ -58,7 +58,7 @@ Once you get the game running, you can:
 Once the game begins between X players, each player starts with $1500. The last player remaining
 that does not go bankrupt (money does not equal $0) wins.
 
-# Credits
+## Credits
 - Yash Kapoor  
 - Robert Simionescu  
 - Himanshu Singh
