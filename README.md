@@ -59,6 +59,6 @@ Once the game begins between X players, each player starts with $1500. The last 
 that does not go bankrupt (money does not equal $0) wins.
 
 ## Credits
-- Yash Kapoor  
-- Robert Simionescu  
-- Himanshu Singh
+- Yash Kapoor: Developer, Unit Tests, and README
+- Robert Simionescu: Developer and Refactoring Code
+- Himanshu Singh: Unit Tests and Refactoring Code
