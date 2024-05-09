@@ -1,5 +1,5 @@
 /**
- * @author Himanshu Singh
+ * @author Yash Kapoor and Himanshu Singh 
  * @version Milestone 4
  */
 
@@ -24,10 +24,6 @@ public class GameModelTest implements Serializable {
     private GameModel gm;
     private static final File FILE = new File("TestSaveGame.txt");
 
-    /**
-     * @author Himanshu Singh
-     * Test add game view.
-     */
     @Test
     public void testAddGameView() {
         gm = new GameModel();
@@ -37,10 +33,6 @@ public class GameModelTest implements Serializable {
         assertEquals(gm.getGameViews().size(), 1);
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test remove game view.
-     */
     @Test
     public void testRemoveGameView() {
         gm = new GameModel();
@@ -51,10 +43,6 @@ public class GameModelTest implements Serializable {
         assertEquals(gm.getGameViews().size(), 0);
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test the Regular Version of Monopoly Gameboard
-     */
     @Test
     public void testStandardGameboard() {
         System.out.println("Testing GetGameboard and CreatingGameboard Function...");
@@ -146,10 +134,6 @@ public class GameModelTest implements Serializable {
         assertEquals(squares.toString(), gm.createGameboard("Standard_Gameboard.xml").getSquares().toString());
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test International Version of the Monopoly Gameboard
-     */
     @Test
     public void testInternationalGameboard() {
         System.out.println("Testing GetGameboard and CreatingGameboard Function...");
@@ -241,11 +225,6 @@ public class GameModelTest implements Serializable {
         assertEquals(squares.toString(), gm.createGameboard("International_Gameboard.xml").getSquares().toString());
     }
 
-
-    /**
-     * @author Himanshu Singh
-     * Test initial gamestate.
-     */
     @Test
     public void testInitialGamestate() {
         System.out.println("Testing InitialGamestate Function...");
@@ -255,10 +234,6 @@ public class GameModelTest implements Serializable {
         assertEquals(testGamestate,gm.getGameState());
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test add player.
-     */
     @Test
     public void testAddPlayer(){
         System.out.println("Testing AddPlayer Function...");
@@ -274,10 +249,6 @@ public class GameModelTest implements Serializable {
         assertEquals(StartingMoney,a.getMoney());
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test one player remaining.
-     */
     @Test
     public void testOnePlayerRemaining(){
         System.out.println("Testing OnePlayerRemaining Function...");
@@ -291,10 +262,6 @@ public class GameModelTest implements Serializable {
 
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test rolls.
-     */
     @Test
     public void testRolls(){
         System.out.println("Testing Roll Function...");
@@ -336,10 +303,6 @@ public class GameModelTest implements Serializable {
         }
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test get players.
-     */
     @Test
     public void testGetPlayers(){
         System.out.println("Testing getPlayers Function...");
@@ -368,10 +331,6 @@ public class GameModelTest implements Serializable {
         System.out.println("\n");
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test remove player.
-     */
     @Test
     public void testRemovePlayer(){
         System.out.println("Testing RemovePlayer Function...");
@@ -389,10 +348,6 @@ public class GameModelTest implements Serializable {
         assertArrayEquals(gm.getPlayers().toArray(),gm2.getPlayers().toArray());
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test get current player.
-     */
     @Test
     public void testGetCurrentPlayer(){
         System.out.println("Testing GetCurrentPlayer Function...");
@@ -425,11 +380,6 @@ public class GameModelTest implements Serializable {
         }
     }
 
-
-    /**
-     * @author Himanshu Singh
-     * Test player land on square.
-     */
     @Test
     public void testPlayerLandOnSquare(){
         System.out.println("Testing PlayerLandOnSquare Function...");
@@ -468,11 +418,6 @@ public class GameModelTest implements Serializable {
         assertTrue(gm.playerLandOnSquare(b, gm.getGameboard().getSquares().get(total)));
     }
 
-
-    /**
-     * @author Himanshu Singh
-     * Test pass turn.
-     */
     @Test
     public void testPassTurn(){
         gm = new GameModel();
@@ -493,10 +438,6 @@ public class GameModelTest implements Serializable {
         assertEquals(b.getName(),gm.getCurrentPlayer().getName());
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test buy property.
-     */
     @Test
     public void testBuyProperty(){
 
@@ -522,10 +463,6 @@ public class GameModelTest implements Serializable {
         }
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test start game.
-     */
     @Test
     public void testStartGame(){
         gm = new GameModel();
@@ -540,10 +477,6 @@ public class GameModelTest implements Serializable {
 
     }
 
-    /**
-     * @author Himanshu Singh
-     * Test building houses/hotels on streets
-     */
     @Test
     public void  testBuildOnProperty(){
         gm = new GameModel();
@@ -622,8 +555,6 @@ public class GameModelTest implements Serializable {
     }
 
     /**
-     * @author Himanshu Singh
-     * Test Save/Load Methods in GameModel
      *
      * There is no need to test save/load separately since they are
      * closely related to one another.
