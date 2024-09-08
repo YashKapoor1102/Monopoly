@@ -8,9 +8,25 @@ like property buying, building houses, managing funds, and following the standar
 This version of the game uses a graphical user interface to make it easier and more enjoyable 
 for players to interact with the game. 
 
-The users can either use a regular monopoly game board or an international game board. 
+The users can either use a regular Monopoly game board or an international game board. 
 For the international game board, we chose to do a Nintendo-themed Monopoly game board. 
 This board features unique properties, each priced differently. 
+
+## UML and Sequence Diagrams
+For a detailed understanding of the system architecture and game flow, you can refer to the following diagrams:
+
+- UML Class Diagram: <a href="https://drive.google.com/file/d/14Xaagq7EtpoLgR8kqka7vR9qQe24VJWw/view?usp=sharing">View UML Diagram</a>
+This diagram outlines the structure of the game, including the main classes and their relationships.
+
+- Sequence Diagram: <a href="https://drive.google.com/file/d/1x1JRakijuZSqmNUnJa6zI2E-5qXD8Ngh/view?usp=sharing">View Sequence Diagram</a>
+This diagram illustrates the following scenario:
+
+The game of Monopoly begins, and the user adds players. The first player then takes their turn, assuming they did not roll doubles. This includes:
+- Adding players to the game.
+- Rolling the dice.
+- Moving the player to a new position on the board.
+- Checking the property status. 
+- Ending the turn.
 
 ## Installation
 Most versions of Java will be able to run this program, but JDK 11 or higher is recommended 
