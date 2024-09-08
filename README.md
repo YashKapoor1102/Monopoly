@@ -15,10 +15,10 @@ This board features unique properties, each priced differently.
 ## UML and Sequence Diagrams
 For a detailed understanding of the system architecture and game flow, you can refer to the following diagrams:
 
-- UML Class Diagram: <a href="https://drive.google.com/file/d/14Xaagq7EtpoLgR8kqka7vR9qQe24VJWw/view?usp=sharing">View UML Diagram</a>
+- UML Class Diagram: <a href="https://drive.google.com/file/d/14Xaagq7EtpoLgR8kqka7vR9qQe24VJWw/view?usp=sharing">View UML Diagram</a><br>
 This diagram outlines the structure of the game, including the main classes and their relationships.
 
-- Sequence Diagram: <a href="https://drive.google.com/file/d/1x1JRakijuZSqmNUnJa6zI2E-5qXD8Ngh/view?usp=sharing">View Sequence Diagram</a>
+- Sequence Diagram: <a href="https://drive.google.com/file/d/1x1JRakijuZSqmNUnJa6zI2E-5qXD8Ngh/view?usp=sharing">View Sequence Diagram</a><br>
 This diagram illustrates the following scenario:
 
 The game of Monopoly begins, and the user adds players. The first player then takes their turn, assuming they did not roll doubles. This includes:
