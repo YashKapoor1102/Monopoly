@@ -21,7 +21,7 @@ This diagram outlines the structure of the game, including the main classes and 
 - Sequence Diagram: <a href="https://drive.google.com/file/d/1x1JRakijuZSqmNUnJa6zI2E-5qXD8Ngh/view?usp=sharing">View Sequence Diagram</a><br><br>
 This diagram illustrates the following scenario:
 
-The game of Monopoly begins, and the user adds players. The first player then takes their turn, assuming they did not roll doubles. This includes:
+**Scenario**: The game of Monopoly begins, and the user adds players. The first player then takes their turn, assuming they did not roll doubles. This includes:
 - Adding players to the game.
 - Rolling the dice.
 - Moving the player to a new position on the board.
